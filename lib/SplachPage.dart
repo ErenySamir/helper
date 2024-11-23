@@ -79,7 +79,7 @@ class SplachPageState extends State<SplachPage> with SingleTickerProviderStateMi
 
     if (!mounted) return;
 
-    if (phone.isEmpty && phoneAlt.isEmpty) {
+    if (phoneAlt.isEmpty) {
       // Navigate to the sign-up page if no phone number is found
       Navigator.pushReplacement(
         context,

@@ -7,10 +7,11 @@ class FamilyModel {
   String? familyNum;
   String? give;
   String? giverName;
+String? Id;
   // List<String>? TeamMembers = [];
 
   // Constructor
-  FamilyModel({this.familyName, this.familyNum,this.familyPhone,this.AdminID,this.date,this.give,this.giverName});
+  FamilyModel({this.familyName,this.Id, this.familyNum,this.familyPhone,this.AdminID,this.date,this.give,this.giverName});
 
   // fromMap method to create a User object from a Map
   factory FamilyModel.fromMap(Map<String, dynamic> map) {
@@ -18,10 +19,11 @@ class FamilyModel {
       familyName: map['familyName'],
       familyNum: map['familyNum'],
       familyPhone:map['familyPhone'],
-      AdminID:map['AdminId'],
+      AdminID:'',
         giverName: map['giverName'],
       give: map['give'],
-      date: map['date']
+      date: map['date'],
+      Id: ''
       // TeamMembers: (map['TeamMembers'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
     );
   }
@@ -33,7 +35,8 @@ class FamilyModel {
      'familyName' :familyName,
        'familyNum': familyNum,
       'familyPhone' :familyPhone,
-      'AdminId' :AdminID,
+      'AdminId' :'',
+
       'giverName': giverName,
        'give':give,
       'date':date

@@ -77,46 +77,7 @@ class SigninPageState extends State<SigninPage>
         ),
       );
     }
-    else{
-      await FirebaseAuth.instance.verifyPhoneNumber(
-        phoneNumber: '+2$phone',
 
-        verificationCompleted: (PhoneAuthCredential credential) async {
-          await FirebaseAuth.instance.signInWithCredential(credential).then((value) {
-            print("Successfully signed in with auto-retrieval.");
-            // You might want to navigate directly to the home page or similar
-          });
-        },
-        verificationFailed: (FirebaseAuthException e) {
-          print("Verification failed: ${e.code}");
-          if (e.code == 'invalid-phone-number') {
-            print("The phone number entered is invalid!");
-          }
-          // Handle error
-        },
-        codeSent: (String verificationId, int? forceResendingToken) async {
-          print('Verification code sent to $phone');
-          isLoading=true;
-          // Navigator.push(
-          //   context,
-          //   MaterialPageRoute(
-          //     builder: (context) => OTP(verificationId, phone, '', ''),
-          //   ),
-          // );
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => HomePage(),
-            ),
-          );
-        },
-        codeAutoRetrievalTimeout: (String verificationID) {
-          print("Auto retrieval timeout for verification ID: $verificationID");
-        },
-        timeout: const Duration(seconds: 60),
-      );
-
-    }
     setState(() {
       isLoading=true;
     });
@@ -147,7 +108,12 @@ class SigninPageState extends State<SigninPage>
           // prefs.setString('docId',docId);
           // Start the phone verification process
           await verifyPhone(value);
-
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => HomePage(),
+            ),
+          );
           break;
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -187,6 +153,12 @@ class SigninPageState extends State<SigninPage>
     } else {
       PasswordController.clear();
       PhoneController.clear();
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(
+      //     builder: (context) => HomePage(),
+      //   ),
+      // );
       print("Document ID of the matched phone number: $docId");
       // You can now use docId for further operations if needed
     }

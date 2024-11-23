@@ -36,15 +36,11 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.example.helper"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
-        minSdk = flutter.minSdkVersion
-        targetSdk = flutter.targetSdkVersion
-        versionCode = flutterVersionCode.toInteger()
-        versionName = flutterVersionName
-
+        applicationId "com.example.helper"
+        minSdkVersion 23 // Change this from 21 to 23
+        targetSdkVersion 33 // Ensure this is also set to a compatible version
+        versionCode 1
+        versionName "1.0"
     }
 
     buildTypes {
