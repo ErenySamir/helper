@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:helper/AddFamilyData/Model/FamilyModel.dart';
 import 'package:helper/HomePage/HomePage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -146,6 +147,13 @@ class AddFamilyDataState extends State<AddFamilyData>{
         // LocationController.clear();
         // selectedImages.clear();
         // _cnt.clearDropDown();
+        _nameController.clear();
+        _phoneController.clear();
+        _familyNumController.clear();
+        _giverNameController.clear();
+        _giveController.clear();
+        _dateController.clear();
+        _nameController.clear();
 
       } catch (e) {
         // Handle any errors
@@ -180,491 +188,528 @@ class AddFamilyDataState extends State<AddFamilyData>{
   Widget build(BuildContext context) {
   return Scaffold(
     backgroundColor: Colors.white,
+    appBar: PreferredSize(
+      preferredSize: Size.fromHeight(70.0), // Set the height of the AppBar
+      child: Padding(
+        padding: EdgeInsets.only(top: 25.0,bottom: 12,right: 8,left: 8), // Add padding to the top of the title
+        child: AppBar(
+          backgroundColor: Colors.white,
+          surfaceTintColor: Colors.transparent,
+          title: Text(
+            "اضافة بيانات",
+            style: TextStyle(
+              fontSize: 16,
+              fontFamily: 'Cairo',
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          centerTitle: true, // Center the title horizontally
+          leading: IconButton(
+            onPressed: () {
+              // Get.off(HomePage());
+              Navigator.of(context).pop();
+              // Navigator.of(context).pop(true); // Navigate back to the previous page
+            },
+            icon: Icon(
+              Directionality.of(context) == TextDirection.rtl
+                  ? Icons.arrow_forward_ios
+                  : Icons.arrow_back_ios_new_rounded,
+              size: 24,
+              color:  Color(0xFF62748E),
+            ),
+          ),
+        ),
+      ),
+    ),
     body: Padding(
       padding: const EdgeInsets.all(28.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          //Name
-          Text("الاسم",
-            style: TextStyle(
-                fontFamily: 'Cairo',
-                fontSize: 14.0,
-                fontWeight: FontWeight.w700,
-                color: Color(0xFF495A71)
-            ),),
-          SizedBox(
-            height: 10,
-          ),
-          Container(
-            height: 48,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20.0),
-              shape: BoxShape.rectangle,
-              color: Colors.white70,
-              border: Border.all(
-                color: Color(0xFF9AAEC9), // Border color
-                width: 1.0, // Border width
-              ),
-            ),
-            alignment: Alignment.centerRight,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Expanded(
-                  child:TextField(
-                    controller: _nameController,
-                    cursorColor:  Color(0xFF000047),
-                    textInputAction: TextInputAction.next,
-                    keyboardType: TextInputType.text,
-                    textAlign: TextAlign.right, // Align text to the right
-                    decoration: InputDecoration(
-                      hintText: 'الأسم',
-                      hintStyle: TextStyle(
-                        fontFamily: 'Cairo',
-                        color: Color(0xFF495A71),
-                      ),
-                      border: InputBorder.none,
-                    ),
-
-                    onEditingComplete: () async {
-                      // Move focus to the next text field
-                      FocusScope.of(context).nextFocus();
-                    },
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.symmetric(horizontal: 20.0),
-                  child: Icon(
-                    Icons.person_outlined,
-                    size: 22,
-                    color:  Color(0xFF000047),
-                  ),
-
-                ),
-              ],
-            ),
-          ),
-          if (_nameController.text.length >0 && _nameController.text.length <2)
-            Text(
-              // textAlign: TextAlign.end,
-              "برجاء ادخال الاسم",
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            //Name
+            Text("الاسم",
               style: TextStyle(
-                color: Colors.red.shade900, // Error message color
-                fontSize: 12.0,
-                fontFamily: 'Cairo',
-              ),
+                  fontFamily: 'Cairo',
+                  fontSize: 14.0,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xFF495A71)
+              ),),
+            SizedBox(
+              height: 10,
             ),
-          //Date
-          Text("التاريخ",
-            style: TextStyle(
-                fontFamily: 'Cairo',
-                fontSize: 14.0,
-                fontWeight: FontWeight.w700,
-                color: Color(0xFF495A71)
-            ),),
-          SizedBox(
-            height: 10,
-          ),
-      Container(
-      height: 48,
-      decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(20.0),
-      shape: BoxShape.rectangle,
-      color: Colors.white70,
-      border: Border.all(
-      color: Color(0xFF9AAEC9), // Border color
-      width: 1.0, // Border width
-      ),
-      ),
-      alignment: Alignment.centerRight,
-      child: Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-      Expanded(
-      child: GestureDetector(
-      onTap: () async {
-      DateTime? selectedDate = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(), // Default date
-      firstDate: DateTime(2000),  // Earliest date
-      lastDate: DateTime(2100),  // Latest date
-      builder: (context, child) {
-      return Theme(
-      data: Theme.of(context).copyWith(
-      colorScheme: ColorScheme.light(
-      primary: Color(0xFF000047), // Header background color
-      onPrimary: Colors.white,   // Header text color
-      onSurface: Color(0xFF000047), // Body text color
-      ),
-      textButtonTheme: TextButtonThemeData(
-      style: TextButton.styleFrom(
-      foregroundColor: Color(0xFF000047), // Button text color
-      ),
-      ),
-      ),
-      child: child!,
-      );
-      },
-      );
-
-      if (selectedDate != null) {
-      // Format the date and set it to the controller
-      String formattedDate =
-      "${selectedDate.year}-${selectedDate.month.toString().padLeft(2, '0')}-${selectedDate.day.toString().padLeft(2, '0')}";
-      _dateController.text = formattedDate;
-      }
-      },
-      child: AbsorbPointer( // Prevent keyboard from showing up
-      child: TextField(
-      controller: _dateController,
-      cursorColor: Color(0xFF000047),
-      textAlign: TextAlign.right, // Align text to the right
-      decoration: InputDecoration(
-      hintText: 'التاريخ',
-      hintStyle: TextStyle(
-      fontFamily: 'Cairo',
-      color: Color(0xFF495A71),
-      ),
-      border: InputBorder.none,
-      ),
-      ),
-      ),
-      ),
-      ),
-      Container(
-      margin: EdgeInsets.symmetric(horizontal: 20.0),
-      child: Icon(
-      Icons.calendar_today, // Use a calendar icon
-      size: 22,
-      color: Color(0xFF000047),
-      ),
-      ),
-      ],
-      ),
-      ),
-
-      //give typeeeeeeeeee
-          Text("العطية",
-            style: TextStyle(
-                fontFamily: 'Cairo',
-                fontSize: 14.0,
-                fontWeight: FontWeight.w700,
-                color: Color(0xFF495A71)
-            ),),
-          SizedBox(
-            height: 10,
-          ),
-          Container(
-            height: 48,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20.0),
-              shape: BoxShape.rectangle,
-              color: Colors.white70,
-              border: Border.all(
-                color: Color(0xFF9AAEC9), // Border color
-                width: 1.0, // Border width
+            Container(
+              height: 48,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20.0),
+                shape: BoxShape.rectangle,
+                color: Colors.white70,
+                border: Border.all(
+                  color: Color(0xFF9AAEC9), // Border color
+                  width: 1.0, // Border width
+                ),
               ),
-            ),
-            alignment: Alignment.centerRight,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Expanded(
-                  child:TextField(
-                    controller: _giveController,
-                    cursorColor:  Color(0xFF000047),
-                    textInputAction: TextInputAction.next,
-                    keyboardType: TextInputType.text,
-                    textAlign: TextAlign.right, // Align text to the right
-                    decoration: InputDecoration(
-                      hintText: 'العطية',
-                      hintStyle: TextStyle(
-                        fontFamily: 'Cairo',
-                        color: Color(0xFF495A71),
+              alignment: Alignment.centerRight,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Expanded(
+                    child:TextField(
+                      controller: _nameController,
+                      cursorColor:  Color(0xFF000047),
+                      textInputAction: TextInputAction.next,
+                      keyboardType: TextInputType.text,
+                      textAlign: TextAlign.right, // Align text to the right
+                      decoration: InputDecoration(
+                        hintText: 'الأسم',
+                        hintStyle: TextStyle(
+                          fontFamily: 'Cairo',
+                          color: Color(0xFF495A71),
+                        ),
+                        border: InputBorder.none,
                       ),
-                      border: InputBorder.none,
+
+                      onEditingComplete: () async {
+                        // Move focus to the next text field
+                        FocusScope.of(context).nextFocus();
+                      },
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.symmetric(horizontal: 20.0),
+                    child: Icon(
+                      Icons.person_outlined,
+                      size: 22,
+                      color:  Color(0xFF000047),
                     ),
 
-                    onEditingComplete: () async {
-                      // Move focus to the next text field
-                      FocusScope.of(context).nextFocus();
-                    },
                   ),
-                ),
-                Container(
-                  margin: EdgeInsets.symmetric(horizontal: 20.0),
-                  child: Icon(
-                    Icons.monetization_on,
-                    size: 22,
-                    color:  Color(0xFF000047),
-                  ),
-
-                ),
-              ],
-            ),
-          ),
-          //giverrrrrrrrrrrrname
-          Text("اسم المعطي العطية",
-            style: TextStyle(
-                fontFamily: 'Cairo',
-                fontSize: 14.0,
-                fontWeight: FontWeight.w700,
-                color: Color(0xFF495A71)
-            ),),
-          SizedBox(
-            height: 10,
-          ),
-          Container(
-            height: 48,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20.0),
-              shape: BoxShape.rectangle,
-              color: Colors.white70,
-              border: Border.all(
-                color: Color(0xFF9AAEC9), // Border color
-                width: 1.0, // Border width
+                ],
               ),
             ),
-            alignment: Alignment.centerRight,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Expanded(
-                  child:TextField(
-                    controller: _giverNameController,
-                    cursorColor:  Color(0xFF000047),
-                    textInputAction: TextInputAction.next,
-                    keyboardType: TextInputType.text,
-                    textAlign: TextAlign.right, // Align text to the right
-                    decoration: InputDecoration(
-                      hintText: 'اسم المعطي العطية',
-                      hintStyle: TextStyle(
-                        fontFamily: 'Cairo',
-                        color: Color(0xFF495A71),
+            if (_nameController.text.length >0 && _nameController.text.length <2)
+              Text(
+                // textAlign: TextAlign.end,
+                "برجاء ادخال الاسم",
+                style: TextStyle(
+                  color: Colors.red.shade900, // Error message color
+                  fontSize: 12.0,
+                  fontFamily: 'Cairo',
+                ),
+              ),
+            //Date
+            Text("التاريخ",
+              style: TextStyle(
+                  fontFamily: 'Cairo',
+                  fontSize: 14.0,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xFF495A71)
+              ),),
+            SizedBox(
+              height: 10,
+            ),
+        Container(
+        height: 48,
+        decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20.0),
+        shape: BoxShape.rectangle,
+        color: Colors.white70,
+        border: Border.all(
+        color: Color(0xFF9AAEC9), // Border color
+        width: 1.0, // Border width
+        ),
+        ),
+        alignment: Alignment.centerRight,
+        child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+        Expanded(
+        child: GestureDetector(
+        onTap: () async {
+        DateTime? selectedDate = await showDatePicker(
+        context: context,
+        initialDate: DateTime.now(), // Default date
+        firstDate: DateTime(2000),  // Earliest date
+        lastDate: DateTime(2100),  // Latest date
+        builder: (context, child) {
+        return Theme(
+        data: Theme.of(context).copyWith(
+        colorScheme: ColorScheme.light(
+        primary: Color(0xFF000047), // Header background color
+        onPrimary: Colors.white,   // Header text color
+        onSurface: Color(0xFF000047), // Body text color
+        ),
+        textButtonTheme: TextButtonThemeData(
+        style: TextButton.styleFrom(
+        foregroundColor: Color(0xFF000047), // Button text color
+        ),
+        ),
+        ),
+        child: child!,
+        );
+        },
+        );
+
+        if (selectedDate != null) {
+        // Format the date and set it to the controller
+        String formattedDate =
+        "${selectedDate.year}-${selectedDate.month.toString().padLeft(2, '0')}-${selectedDate.day.toString().padLeft(2, '0')}";
+        _dateController.text = formattedDate;
+        }
+        },
+        child: AbsorbPointer( // Prevent keyboard from showing up
+        child: TextField(
+        controller: _dateController,
+        cursorColor: Color(0xFF000047),
+        textAlign: TextAlign.right, // Align text to the right
+        decoration: InputDecoration(
+        hintText: 'التاريخ',
+        hintStyle: TextStyle(
+        fontFamily: 'Cairo',
+        color: Color(0xFF495A71),
+        ),
+        border: InputBorder.none,
+        ),
+        ),
+        ),
+        ),
+        ),
+        Container(
+        margin: EdgeInsets.symmetric(horizontal: 20.0),
+        child: Icon(
+        Icons.calendar_today, // Use a calendar icon
+        size: 22,
+        color: Color(0xFF000047),
+        ),
+        ),
+        ],
+        ),
+        ),
+
+        //give typeeeeeeeeee
+            Text("العطية",
+              style: TextStyle(
+                  fontFamily: 'Cairo',
+                  fontSize: 14.0,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xFF495A71)
+              ),),
+            SizedBox(
+              height: 10,
+            ),
+            Container(
+              height: 48,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20.0),
+                shape: BoxShape.rectangle,
+                color: Colors.white70,
+                border: Border.all(
+                  color: Color(0xFF9AAEC9), // Border color
+                  width: 1.0, // Border width
+                ),
+              ),
+              alignment: Alignment.centerRight,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Expanded(
+                    child:TextField(
+                      controller: _giveController,
+                      cursorColor:  Color(0xFF000047),
+                      textInputAction: TextInputAction.next,
+                      keyboardType: TextInputType.text,
+                      textAlign: TextAlign.right, // Align text to the right
+                      decoration: InputDecoration(
+                        hintText: 'العطية',
+                        hintStyle: TextStyle(
+                          fontFamily: 'Cairo',
+                          color: Color(0xFF495A71),
+                        ),
+                        border: InputBorder.none,
                       ),
-                      border: InputBorder.none,
+
+                      onEditingComplete: () async {
+                        // Move focus to the next text field
+                        FocusScope.of(context).nextFocus();
+                      },
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.symmetric(horizontal: 20.0),
+                    child: Icon(
+                      Icons.monetization_on,
+                      size: 22,
+                      color:  Color(0xFF000047),
                     ),
 
-                    onEditingComplete: () async {
-                      // Move focus to the next text field
-                      FocusScope.of(context).nextFocus();
-                    },
                   ),
-                ),
-                Container(
-                  margin: EdgeInsets.symmetric(horizontal: 20.0),
-                  child: Icon(
-                    Icons.person_outlined,
-                    size: 22,
-                    color:  Color(0xFF000047),
-                  ),
-
-                ),
-              ],
-            ),
-          ),
-          //phoneeeeeeeefamily
-          Text("تليفون العائلة",
-            style: TextStyle(
-                fontFamily: 'Cairo',
-                fontSize: 14.0,
-                fontWeight: FontWeight.w700,
-                color: Color(0xFF495A71)
-            ),),
-          SizedBox(
-            height: 10,
-          ),
-          Container(
-            height: 48,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20.0),
-              shape: BoxShape.rectangle,
-              color: Colors.white70,
-              border: Border.all(
-                color: Color(0xFF9AAEC9), // Border color
-                width: 1.0, // Border width
+                ],
               ),
             ),
-            alignment: Alignment.centerRight,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Expanded(
-                  child:TextField(
-                    controller: _phoneController,
-                    cursorColor:  Color(0xFF000047),
-                    textInputAction: TextInputAction.next,
-                    keyboardType: TextInputType.datetime,
-                    textAlign: TextAlign.right, // Align text to the right
-                    decoration: InputDecoration(
-                      hintText: "تليفون العائلة",
-                      hintStyle: TextStyle(
-                        fontFamily: 'Cairo',
-                        color: Color(0xFF495A71),
+            //giverrrrrrrrrrrrname
+            Text("اسم المعطي العطية",
+              style: TextStyle(
+                  fontFamily: 'Cairo',
+                  fontSize: 14.0,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xFF495A71)
+              ),),
+            SizedBox(
+              height: 10,
+            ),
+            Container(
+              height: 48,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20.0),
+                shape: BoxShape.rectangle,
+                color: Colors.white70,
+                border: Border.all(
+                  color: Color(0xFF9AAEC9), // Border color
+                  width: 1.0, // Border width
+                ),
+              ),
+              alignment: Alignment.centerRight,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Expanded(
+                    child:TextField(
+                      controller: _giverNameController,
+                      cursorColor:  Color(0xFF000047),
+                      textInputAction: TextInputAction.next,
+                      keyboardType: TextInputType.text,
+                      textAlign: TextAlign.right, // Align text to the right
+                      decoration: InputDecoration(
+                        hintText: 'اسم المعطي العطية',
+                        hintStyle: TextStyle(
+                          fontFamily: 'Cairo',
+                          color: Color(0xFF495A71),
+                        ),
+                        border: InputBorder.none,
                       ),
-                      border: InputBorder.none,
+
+                      onEditingComplete: () async {
+                        // Move focus to the next text field
+                        FocusScope.of(context).nextFocus();
+                      },
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.symmetric(horizontal: 20.0),
+                    child: Icon(
+                      Icons.person_outlined,
+                      size: 22,
+                      color:  Color(0xFF000047),
                     ),
 
-                    onEditingComplete: () async {
-                      // Move focus to the next text field
-                      FocusScope.of(context).nextFocus();
-                    },
                   ),
-                ),
-                Container(
-                  margin: EdgeInsets.symmetric(horizontal: 20.0),
-                  child: Icon(
-                    Icons.phone,
-                    size: 22,
-                    color:  Color(0xFF000047),
-                  ),
-
-                ),
-              ],
-            ),
-          ),
-          //familyNuuuuuuum
-          Text("عدد افراد العائلة",
-            style: TextStyle(
-                fontFamily: 'Cairo',
-                fontSize: 14.0,
-                fontWeight: FontWeight.w700,
-                color: Color(0xFF495A71)
-            ),),
-          SizedBox(
-            height: 10,
-          ),
-          Container(
-            height: 48,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20.0),
-              shape: BoxShape.rectangle,
-              color: Colors.white70,
-              border: Border.all(
-                color: Color(0xFF9AAEC9), // Border color
-                width: 1.0, // Border width
+                ],
               ),
             ),
-            alignment: Alignment.centerRight,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Expanded(
-                  child:TextField(
-                    controller: _familyNumController,
-                    cursorColor:  Color(0xFF000047),
-                    textInputAction: TextInputAction.next,
-                    keyboardType: TextInputType.datetime,
-                    textAlign: TextAlign.right, // Align text to the right
-                    decoration: InputDecoration(
-                      hintText: 'عدد افراد العائلة',
-                      hintStyle: TextStyle(
-                        fontFamily: 'Cairo',
-                        color: Color(0xFF495A71),
+            //phoneeeeeeeefamily
+            Text("تليفون العائلة",
+              style: TextStyle(
+                  fontFamily: 'Cairo',
+                  fontSize: 14.0,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xFF495A71)
+              ),),
+            SizedBox(
+              height: 10,
+            ),
+            Container(
+              height: 48,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20.0),
+                shape: BoxShape.rectangle,
+                color: Colors.white70,
+                border: Border.all(
+                  color: Color(0xFF9AAEC9), // Border color
+                  width: 1.0, // Border width
+                ),
+              ),
+              alignment: Alignment.centerRight,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Expanded(
+                    child:TextField(
+                      controller: _phoneController,
+                      cursorColor:  Color(0xFF000047),
+                      textInputAction: TextInputAction.next,
+                      keyboardType: TextInputType.datetime,
+                      textAlign: TextAlign.right, // Align text to the right
+                      decoration: InputDecoration(
+                        hintText: "تليفون العائلة",
+                        hintStyle: TextStyle(
+                          fontFamily: 'Cairo',
+                          color: Color(0xFF495A71),
+                        ),
+                        border: InputBorder.none,
                       ),
-                      border: InputBorder.none,
+                      inputFormatters: [
+                        LengthLimitingTextInputFormatter(11),
+                      ],
+                      onEditingComplete: () async {
+                        // Move focus to the next text field
+                        FocusScope.of(context).nextFocus();
+                      },
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.symmetric(horizontal: 20.0),
+                    child: Icon(
+                      Icons.phone,
+                      size: 22,
+                      color:  Color(0xFF000047),
                     ),
 
-                    onEditingComplete: () async {
-                      // Move focus to the next text field
-                      FocusScope.of(context).nextFocus();
-                    },
                   ),
+                ],
+              ),
+            ),
+            //familyNuuuuuuum
+            Text("عدد افراد العائلة",
+              style: TextStyle(
+                  fontFamily: 'Cairo',
+                  fontSize: 14.0,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xFF495A71)
+              ),),
+            SizedBox(
+              height: 10,
+            ),
+            Container(
+              height: 48,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20.0),
+                shape: BoxShape.rectangle,
+                color: Colors.white70,
+                border: Border.all(
+                  color: Color(0xFF9AAEC9), // Border color
+                  width: 1.0, // Border width
                 ),
-                Container(
-                  margin: EdgeInsets.symmetric(horizontal: 20.0),
-                  child: Icon(
-                    Icons.person_outlined,
-                    size: 22,
-                    color:  Color(0xFF000047),
-                  ),
+              ),
+              alignment: Alignment.centerRight,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Expanded(
+                    child:TextField(
+                      controller: _familyNumController,
+                      cursorColor:  Color(0xFF000047),
+                      textInputAction: TextInputAction.next,
+                      keyboardType: TextInputType.datetime,
+                      textAlign: TextAlign.right, // Align text to the right
+                      decoration: InputDecoration(
+                        hintText: 'عدد افراد العائلة',
+                        hintStyle: TextStyle(
+                          fontFamily: 'Cairo',
+                          color: Color(0xFF495A71),
+                        ),
+                        border: InputBorder.none,
+                      ),
 
-                ),
-
-            ]),
-          ),
-          GestureDetector(
-            onTap: () async {
-              // Check if any of the required fields are empty
-              if (_nameController.text.isEmpty
-              // ||
-                  // _phoneController.text.isNotEmpty ||
-                  // // _dateController.text.isEmpty ||
-                  // _familyNumController.text.isEmpty ||
-                  // _giveController.text.isNotEmpty || _giverNameController.text.isNotEmpty
-              ) {
-                // Show a SnackBar with the error message
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      'برجاء ادخال جميع البيانات', // "Please enter all the data"
-                      textAlign: TextAlign.center,
+                      onEditingComplete: () async {
+                        // Move focus to the next text field
+                        FocusScope.of(context).nextFocus();
+                      },
                     ),
-                    backgroundColor: Color(0xFF000047),
                   ),
-                );
-                isLoading = false;
-              } else {
-                // Show the loading indicator
-                setState(() {
-                  isLoading = true;
-                });
+                  Container(
+                    margin: EdgeInsets.symmetric(horizontal: 20.0),
+                    child: Icon(
+                      Icons.person_outlined,
+                      size: 22,
+                      color:  Color(0xFF000047),
+                    ),
 
-                // If validation passes, send data to Firebase
-                try {
-                  await _sendData(context); // Ensure this function is async and handles Firebase operations
-                  // After successful data sending, navigate to the ConfirmInformationPlayGround screen
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => HomePage()),
-                  );
-                } catch (e) {
-                  // Show an error SnackBar if data sending fails
-                  print("errrrrrrrrrrrrrrrrrrror$e");
+                  ),
+
+              ]),
+            ),
+            GestureDetector(
+              onTap: () async {
+                // Check if any of the required fields are empty
+                if (_nameController.text.isEmpty
+                // ||
+                    // _phoneController.text.isNotEmpty ||
+                    // // _dateController.text.isEmpty ||
+                    // _familyNumController.text.isEmpty ||
+                    // _giveController.text.isNotEmpty || _giverNameController.text.isNotEmpty
+                ) {
+                  // Show a SnackBar with the error message
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(
-                        'حدث خطأ أثناء إرسال البيانات. حاول مرة أخرى.', // "An error occurred while sending data. Please try again."
+                        'برجاء ادخال جميع البيانات', // "Please enter all the data"
                         textAlign: TextAlign.center,
                       ),
-                      backgroundColor: Colors.red,
+                      backgroundColor: Color(0xFF000047),
                     ),
                   );
-                } finally {
-                  // Hide the loading indicator in both success and error cases
+                  isLoading = false;
+                } else {
+                  // Show the loading indicator
                   setState(() {
-                    isLoading = false;
+                    isLoading = true;
                   });
+
+                  // If validation passes, send data to Firebase
+                  try {
+                    await _sendData(context); // Ensure this function is async and handles Firebase operations
+                    // After successful data sending, navigate to the ConfirmInformationPlayGround screen
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => HomePage()),
+                    );
+                  } catch (e) {
+                    // Show an error SnackBar if data sending fails
+                    print("errrrrrrrrrrrrrrrrrrror$e");
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          'حدث خطأ أثناء إرسال البيانات. حاول مرة أخرى.', // "An error occurred while sending data. Please try again."
+                          textAlign: TextAlign.center,
+                        ),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                  } finally {
+                    // Hide the loading indicator in both success and error cases
+                    setState(() {
+                      isLoading = false;
+                    });
+                  }
                 }
-              }
-            },
-            child: Padding(
-              padding: const EdgeInsets.only(
-                  top: 30.0,right:6 , bottom: 30),
-              child: Container(
-                height: 50,
-                // width: 320,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(40.0),
-                  shape: BoxShape.rectangle,
-                  color: Color(0xFF000047), // Background color of the container
-                ),
-                child: Center(
-                  child: Text(
-                    'حفظ',
-                    style: TextStyle(
-                      fontFamily: 'Cairo',
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.white, // Text color
+              },
+              child: Padding(
+                padding: const EdgeInsets.only(
+                    top: 30.0,right:6 , bottom: 30),
+                child: Container(
+                  height: 50,
+                  // width: 320,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(40.0),
+                    shape: BoxShape.rectangle,
+                    color: Color(0xFF000047), // Background color of the container
+                  ),
+                  child: Center(
+                    child: Text(
+                      'حفظ',
+                      style: TextStyle(
+                        fontFamily: 'Cairo',
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.white, // Text color
+                      ),
                     ),
                   ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     ),
   );

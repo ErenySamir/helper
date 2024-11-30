@@ -74,7 +74,6 @@ class SplachPageState extends State<SplachPage> with SingleTickerProviderStateMi
   // Navigate to the appropriate page based on the phone number availability
   Future<void> navigateToPage() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String phone = prefs.getString('phoneotp') ?? '';
     String phoneAlt = prefs.getString('phonev') ?? '';
 
     if (!mounted) return;
@@ -87,20 +86,20 @@ class SplachPageState extends State<SplachPage> with SingleTickerProviderStateMi
       );
     } else {
       // Query Firestore once to get the document ID and navigate to home page
-      await getDocumentIdAndNavigate(phone, phoneAlt);
+      await getDocumentIdAndNavigate( phoneAlt);
     }
   }
 
   // Query Firestore for the document ID and navigate accordingly
-  Future<void> getDocumentIdAndNavigate(String phone, String phoneAlt) async {
+  Future<void> getDocumentIdAndNavigate(String phoneAlt) async {
     String docId = '';
 
     try {
       CollectionReference playerchat = FirebaseFirestore.instance.collection('PersonData');
       QuerySnapshot playerQuerySnapshot;
 
-      if (phone.isNotEmpty) {
-        playerQuerySnapshot = await playerchat.where('phone', isEqualTo: phone).get();
+      if (phoneAlt.isNotEmpty) {
+        playerQuerySnapshot = await playerchat.where('phone', isEqualTo: phoneAlt).get();
       } else {
         playerQuerySnapshot = await playerchat.where('phone', isEqualTo: phoneAlt).get();
       }

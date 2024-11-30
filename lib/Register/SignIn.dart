@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:io';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import '../HomePage/HomePage.dart';
 import '../Loading/Loading.dart';
@@ -64,38 +63,13 @@ class SigninPageState extends State<SigninPage>
 
     return true;
   }
-  Future<void> verifyPhone(String phone) async {
-    print('verificationIddd  ' + '+2$phone');
-    if(phone.startsWith("011")||phone.startsWith("015")){
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-
-      prefs.setString('phonev','+2$phone');
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => HomePage(),
-        ),
-      );
-    }
-
-    setState(() {
-      isLoading=true;
-    });
-  }
   bool isLoading = false;
-
-
-  bool startsWith015or011(String input) {
-    return input.startsWith('015') || input.startsWith('011');
-  }
 
   void validatePhonefirebase(String value, String userEnteredPass) async {
     CollectionReference playerchat = FirebaseFirestore.instance.collection('PersonData');
     QuerySnapshot querySnapshot = await playerchat.get();
-
     bool phoneFound = false;
     String? docId; // To store the document ID of the matching phone number
-
     for (var doc in querySnapshot.docs) {
       if (doc['phone'] == value) {
         phoneFound = true;
@@ -104,10 +78,11 @@ class SigninPageState extends State<SigninPage>
 
         if (doc['password'] == userEnteredPass) {
           SharedPreferences prefs = await SharedPreferences.getInstance();
-          prefs.setString('phone', value);
+          prefs.setString('phonev', value);
+
           // prefs.setString('docId',docId);
           // Start the phone verification process
-          await verifyPhone(value);
+
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -482,7 +457,7 @@ class SigninPageState extends State<SigninPage>
                           ),
                         ),
                         GestureDetector(
-                          onTap: () {
+                          onTap: () async {
                             String phoneNumber = PhoneController.text;
                             String password = PasswordController.text;
 
@@ -520,6 +495,9 @@ class SigninPageState extends State<SigninPage>
                             }
                             else {
                               validatePhonefirebase(phoneNumber, password);
+                              print("phonnnnnnnnnnnnnnnnnnneeee$phoneNumber");
+
+
                             }
                           },
 
