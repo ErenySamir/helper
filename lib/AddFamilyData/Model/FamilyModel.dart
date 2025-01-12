@@ -4,7 +4,7 @@ class FamilyModel {
   String? familyName;
   String? date;
   String? AdminID;
-  String? familyNum;
+  int? familyNum;
   String? give;
   String? giverName;
 String? Id;
@@ -17,12 +17,15 @@ String? Id;
   factory FamilyModel.fromMap(Map<String, dynamic> map) {
     return FamilyModel(
       familyName: map['familyName'],
-      familyNum: map['familyNum'],
-      familyPhone:map['familyPhone'],
+        familyNum: map['familyNum'] is String
+            ? int.tryParse(map['familyNum']) // Convert if it's a string
+            : map['familyNum'] as int?, // Keep as is if it's already an int
+        //      familyPhone:map['familyPhone'],
       AdminID:'',
         giverName: map['giverName'],
       give: map['give'],
       date: map['date'],
+      familyPhone: map['familyPhone'],
       Id: ''
       // TeamMembers: (map['TeamMembers'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
     );

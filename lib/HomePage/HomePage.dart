@@ -21,15 +21,9 @@ class HomePageState extends State<HomePage> {
   List<UserData> userDataa = [];
   List<FamilyModel> familyAllData = [];
 
-  Future<void> getAlldata() async {
-    setState(() {
-      isLoading = true; // Start loading indicator
-    });
+   getAlldata() async {
 
-    try {
-      CollectionReference playerchat =
-          FirebaseFirestore.instance.collection("PeopleData");
-
+      CollectionReference playerchat = FirebaseFirestore.instance.collection("PeopleData");
       // Fetch playgrounds where AdminId matches the retrieved docId
       QuerySnapshot playgroundSnapshot = await playerchat.get();
 
@@ -41,22 +35,15 @@ class HomePageState extends State<HomePage> {
                 document.data() as Map<String, dynamic>;
             FamilyModel familyAllDataa = FamilyModel.fromMap(userData);
 
-            familyAllDataa.Id =
-                document.id; // Store the document ID in the model
+            familyAllDataa.Id = document.id; // Store the document ID in the model
             familyAllData.add(familyAllDataa); // Add playground to the list
-            print("Stored document ID in model: ${familyAllDataa.Id}");
+            // print("Stored document ID in model: ${familyAllDataa.Id}");
           }
         });
       } else {
         print("No playgrounds found for this AdminId.");
       }
-    } catch (error) {
-      print("Error fetching playgrounds: $error");
-    } finally {
-      setState(() {
-        isLoading = false; // Stop loading after data is fetched
-      });
-    }
+
   }
 
   Future<void> getUserByPhone(String phoneNumber) async {
@@ -99,6 +86,12 @@ class HomePageState extends State<HomePage> {
     _initializeState();
     getAlldata();
     // _loadUserData();
+  }
+
+  @override
+  void dispose() {
+
+    super.dispose();
   }
 
   Future<void> _initializeState() async {
@@ -177,8 +170,7 @@ class HomePageState extends State<HomePage> {
                                           context,
                                           MaterialPageRoute(
                                             builder: (context) => AddFamilyData(
-                                                docId:
-                                                    familyAllData[index].Id!),
+                                                docId: familyAllData[index].Id!),
                                           ),
                                         );
                                       },
