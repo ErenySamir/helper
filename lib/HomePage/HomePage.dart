@@ -1,12 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:helper/AddFamilyData/AddFamilyData.dart';
 import 'package:helper/AddFamilyData/Model/FamilyModel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:shimmer/shimmer.dart';
 import '../Register/Model/UserModel.dart';
 import '../Register/SignIn.dart';
 
@@ -170,7 +167,7 @@ class HomePageState extends State<HomePage> {
                                           context,
                                           MaterialPageRoute(
                                             builder: (context) => AddFamilyData(
-                                                docId: familyAllData[index].Id!),
+                                              familyAllData[index].Id!),
                                           ),
                                         );
                                       },
@@ -302,9 +299,7 @@ class HomePageState extends State<HomePage> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => AddFamilyData(
-                        docId: '',
-                      )),
+                  builder: (context) => AddFamilyData("")),
             );
           },
           child: Icon(

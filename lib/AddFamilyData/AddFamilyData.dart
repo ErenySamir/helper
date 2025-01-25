@@ -8,7 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class AddFamilyData extends StatefulWidget{
   String docId;
-  AddFamilyData({required this.docId});
+  AddFamilyData(this.docId);
   @override
   State<AddFamilyData> createState() {
     return AddFamilyDataState();
@@ -32,6 +32,7 @@ class AddFamilyDataState extends State<AddFamilyData>{
     final giver = giverNameController.text.trim();
     final date = dateController.text.trim();
     final num = familyNumController.text.trim();
+
 
     String docId = '';
 
@@ -92,6 +93,12 @@ class AddFamilyDataState extends State<AddFamilyData>{
             backgroundColor: Colors.blue.shade900,
           ),
         );
+        nameController.clear();
+        phoneControlller.clear();
+        giveController.clear();
+        giverNameController.clear();
+        dateController.clear();
+        familyNumController.clear();
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => HomePage(),
@@ -122,6 +129,12 @@ class AddFamilyDataState extends State<AddFamilyData>{
           backgroundColor: Colors.blue.shade900,
         ),
       );
+      nameController.clear();
+      phoneControlller.clear();
+      giveController.clear();
+      giverNameController.clear();
+      dateController.clear();
+      familyNumController.clear();
       Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => HomePage(),
@@ -133,36 +146,59 @@ class AddFamilyDataState extends State<AddFamilyData>{
   late List<FamilyModel> PeopleData = [];
 
   Future<void> getPeopleData(String iiid) async {
-    // try {
+    // Clear the current PeopleData list to ensure fresh data is fetched
+    PeopleData.clear();
+
+    try {
       CollectionReference peopleData = FirebaseFirestore.instance.collection("PeopleData");
       QuerySnapshot querySnapshot = await peopleData.get();
+
+      // Check if there are any documents in the query
       if (querySnapshot.docs.isNotEmpty) {
+        bool isMatchFound = false; // Flag to check if any matching document is found
+
         for (QueryDocumentSnapshot document in querySnapshot.docs) {
           Map<String, dynamic> userData = document.data() as Map<String, dynamic>;
           FamilyModel user = FamilyModel.fromMap(userData);
-          if (document.id == widget.docId) {
-            PeopleData.add(user);
-            if (PeopleData.isNotEmpty) {
-              nameController.text = PeopleData[0].familyName!;
-              familyNumController.text = PeopleData[0].familyNum!.toString();
-              giveController.text = PeopleData[0].give!;
-              giverNameController.text = PeopleData[0].giverName!;
-              dateController.text =PeopleData[0].date!;
-              phoneControlller.text = PeopleData[0].familyPhone!;
-                }
-
-            setState(() {
-
-            });
-
-          }
           user.Id = document.id;
+
+          // Add the user data to PeopleData if the document ID matches
+          if (document.id == widget.docId) {
+            isMatchFound = true; // Set the flag to true
+            PeopleData.add(user);
+
+            // Populate the controllers with the first item's data
+            nameController.text = user.familyName ?? '';
+            familyNumController.text = user.familyNum?.toString() ?? '';
+            giveController.text = user.give ?? '';
+            giverNameController.text = user.giverName ?? '';
+            dateController.text = user.date ?? '';
+            phoneControlller.text = user.familyPhone ?? '';
+          }
         }
 
+        // Clear the controllers if no match is found
+        if (!isMatchFound) {
+          nameController.clear();
+          familyNumController.clear();
+          giveController.clear();
+          giverNameController.clear();
+          dateController.clear();
+          phoneControlller.clear();
+        }
+      } else {
+        // Clear all controllers if no documents are found
+        nameController.clear();
+        familyNumController.clear();
+        giveController.clear();
+        giverNameController.clear();
+        dateController.clear();
+        phoneControlller.clear();
       }
-    // } catch (e) {
-    //   print("Error getting playground: $e");
-    // }
+    } catch (e) {
+      // Uncomment if you want error logging
+      // print("Error getting people data: $e");
+    }
   }
 
   @override
