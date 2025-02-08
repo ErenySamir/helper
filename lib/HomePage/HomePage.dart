@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:helper/AddFamilyData/AddFamilyData.dart';
 import 'package:helper/AddFamilyData/Model/FamilyModel.dart';
+import 'package:helper/Profile/ProfilePage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../Register/Model/UserModel.dart';
 import '../Register/SignIn.dart';
@@ -121,15 +122,25 @@ class HomePageState extends State<HomePage> {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         userDataa.isNotEmpty && userDataa[0].name!.isNotEmpty
-                            ? Text(
-                                userDataa[0].name!,
-                                style: TextStyle(
-                                  fontFamily: 'Cairo',
-                                  fontSize: 18.0,
-                                  fontWeight: FontWeight.w700,
-                                  color: Color(0xFF000047),
+                            ? GestureDetector(
+                          onTap:(){
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Profilepage(docId: userDataa[0].phoneNumber!,),
+                              ),
+                            );
+                          },
+                              child: Text(
+                                  userDataa[0].name!,
+                                  style: TextStyle(
+                                    fontFamily: 'Cairo',
+                                    fontSize: 18.0,
+                                    fontWeight: FontWeight.w700,
+                                    color: Color(0xFF000047),
+                                  ),
                                 ),
-                              )
+                            )
                             : Container(),
                         Text(
                           "  مرحبا بك  ",
@@ -240,8 +251,7 @@ class HomePageState extends State<HomePage> {
                                                           fontSize: 14.0,
                                                           fontWeight:
                                                               FontWeight.w700,
-                                                          color: Color(
-                                                              0xFF000047))),
+                                                          color: Color(0xFF000047))),
                                                   Text(
                                                       "  اسم المعطي :  " +
                                                           familyAllData[index]
