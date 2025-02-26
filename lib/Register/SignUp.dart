@@ -283,7 +283,7 @@ class SignUpPagePageState extends State<SignUpPage>
           _isConnected
               ? SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.only(top: 15.0,bottom: 15,right: 22,left: 22),
+              padding: const EdgeInsets.only(top: 100.0,bottom: 15,right: 22,left: 22),
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [

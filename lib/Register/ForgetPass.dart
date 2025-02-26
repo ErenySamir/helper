@@ -328,7 +328,7 @@ class ForgetPasswordState extends State<ForgetPassword>
                 },
 
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 190.0,right: 20,left: 20),
+                  padding: const EdgeInsets.only(top: 100.0,right: 20,left: 20),
                   child: Container(
                     height: 50,
                     width: 320,

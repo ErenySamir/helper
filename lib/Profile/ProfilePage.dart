@@ -491,6 +491,33 @@ class ProfilepageState extends State<Profilepage>
                   SizedBox(
                     height: 5,
                   ),
+                  SizedBox(height: 5,),
+                  GestureDetector(
+                    onTap: (){
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>SigninPage(),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      alignment: Alignment.centerLeft, // Ensure container aligns children to the left
+                      child: Text(
+                        'تسجيل خروج'.tr,
+                        textAlign: TextAlign.left, // Aligns text within its own bounds
+                        style: TextStyle(
+                          fontFamily: 'Cairo',
+                          fontSize: 14.0,
+                          fontWeight: FontWeight.w400,
+                          color:  Color(0xFF000047),
+                          decoration: TextDecoration.underline, // Adds the underline
+                          decorationColor:  Color(0xFF000047), // Underline color to match text color
+                          decorationThickness: 1.0, // Optional: Thickness of the underline
+                        ),
+                      ),
+                    ),
+                  ),
                 ]),
               ),
             ),

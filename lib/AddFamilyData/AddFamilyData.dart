@@ -90,7 +90,7 @@ class AddFamilyDataState extends State<AddFamilyData>{
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('تم تعديل البيانات بنجاح', textAlign: TextAlign.center),
-            backgroundColor: Colors.blue.shade900,
+            backgroundColor: Color(0xFF000047),
           ),
         );
         nameController.clear();
@@ -381,6 +381,38 @@ getPeopleData(widget.docId);
                         },
                         child: AbsorbPointer( // Prevent keyboard from showing up
                           child: TextField(
+                            onTap: () async {
+                          DateTime? selectedDate = await showDatePicker(
+                          context: context,
+                          initialDate: DateTime.now(), // Default date
+                          firstDate: DateTime(2000),  // Earliest date
+                          lastDate: DateTime(2100),  // Latest date
+                          builder: (context, child) {
+                          return Theme(
+                          data: Theme.of(context).copyWith(
+                          colorScheme: ColorScheme.light(
+                          primary: Color(0xFF000047), // Header background color
+                          onPrimary: Colors.white,   // Header text color
+                          onSurface: Color(0xFF000047), // Body text color
+                          ),
+                          textButtonTheme: TextButtonThemeData(
+                          style: TextButton.styleFrom(
+                          foregroundColor: Color(0xFF000047), // Button text color
+                          ),
+                          ),
+                          ),
+                          child: child!,
+                          );
+                          },
+                          );
+
+                          if (selectedDate != null) {
+                          // Format the date and set it to the controller
+                          String formattedDate =
+                          "${selectedDate.year}-${selectedDate.month.toString().padLeft(2, '0')}-${selectedDate.day.toString().padLeft(2, '0')}";
+                          dateController.text = formattedDate;
+                          }
+                          },
                             controller: dateController,
                             cursorColor: Color(0xFF000047),
                             textAlign: TextAlign.right, // Align text to the right
@@ -632,10 +664,7 @@ getPeopleData(widget.docId);
                             border: InputBorder.none,
                           ),
 
-                          onEditingComplete: () async {
-                            // Move focus to the next text field
-                            FocusScope.of(context).nextFocus();
-                          },
+
                         ),
                       ),
                       Container(

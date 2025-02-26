@@ -19,29 +19,30 @@ class HomePageState extends State<HomePage> {
   List<UserData> userDataa = [];
   List<FamilyModel> familyAllData = [];
 
-   getAlldata() async {
+  Future<void> getAlldata() async {
+    CollectionReference playerchat = FirebaseFirestore.instance.collection("PeopleData");
 
-      CollectionReference playerchat = FirebaseFirestore.instance.collection("PeopleData");
-      // Fetch playgrounds where AdminId matches the retrieved docId
+    try {
       QuerySnapshot playgroundSnapshot = await playerchat.get();
 
-      if (playgroundSnapshot.docs.isNotEmpty) {
-        setState(() {
-          familyAllData.clear(); // Clear previous data to avoid duplicates
-          for (var document in playgroundSnapshot.docs) {
-            Map<String, dynamic> userData =
-                document.data() as Map<String, dynamic>;
-            FamilyModel familyAllDataa = FamilyModel.fromMap(userData);
+      if (!mounted) return; // Ensure the widget is still in the tree before modifying state
 
-            familyAllDataa.Id = document.id; // Store the document ID in the model
-            familyAllData.add(familyAllDataa); // Add playground to the list
-            // print("Stored document ID in model: ${familyAllDataa.Id}");
+      if (playgroundSnapshot.docs.isNotEmpty) {
+        setState(() {  // Safely update UI
+          familyAllData.clear();
+          for (var document in playgroundSnapshot.docs) {
+            Map<String, dynamic> userData = document.data() as Map<String, dynamic>;
+            FamilyModel familyAllDataa = FamilyModel.fromMap(userData);
+            familyAllDataa.Id = document.id;
+            familyAllData.add(familyAllDataa);
           }
         });
       } else {
         print("No playgrounds found for this AdminId.");
       }
-
+    } catch (e) {
+      print("Error getting user: $e");
+    }
   }
 
   Future<void> getUserByPhone(String phoneNumber) async {
@@ -115,23 +116,35 @@ class HomePageState extends State<HomePage> {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Padding(
-                  padding:
-                      const EdgeInsets.only(bottom: 14.0, right: 12, top: 66),
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        userDataa.isNotEmpty && userDataa[0].name!.isNotEmpty
-                            ? GestureDetector(
-                          onTap:(){
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => Profilepage(docId: userDataa[0].phoneNumber!,),
-                              ),
-                            );
-                          },
-                              child: Text(
+                  padding: EdgeInsets.only( right: 12, top: 66),
+                  child: Text(
+                    "  مرحبا بك  ",
+                    style: TextStyle(
+                      fontFamily: 'Cairo',
+                      fontSize: 15.0,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(bottom: 14.0, right: 12, top: 10),
+                  child: GestureDetector(
+                    onTap:(){
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => Profilepage(docId: userDataa[0].phoneNumber!,),
+                        ),
+                      );
+                    },
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          // SizedBox(width: 8,),
+                          Icon(Icons.person_rounded,color: Color(0xFF000047),),
+                          userDataa.isNotEmpty && userDataa[0].name!.isNotEmpty
+                              ? Text(
                                   userDataa[0].name!,
                                   style: TextStyle(
                                     fontFamily: 'Cairo',
@@ -139,19 +152,12 @@ class HomePageState extends State<HomePage> {
                                     fontWeight: FontWeight.w700,
                                     color: Color(0xFF000047),
                                   ),
-                                ),
-                            )
-                            : Container(),
-                        Text(
-                          "  مرحبا بك  ",
-                          style: TextStyle(
-                            fontFamily: 'Cairo',
-                            fontSize: 15.0,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ]),
+                                )
+                              : Container(),
+
+                        ]),
+                  ),
+
                 ),
                 familyAllData.isNotEmpty
                     ? ListView.builder(

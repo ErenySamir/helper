@@ -186,26 +186,26 @@ class SigninPageState extends State<SigninPage>
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 65.0),
-                          child: Align(
-                            alignment: Alignment.topCenter,
-                            child: Container(
-                              width: 135,
-                              height: 160.72,
-                              child: AnimatedBuilder(
-                                animation: animationController,
-                                builder: (context, child) {
-                                  return Transform.scale(
-                                    scale: animation.value,
-                                    child: Image.asset('assets/images/splach.png'),
-                                  );
-                                },
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 16,),
+                        // Padding(
+                        //   padding: const EdgeInsets.only(top: 65.0),
+                        //   child: Align(
+                        //     alignment: Alignment.topCenter,
+                        //     child: Container(
+                        //       width: 135,
+                        //       height: 160.72,
+                        //       child: AnimatedBuilder(
+                        //         animation: animationController,
+                        //         builder: (context, child) {
+                        //           return Transform.scale(
+                        //             scale: animation.value,
+                        //             child: Image.asset('assets/images/splach.png'),
+                        //           );
+                        //         },
+                        //       ),
+                        //     ),
+                        //   ),
+                        // ),
+                        SizedBox(height: 106,),
                         Center(
                           child: Text(
                             "تسجيل دخول".tr,
@@ -502,7 +502,7 @@ class SigninPageState extends State<SigninPage>
                           },
 
                           child: Padding(
-                            padding: const EdgeInsets.only(top: 190.0,right: 20,left: 20),
+                            padding: const EdgeInsets.only(top: 80.0,right: 20,left: 20),
                             child: Container(
                               height: 50,
                               width: 320,
