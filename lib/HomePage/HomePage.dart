@@ -161,144 +161,174 @@ class HomePageState extends State<HomePage> {
                 ),
                 familyAllData.isNotEmpty
                     ? ListView.builder(
-                        itemCount: familyAllData.length,
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemBuilder: (context, index) {
-                          // key: ValueKey(playgroundbook[index].groundID!); // Using ValueKey with item value
-                          getAlldata();
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Padding(
-                                  padding: const EdgeInsets.only(
-                                      right: 22.0,
-                                      left: 22,
-                                      top: 6,
-                                      bottom: 10),
-                                  child: GestureDetector(
-                                      onTap: () {
-                                        print(
-                                            "iddddddddddd  ${familyAllData[index].Id!}");
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => AddFamilyData(
-                                              familyAllData[index].Id!),
-                                          ),
-                                        );
-                                      },
-                                      child: Container(
-                                        height: 140,
-                                        // constraints: BoxConstraints(maxHeight: 133), // Set a reasonable max height
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(20.0),
-                                          color: Color(0xFFF0F6FF),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color:
-                                                  Colors.grey.withOpacity(0.5),
-                                              spreadRadius: 1,
-                                              blurRadius: 2,
-                                              offset: Offset(0, 0),
-                                            ),
-                                          ],
-                                        ),
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(
-                                              top: 8, right: 18, left: 8),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.end,
-                                            children: [
+                  itemCount: familyAllData.length,
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    final familyItem = familyAllData[index];
 
-                                              Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.end,
-                                                children: [
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
-                                                    children: [
-                                                      Icon(Icons.edit),
-
-                                                      Text(
-                                                          "   اسم العائلة :  " +
-                                                              familyAllData[index]
-                                                                  .familyName!,
-                                                          style: TextStyle(
-                                                              fontFamily: 'Cairo',
-                                                              fontSize: 14.0,
-                                                              fontWeight:
-                                                                  FontWeight.w700,
-                                                              color: Color(
-                                                                  0xFF000047))),
-
-                                                    ],
-                                                  ),
-                                                  Text(
-                                                      " تاريخ العطية : " +
-                                                          familyAllData[index]
-                                                              .date!,
-                                                      style: TextStyle(
-                                                          fontFamily: 'Cairo',
-                                                          fontSize: 14.0,
-                                                          fontWeight:
-                                                              FontWeight.w700,
-                                                          color: Color(
-                                                              0xFF000047))),
-                                                  Text(
-                                                      " العطية : " +
-                                                          familyAllData[index]
-                                                              .give!,
-                                                      style: TextStyle(
-                                                          fontFamily: 'Cairo',
-                                                          fontSize: 14.0,
-                                                          fontWeight:
-                                                              FontWeight.w700,
-                                                          color: Color(0xFF000047))),
-                                                  Text(
-                                                      "  اسم المعطي :  " +
-                                                          familyAllData[index]
-                                                              .giverName!,
-                                                      style: TextStyle(
-                                                          fontFamily: 'Cairo',
-                                                          fontSize: 14.0,
-                                                          fontWeight:
-                                                              FontWeight.w700,
-                                                          color: Color(
-                                                              0xFF000047))),
-                                                  Text(
-                                                      familyAllData[index]
-                                                              .date! +
-                                                          ": بتاريخ ",
-                                                      style: TextStyle(
-                                                          fontFamily: 'Cairo',
-                                                          fontSize: 14.0,
-                                                          fontWeight:
-                                                              FontWeight.w700,
-                                                          color: Color(
-                                                              0xFF000047))),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ))),
+                    return Dismissible(
+                      key: ValueKey(familyItem.Id), // Unique key for each item
+                      direction: DismissDirection.endToStart, // Swipe from right to left
+                      background: Container(
+                        color: Colors.red,
+                        alignment: Alignment.centerRight,
+                        padding: EdgeInsets.only(right: 20),
+                        child: Icon(Icons.delete, color: Colors.white, size: 30),
+                      ),
+                      confirmDismiss: (direction) async {
+                        // Show confirmation dialog before deleting
+                        return await showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: Text("تأكيد الحذف"),
+                            content: Text("هل أنت متأكد أنك تريد حذف هذه العائلة؟"),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.of(context).pop(false),
+                                child: Text("إلغاء"),
+                              ),
+                              TextButton(
+                                onPressed: () async {
+                                  print("familyItem.Id!${familyItem.Id!}");
+                                  await deleteCancelByPhoneAndPlaygroundId(familyItem.Id!);
+                                  Navigator.of(context).pop(true);
+                                  },
+                                child: Text("حذف", style: TextStyle(color: Colors.red)),
+                              ),
                             ],
-                          );
-                        })
-                    : Container(
-                        child: Text(
-                        "لم تتم اضافه اي بيانات حتي الان ",
-                        style: TextStyle(
-                          fontFamily: 'Cairo',
-                          fontSize: 15.0,
-                          fontWeight: FontWeight.w500,
-                          color: Color(0xFF000047),
+                          ),
+                        );
+                      },
+                      onDismissed: (direction) async {
+                        // Delete from Firebase
+                        await FirebaseFirestore.instance
+                            .collection('familyCollection') // Change to your actual collection name
+                            .doc(familyItem.Id)
+                            .delete();
+
+                        // Remove from local list
+                        setState(() {
+                          familyAllData.removeAt(index);
+                        });
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text("تم حذف العائلة بنجاح"), backgroundColor:  Color(0xFF000047),),
+                        );
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 22.0, left: 22, top: 6, bottom: 10),
+                        child: GestureDetector(
+                          onTap: () {
+                            print("iddddddddddd  ${familyItem.Id}");
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => AddFamilyData(familyItem.Id!),
+                              ),
+                            );
+                          },
+                          child: Container(
+                            height: 140,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20.0),
+                              color: Color(0xFFF0F6FF),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.5),
+                                  spreadRadius: 1,
+                                  blurRadius: 2,
+                                  offset: Offset(0, 0),
+                                ),
+                              ],
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 8, right: 18, left: 8),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Icon(Icons.edit),
+                                      Text(
+                                        "   اسم العائلة :  " + familyItem.familyName!,
+                                        style: TextStyle(
+                                          fontFamily: 'Cairo',
+                                          fontSize: 14.0,
+                                          fontWeight: FontWeight.w700,
+                                          color: Color(0xFF000047),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Text(
+                                    " تاريخ العطية : " + familyItem.date!,
+                                    style: TextStyle(
+                                      fontFamily: 'Cairo',
+                                      fontSize: 14.0,
+                                      fontWeight: FontWeight.w700,
+                                      color: Color(0xFF000047),
+                                    ),
+                                  ),
+                                  Text(
+                                    " العطية : " + familyItem.give!,
+                                    style: TextStyle(
+                                      fontFamily: 'Cairo',
+                                      fontSize: 14.0,
+                                      fontWeight: FontWeight.w700,
+                                      color: Color(0xFF000047),
+                                    ),
+                                  ),
+                                  Text(
+                                    "  اسم المعطي :  " + familyItem.giverName!,
+                                    style: TextStyle(
+                                      fontFamily: 'Cairo',
+                                      fontSize: 14.0,
+                                      fontWeight: FontWeight.w700,
+                                      color: Color(0xFF000047),
+                                    ),
+                                  ),
+                                  Text(
+                                    familyItem.date! + ": بتاريخ ",
+                                    style: TextStyle(
+                                      fontFamily: 'Cairo',
+                                      fontSize: 14.0,
+                                      fontWeight: FontWeight.w700,
+                                      color: Color(0xFF000047),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
                         ),
-                      )),
+                      ),
+                    );
+                  },
+                )
+
+                    : Container(
+                        child: Center(
+                          child: Column(
+                            children: [
+                              Image.asset(
+                                'assets/images/zero.jpg',
+                                height: 140,
+                                width: 140,
+                              ),
+                              Text(
+                              "لم تتم اضافه اي بيانات حتي الان ",
+                              style: TextStyle(
+                                fontFamily: 'Cairo',
+                                fontSize: 15.0,
+                                fontWeight: FontWeight.w500,
+                                color: Color(0xFF000047),
+                              ),
+                                                    ),
+                            ],
+                          ),
+                        )),
                 ///////////////////////// design bsssssssssssssssss
                 ///UUUUUUU
                 SizedBox(height: 55),
@@ -333,4 +363,17 @@ class HomePageState extends State<HomePage> {
       ),
     );
   }
+  Future<void> deleteCancelByPhoneAndPlaygroundId(String docId) async {
+    try {
+      final firestore = FirebaseFirestore.instance;
+
+      await firestore.collection('PeopleData').doc(docId).delete(); // Delete the document
+
+      print("Document with ID $docId deleted successfully.");
+    } catch (e) {
+      print('Error deleting document: $e');
+    }
+  }
+
+
 }

@@ -11,6 +11,7 @@ Future<void> main() async {
   // WidgetsFlutterBinding.ensureInitialized(); // Ensures that Flutter bindings are initialized
 
   await Firebase.initializeApp(
+    name: "Helper",
     options: FirebaseOptions(
         apiKey: "AIzaSyDNdmYiVhY8qApFaywn2BIpuRLC0papBUU",
         authDomain: "helper-e19f5.firebaseapp.com",

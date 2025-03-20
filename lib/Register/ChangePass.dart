@@ -12,6 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../HomePage/HomePage.dart';
 import '../Loading/Loading.dart';
+import 'SignIn.dart';
 import 'SignUp.dart';
 class ChangePassword extends StatefulWidget {
 
@@ -30,6 +31,7 @@ class ChangePasswordState extends State<ChangePassword>
   final TextEditingController confirmPasswordController = TextEditingController();
   String? _passwordError;
   bool isLoading = false;
+  var Phone = '';
 
   void _updateData() async {
     // setState(() {
@@ -84,7 +86,7 @@ class ChangePasswordState extends State<ChangePassword>
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => HomePage(),
+          builder: (context) => SigninPage(),
         ),
       );
     }
@@ -103,7 +105,7 @@ class ChangePasswordState extends State<ChangePassword>
       Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => HomePage()
+              builder: (context) => SigninPage()
 
 
           ));

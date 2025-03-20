@@ -567,9 +567,7 @@ class SigninPageState extends State<SigninPage>
                 ),
 
               ) : SizedBox.shrink(),
-              (isLoading == true)
-                  ? const Positioned(top: 0, child: Loading())
-                  : Container(),
+              isLoading ? Loading() :  Container(height: 5,),
               if (!_isConnected) _buildNoConnectionOverlay(),
 
             ],

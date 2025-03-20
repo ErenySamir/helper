@@ -94,8 +94,8 @@ class SignUpPagePageState extends State<SignUpPage>
     QuerySnapshot querySnapshot = await playerChat.where('phone', isEqualTo: value).get();
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString('phone', value);
-    print('shared phone ${prefs.getString('phone') ?? ''}');
+    prefs.setString('phonev', value);
+    print('shared phone ${prefs.getString('phonev') ?? ''}');
 
     // Check if the phone number was found
     if (querySnapshot.docs.isNotEmpty) {
@@ -815,9 +815,7 @@ class SignUpPagePageState extends State<SignUpPage>
             ),
 
           ) : SizedBox.shrink(),
-          (isLoading == true)
-              ? const Positioned(top: 0, child: Loading())
-              : Container(),
+          isLoading ? Loading() :  Container(height: 5,),
           if (!_isConnected) _buildNoConnectionOverlay(),
 
         ],
