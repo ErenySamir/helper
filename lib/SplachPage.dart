@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import 'ButtomNavigation/CustomButtomNavigation/ButtomNavigation.dart';
 import 'HomePage/HomePage.dart';
 import 'Register/SignIn.dart';
 import 'Register/SignUp.dart';
@@ -111,10 +112,13 @@ class SplachPageState extends State<SplachPage> with SingleTickerProviderStateMi
       }
 
       // Navigate to home page after successfully fetching document ID
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => HomePage()),
-      );
+      // FocusScope.of(context).requestFocus(FocusNode());
+      // if (controller.formKey.currentState!.validate()) {
+      Navigator.push(context,
+        MaterialPageRoute(
+          builder: (context) =>
+              CustomNavigationBar(current: 0,),
+        ),);
     } catch (e) {
       print('Error retrieving document ID: $e');
     }
@@ -140,7 +144,7 @@ class SplachPageState extends State<SplachPage> with SingleTickerProviderStateMi
               child: child,
             );
           },
-          child: Image.asset('assets/images/splach.png'),
+          child: Image.asset('assets/images/mam.png',height: 250,width: 250,),
         ),
       ),
     );

@@ -1,15 +1,16 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:get/get.dart';
 
+
+import 'Setting/Translation/Translation.dart';
 import 'SplachPage.dart';
-
-
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // WidgetsFlutterBinding.ensureInitialized(); // Ensures that Flutter bindings are initialized
 
+  // Initialize Firebase
   await Firebase.initializeApp(
     name: "Helper",
     options: FirebaseOptions(
@@ -23,17 +24,36 @@ Future<void> main() async {
     ),
   );
 
-  runApp(
-    GetMaterialApp(
-      // theme: ThemeData(
-      //   textSelectionTheme: TextSelectionThemeData(
-      //       selectionColor: Color(0xFF32AE64), // Color of selected text
-      //       selectionHandleColor: Color(0xFF32AE64),
-      //       cursorColor: Colors.green.shade600// Color of the selection handles (cursors)
-      //   ),
-      // ),
+  // Initialize controllers
+  Get.put(TranslationController());
+
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return GetMaterialApp(
       debugShowCheckedModeBanner: false,
+      locale: TranslationController.to.currentLocale,
+      fallbackLocale: const Locale('en', 'US'),
+      translations: TranslationController.to,
+      supportedLocales: const [
+        Locale('en', 'US'),
+        Locale('ar', 'AR'),
+      ],
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      builder: (context, child) {
+        return Directionality(
+          textDirection: TextDirection.ltr, // Force entire app to LTR
+          child: child!,
+        );
+      },
       home: SplachPage(),
-    ),
-  );
+    );
+  }
 }

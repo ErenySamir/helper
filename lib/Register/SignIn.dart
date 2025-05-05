@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import '../ButtomNavigation/CustomButtomNavigation/ButtomNavigation.dart';
 import '../HomePage/HomePage.dart';
 import '../Loading/Loading.dart';
 import 'ForgetPass.dart';
@@ -33,12 +34,12 @@ class SigninPageState extends State<SigninPage>
   void validatePhone(String value) {
     if (value.isEmpty) {
       setState(() {
-        PhoneErrorText = ' يجب ادخال رقم التليفون *'.tr;
+        PhoneErrorText = " يجب ادخال رقم التليفون *".tr;
         // isLoading=false;
       });
     } else if (value.length < 11) {
       setState(() {
-        PhoneErrorText = ' يجب أن يكون رقم الهاتف 11 رقمًا *'.tr;
+        PhoneErrorText = " يجب أن يكون رقم الهاتف 11 رقمًا *".tr;
         // isLoading=false;
       });
     } else {
@@ -82,19 +83,26 @@ class SigninPageState extends State<SigninPage>
 
           // prefs.setString('docId',docId);
           // Start the phone verification process
-
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => HomePage(),
-            ),
-          );
+FocusScope.of(context).requestFocus(FocusNode());
+          // if (controller.formKey.currentState!.validate()) {
+            Navigator.push(context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    CustomNavigationBar(current: 0,),
+              ),);
+          // }
+          // Navigator.push(
+          //   context,
+          //   MaterialPageRoute(
+          //     builder: (context) => HomePage(),
+          //   ),
+          // );
           break;
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
-                'برجاء ادخال كلمه مرور صحيحة'.tr,
+                "برجاء ادخال كلمه مرور صحيحة".tr,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.white,
@@ -114,7 +122,7 @@ class SigninPageState extends State<SigninPage>
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            'رقم الهاتف غير موجود برجاء انشاء حساب'.tr,
+            "رقم الهاتف غير موجود برجاء انشاء حساب".tr,
             textAlign: TextAlign.center,
             style: TextStyle(
               color: Colors.white,
@@ -186,26 +194,30 @@ class SigninPageState extends State<SigninPage>
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        // Padding(
-                        //   padding: const EdgeInsets.only(top: 65.0),
-                        //   child: Align(
-                        //     alignment: Alignment.topCenter,
-                        //     child: Container(
-                        //       width: 135,
-                        //       height: 160.72,
-                        //       child: AnimatedBuilder(
-                        //         animation: animationController,
-                        //         builder: (context, child) {
-                        //           return Transform.scale(
-                        //             scale: animation.value,
-                        //             child: Image.asset('assets/images/splach.png'),
-                        //           );
-                        //         },
-                        //       ),
-                        //     ),
-                        //   ),
-                        // ),
-                        SizedBox(height: 106,),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 65.0),
+                          child: Align(
+                            alignment: Alignment.topCenter,
+                            child: Container(
+                              width: 135,
+                              height: 160.72,
+                              child: AnimatedBuilder(
+                                animation: animationController,
+                                builder: (context, child) {
+                                  return Transform.scale(
+                                    scale: animation.value,
+                                    child: Container(
+                                      height: 250,
+                                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(20.0),
+                                          color: Color(0xFF000047),),
+                                        child: Image.asset('assets/images/mam.png')),
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 20,),
                         Center(
                           child: Text(
                             "تسجيل دخول".tr,
@@ -240,7 +252,7 @@ class SigninPageState extends State<SigninPage>
                                 ),
                               ),
                               TextSpan(
-                                text: 'رقم التليفون ',
+                                text: "رقم التليفون ".tr,
                               ),
                             ],
                           ),
@@ -275,7 +287,7 @@ class SigninPageState extends State<SigninPage>
                                   keyboardType: TextInputType.datetime,
                                   textAlign: TextAlign.right, // Align text to the right
                                   decoration: InputDecoration(
-                                    hintText: 'رقم التليفون'.tr,
+                                    hintText: "رقم التليفون ".tr,
                                     hintStyle: TextStyle(
                                       fontFamily: 'Cairo',
                                       color: Color(0xFF495A71),
@@ -342,7 +354,7 @@ class SigninPageState extends State<SigninPage>
                                 ),
                               ),
                               TextSpan(
-                                text: 'كلمة المرور ',
+                                text: "كلمة المرور ".tr,
                               ),
                             ],
                           ),
@@ -390,7 +402,7 @@ class SigninPageState extends State<SigninPage>
                                   textAlign: TextAlign.right,
                                   obscureText: !_isPasswordVisible, // Toggle password visibility
                                   decoration: InputDecoration(
-                                    hintText: 'كلمة المرور'.tr,
+                                    hintText: "كلمة المرور ".tr,
                                     hintStyle: TextStyle(
                                       fontFamily: 'Cairo',
                                       color: Color(0xFF495A71),
@@ -421,7 +433,7 @@ class SigninPageState extends State<SigninPage>
                           Padding(
                             padding: const EdgeInsets.only(top: 4.0), // Adjust padding as needed
                             child: Text(
-                              'برجاء ادخال كلمه المرور قوية *', // Provide a default error message if _passwordError is null
+                              "برجاء ادخال كلمه المرور قوية *".tr, // Provide a default error message if _passwordError is null
                               style: TextStyle(
                                 color: Colors.red.shade900, // Error message color
                                 fontSize: 12.0,
@@ -442,7 +454,7 @@ class SigninPageState extends State<SigninPage>
                           child: Container(
                             alignment: Alignment.centerLeft, // Ensure container aligns children to the left
                             child: Text(
-                              'نسيت كلمة المرور'.tr,
+                              "نسيت كلمة المرور".tr,
                               textAlign: TextAlign.left, // Aligns text within its own bounds
                               style: TextStyle(
                                 fontFamily: 'Cairo',
@@ -466,7 +478,7 @@ class SigninPageState extends State<SigninPage>
                                 SnackBar(
                                   content: Text(
                                     textAlign: TextAlign.center,
-                                    'يجب ادخال بيانات'.tr,
+                                    "يجب ادخال بيانات".tr,
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontFamily: 'Cairo',
@@ -482,7 +494,7 @@ class SigninPageState extends State<SigninPage>
                                 SnackBar(
                                   content: Text(
                                     textAlign: TextAlign.center,
-                                    'رقم الهاتف غير صحيح'.tr,
+                                    "رقم الهاتف غير صحيح".tr,
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontFamily: 'Cairo',
@@ -545,7 +557,7 @@ class SigninPageState extends State<SigninPage>
                           child: Container(
                             alignment: Alignment.center, // Center the text within the container
                             child: Text(
-                              'إنشــــاء حســــــاب'.tr,
+                              "إنشــــاء حســــــاب".tr,
                               style: TextStyle(
                                 fontFamily: 'Cairo',
                                 fontSize: 14.0,
@@ -592,7 +604,7 @@ class SigninPageState extends State<SigninPage>
             ),
             SizedBox(height: 16,),
             Text(
-              'انت غير متصل بالانترنت',
+              "انت غير متصل بالانترنت".tr,
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Color(0xFF181A20),
@@ -630,7 +642,7 @@ class SigninPageState extends State<SigninPage>
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              'لا يوجد اتصال بالإنترنت',
+              "لا يوجد اتصال بالإنترنت".tr,
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontFamily: 'Cairo',

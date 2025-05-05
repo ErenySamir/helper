@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +12,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'ChangePass.dart';
+import 'SignIn.dart';
 
 class ForgetPassword extends StatefulWidget {
 
@@ -28,12 +32,12 @@ class ForgetPasswordState extends State<ForgetPassword>
   void validatePhone(String value) {
     if (value.isEmpty) {
       setState(() {
-        PhoneErrorText = ' يجب ادخال رقم التليفون *'.tr;
+        PhoneErrorText = " يجب ادخال رقم التليفون *".tr;
         // isLoading=false;
       });
     } else if (value.length < 11) {
       setState(() {
-        PhoneErrorText = ' يجب أن يكون رقم الهاتف 11 رقمًا *'.tr;
+        PhoneErrorText = " يجب أن يكون رقم الهاتف 11 رقمًا *".tr;
         // isLoading=false;
       });
     } else {
@@ -58,9 +62,76 @@ class ForgetPasswordState extends State<ForgetPassword>
 
     return true;
   }
+  bool _isConnected = true; // Flag to check connectivity
+  Future<void> _checkConnectivity() async {
+    // Initial check
+    await _updateConnectionStatus();
+    // Listen for connectivity changes
+    Connectivity().onConnectivityChanged.listen((result) async {
+      await _updateConnectionStatus();
+    });
+  }
+
+  Future<void> _updateConnectionStatus() async {
+    bool isConnected = await _hasNetworkAccess();
+    if (_isConnected != isConnected) {
+      setState(() {
+        _isConnected = isConnected;
+      });
+
+      if (!_isConnected) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              "لا يوجد اتصال بالإنترنت".tr,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontFamily: 'Cairo',
+                fontSize: 15.0,
+                fontWeight: FontWeight.normal,
+              ),
+            ),
+            backgroundColor: Colors.red.shade700,
+          ),
+        );
+      }
+    }
+  }
+
+  Future<bool> _hasNetworkAccess() async {
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      return result.isNotEmpty && result[0].rawAddress.isNotEmpty;
+    } on SocketException catch (_) {
+      return false;
+    }
+  }
   @override
   void initState() {
-    // validatePhonefirebase(widget.phonenum);
+    _checkConnectivity();
+    // Define animation controller
+    animationController = AnimationController(
+      vsync: this,
+      duration: Duration(seconds: 2), // Adjust the duration as needed
+    );
+    Future.delayed(Duration(seconds: 2), () {});
+
+    // Define animation
+    animation = Tween<double>(begin: 0.5, end: 1.0).animate(
+      CurvedAnimation(
+        parent: animationController,
+        curve: Curves.easeInOut,
+      ),
+    );
+
+    // Start the animation
+    animationController.forward();
+  }
+
+  @override
+  void dispose() {
+    animationController.dispose();
+    super.dispose();
   }
 
   Future<void> verifyPhone(String phone) async {
@@ -169,7 +240,19 @@ class ForgetPasswordState extends State<ForgetPassword>
                   child: Container(
                     width: 135,
                     height: 160.72,
-                    child: Image.asset('assets/images/splach.png'),
+                    child: AnimatedBuilder(
+                      animation: animationController,
+                      builder: (context, child) {
+                        return Transform.scale(
+                          scale: animation.value,
+                          child: Container(
+                              height: 250,
+                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(20.0),
+                                color: Color(0xFF000047),),
+                              child: Image.asset('assets/images/mam.png')),
+                        );
+                      },
+                    ),
                   ),
                 ),
               ),
@@ -177,7 +260,7 @@ class ForgetPasswordState extends State<ForgetPassword>
 
               Center(
                 child: Text(
-                  'نسيت كلمة المرور'.tr,
+                  "نسيت كلمة المرور".tr,
                   style: TextStyle(
                     color:  Color(0xFF000047),
                     fontFamily: 'Cairo',
@@ -187,7 +270,7 @@ class ForgetPasswordState extends State<ForgetPassword>
                 ),
               ),
               Text(
-                'رقم التليفون'.tr,
+                "رقم التليفون".tr,
                 textAlign: TextAlign.right,
                 style: TextStyle(
                     fontFamily: 'Cairo',
@@ -227,7 +310,7 @@ class ForgetPasswordState extends State<ForgetPassword>
                           keyboardType: TextInputType.number,
                           textAlign: TextAlign.right, // Align text to the right
                           decoration: InputDecoration(
-                            hintText: 'رقم التليفون'.tr,
+                            hintText: "رقم التليفون".tr,
                             hintStyle: TextStyle(
                               fontFamily: 'Cairo',
                               color: Color(0xFF495A71),
@@ -284,7 +367,7 @@ class ForgetPasswordState extends State<ForgetPassword>
                       SnackBar(
                         content: Text(
                           textAlign: TextAlign.center,
-                          'يجب ادخال بيانات'.tr,
+                          "يجب ادخال بيانات".tr,
                           style: TextStyle(
                             color: Colors.white,
                             fontFamily: 'Cairo',
@@ -300,7 +383,7 @@ class ForgetPasswordState extends State<ForgetPassword>
                       SnackBar(
                         content: Text(
                           textAlign: TextAlign.center,
-                          'رقم الهاتف غير صحيح'.tr,
+                          "رقم الهاتف غير صحيح".tr,
                           style: TextStyle(
                             color: Colors.white,
                             fontFamily: 'Cairo',

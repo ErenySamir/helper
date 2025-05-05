@@ -1,14 +1,22 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:helper/AddFamilyData/Model/FamilyModel.dart';
 import 'package:helper/HomePage/HomePage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../ButtomNavigation/CustomButtomNavigation/ButtomNavigation.dart';
+import '../Register/SignIn.dart';
+
 class AddFamilyData extends StatefulWidget{
   String docId;
-  AddFamilyData(this.docId);
+  String AdminId;
+  AddFamilyData(this.docId,this.AdminId);
   @override
   State<AddFamilyData> createState() {
     return AddFamilyDataState();
@@ -23,7 +31,8 @@ TextEditingController familyNumController = TextEditingController();
 bool isLoading = false;
 
 
-class AddFamilyDataState extends State<AddFamilyData>{
+class AddFamilyDataState extends State<AddFamilyData>
+    with SingleTickerProviderStateMixin {
 
   Future<void> _sendData(BuildContext context) async {
     final name = nameController.text.trim();
@@ -34,18 +43,6 @@ class AddFamilyDataState extends State<AddFamilyData>{
     final num = familyNumController.text.trim();
 
 
-    String docId = '';
-
-    // Retrieve Admin ID from Firestore
-    CollectionReference playerChat = FirebaseFirestore.instance.collection('PeopleData');
-    QuerySnapshot playerQuerySnapshot = await playerChat.get();
-    if (playerQuerySnapshot.docs.isNotEmpty) {
-      docId = playerQuerySnapshot.docs.first.id;
-      print("Admin ID retrieved: $docId");
-    } else {
-      print("No Admin ID found for phone: ");
-    }
-
     // Create a playground model object
     final FamilyModel familyModel = FamilyModel(
       familyName: nameController.text,
@@ -54,7 +51,7 @@ class AddFamilyDataState extends State<AddFamilyData>{
       giverName: giverNameController.text,
       give: giveController.text,
       date: dateController.text,
-      AdminID: docId,
+      AdminID: widget.AdminId,
     );
 
     if (widget.docId.isNotEmpty) {
@@ -89,7 +86,7 @@ class AddFamilyDataState extends State<AddFamilyData>{
         print("Document updated: ${widget.docId}");
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('تم تعديل البيانات بنجاح', textAlign: TextAlign.center),
+            content: Text("تم تعديل البيانات بنجاح".tr, textAlign: TextAlign.center),
             backgroundColor: Color(0xFF000047),
           ),
         );
@@ -99,16 +96,20 @@ class AddFamilyDataState extends State<AddFamilyData>{
         giverNameController.clear();
         dateController.clear();
         familyNumController.clear();
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => HomePage(),
-        ));
+        FocusScope.of(context).requestFocus(FocusNode());
+        // if (controller.formKey.currentState!.validate()) {
+        Navigator.push(context,
+          MaterialPageRoute(
+            builder: (context) =>
+                CustomNavigationBar(current: 0,),
+          ),);
 
         setState(() {
           isLoading=false;
 
         });
       } else {
+        isLoading=false;
         isLoading=false;
         // Navigator.push(
         //   context,
@@ -125,8 +126,8 @@ class AddFamilyDataState extends State<AddFamilyData>{
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('تم تسجيل البيانات بنجاح', textAlign: TextAlign.center),
-          backgroundColor: Colors.blue.shade900,
+          content: Text("تم تسجيل البيانات بنجاح".tr, textAlign: TextAlign.center),
+          backgroundColor: Color(0xFF000047),
         ),
       );
       nameController.clear();
@@ -135,10 +136,13 @@ class AddFamilyDataState extends State<AddFamilyData>{
       giverNameController.clear();
       dateController.clear();
       familyNumController.clear();
-      Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => HomePage(),
-    ));
+      FocusScope.of(context).requestFocus(FocusNode());
+      // if (controller.formKey.currentState!.validate()) {
+      Navigator.push(context,
+        MaterialPageRoute(
+          builder: (context) =>
+              CustomNavigationBar(current: 0,),
+        ),);
     }
   }
 
@@ -200,12 +204,81 @@ class AddFamilyDataState extends State<AddFamilyData>{
       // print("Error getting people data: $e");
     }
   }
+  bool _isConnected = true; // Flag to check connectivity
+  Future<void> _checkConnectivity() async {
+    // Initial check
+    await _updateConnectionStatus();
 
+    // Listen for connectivity changes
+    Connectivity().onConnectivityChanged.listen((result) async {
+      await _updateConnectionStatus();
+    });
+  }
+
+  Future<void> _updateConnectionStatus() async {
+    bool isConnected = await _hasNetworkAccess();
+    if (_isConnected != isConnected) {
+      setState(() {
+        _isConnected = isConnected;
+      });
+
+      if (!_isConnected) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              "لا يوجد اتصال بالإنترنت".tr,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontFamily: 'Cairo',
+                fontSize: 15.0,
+                fontWeight: FontWeight.normal,
+              ),
+            ),
+            backgroundColor: Colors.red.shade700,
+          ),
+        );
+      }
+    }
+  }
+
+  Future<bool> _hasNetworkAccess() async {
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      return result.isNotEmpty && result[0].rawAddress.isNotEmpty;
+    } on SocketException catch (_) {
+      return false;
+    }
+  }
   @override
   void initState() {
 getPeopleData(widget.docId);
     super.initState();
+_checkConnectivity();
+// Define animation controller
+animationController = AnimationController(
+  vsync: this,
+  duration: Duration(seconds: 2), // Adjust the duration as needed
+);
+Future.delayed(Duration(seconds: 2), () {});
+
+// Define animation
+animation = Tween<double>(begin: 0.5, end: 1.0).animate(
+  CurvedAnimation(
+    parent: animationController,
+    curve: Curves.easeInOut,
+  ),
+);
+
+// Start the animation
+animationController.forward();
   }
+
+  @override
+  void dispose() {
+    animationController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -218,7 +291,7 @@ getPeopleData(widget.docId);
             backgroundColor: Colors.white,
             surfaceTintColor: Colors.transparent,
             title: Text(
-              "اضافة بيانات",
+              "إضافة بيانات".tr,
               style: TextStyle(
                 fontSize: 16,
                 fontFamily: 'Cairo',
@@ -249,8 +322,27 @@ getPeopleData(widget.docId);
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
+              Align(
+                alignment: Alignment.topCenter,
+                child: Container(
+                  width: 105,
+                  height: 106.72,
+                  child: AnimatedBuilder(
+                    animation: animationController,
+                    builder: (context, child) {
+                      return Transform.scale(
+                        scale: animation.value,
+                        child: Container(
+                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(20.0),
+                              color: Color(0xFF000047),),
+                            child: Image.asset('assets/images/mam.png')),
+                      );
+                    },
+                  ),
+                ),
+              ),
               //Name
-              Text("الاسم",
+              Text("الأسم".tr,
                 style: TextStyle(
                     fontFamily: 'Cairo',
                     fontSize: 14.0,
@@ -283,7 +375,7 @@ getPeopleData(widget.docId);
                         keyboardType: TextInputType.text,
                         textAlign: TextAlign.right, // Align text to the right
                         decoration: InputDecoration(
-                          hintText: 'الأسم',
+                          hintText: "الأسم".tr,
                           hintStyle: TextStyle(
                             fontFamily: 'Cairo',
                             color: Color(0xFF495A71),
@@ -312,7 +404,7 @@ getPeopleData(widget.docId);
               if (nameController.text.length >0 && nameController.text.length <2)
                 Text(
                   // textAlign: TextAlign.end,
-                  "برجاء ادخال الاسم",
+                  "برجاء ادخال الأسم".tr,
                   style: TextStyle(
                     color: Colors.red.shade900, // Error message color
                     fontSize: 12.0,
@@ -320,7 +412,7 @@ getPeopleData(widget.docId);
                   ),
                 ),
               //Date
-              Text("التاريخ",
+              Text("التاريخ".tr,
                 style: TextStyle(
                     fontFamily: 'Cairo',
                     fontSize: 14.0,
@@ -417,7 +509,7 @@ getPeopleData(widget.docId);
                             cursorColor: Color(0xFF000047),
                             textAlign: TextAlign.right, // Align text to the right
                             decoration: InputDecoration(
-                              hintText: 'التاريخ',
+                              hintText: "التاريخ".tr,
                               hintStyle: TextStyle(
                                 fontFamily: 'Cairo',
                                 color: Color(0xFF495A71),
@@ -441,7 +533,7 @@ getPeopleData(widget.docId);
               ),
 
               //give typeeeeeeeeee
-              Text("العطية",
+              Text("العطية".tr,
                 style: TextStyle(
                     fontFamily: 'Cairo',
                     fontSize: 14.0,
@@ -474,7 +566,7 @@ getPeopleData(widget.docId);
                         keyboardType: TextInputType.text,
                         textAlign: TextAlign.right, // Align text to the right
                         decoration: InputDecoration(
-                          hintText: 'العطية',
+                          hintText: "العطية".tr,
                           hintStyle: TextStyle(
                             fontFamily: 'Cairo',
                             color: Color(0xFF495A71),
@@ -501,7 +593,7 @@ getPeopleData(widget.docId);
                 ),
               ),
               //giverrrrrrrrrrrrname
-              Text("اسم المعطي العطية",
+              Text("أسم المعطي العطية".tr,
                 style: TextStyle(
                     fontFamily: 'Cairo',
                     fontSize: 14.0,
@@ -534,7 +626,7 @@ getPeopleData(widget.docId);
                         keyboardType: TextInputType.text,
                         textAlign: TextAlign.right, // Align text to the right
                         decoration: InputDecoration(
-                          hintText: 'اسم المعطي العطية',
+                          hintText: "أسم المعطي العطية".tr,
                           hintStyle: TextStyle(
                             fontFamily: 'Cairo',
                             color: Color(0xFF495A71),
@@ -561,7 +653,7 @@ getPeopleData(widget.docId);
                 ),
               ),
               //phoneeeeeeeefamily
-              Text("تليفون العائلة",
+              Text("تليفون العائلة".tr,
                 style: TextStyle(
                     fontFamily: 'Cairo',
                     fontSize: 14.0,
@@ -594,7 +686,7 @@ getPeopleData(widget.docId);
                         keyboardType: TextInputType.datetime,
                         textAlign: TextAlign.right, // Align text to the right
                         decoration: InputDecoration(
-                          hintText: "تليفون العائلة",
+                          hintText: "تليفون العائلة".tr,
                           hintStyle: TextStyle(
                             fontFamily: 'Cairo',
                             color: Color(0xFF495A71),
@@ -623,7 +715,7 @@ getPeopleData(widget.docId);
                 ),
               ),
               //familyNuuuuuuum
-              Text("عدد افراد العائلة",
+              Text("عدد افراد العائلة".tr,
                 style: TextStyle(
                     fontFamily: 'Cairo',
                     fontSize: 14.0,
@@ -656,7 +748,7 @@ getPeopleData(widget.docId);
                           keyboardType: TextInputType.datetime,
                           textAlign: TextAlign.right, // Align text to the right
                           decoration: InputDecoration(
-                            hintText: 'عدد افراد العائلة',
+                            hintText: "عدد افراد العائلة".tr,
                             hintStyle: TextStyle(
                               fontFamily: 'Cairo',
                               color: Color(0xFF495A71),
@@ -693,7 +785,7 @@ getPeopleData(widget.docId);
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text(
-                          'برجاء ادخال جميع البيانات', // "Please enter all the data"
+                          "برجاء ادخال جميع البيانات".tr, // "Please enter all the data"
                           textAlign: TextAlign.center,
                         ),
                         backgroundColor: Color(0xFF000047),
@@ -717,7 +809,7 @@ getPeopleData(widget.docId);
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(
-                            'حدث خطأ أثناء إرسال البيانات. حاول مرة أخرى.', // "An error occurred while sending data. Please try again."
+                            "حدث خطأ أثناء إرسال البيانات. حاول مرة أخرى.".tr, // "An error occurred while sending data. Please try again."
                             textAlign: TextAlign.center,
                           ),
                           backgroundColor: Colors.red,
@@ -744,7 +836,7 @@ getPeopleData(widget.docId);
                     ),
                     child: Center(
                       child: Text(
-                        'حفظ',
+                        "حفــــــظ".tr,
                         style: TextStyle(
                           fontFamily: 'Cairo',
                           fontSize: 16.0,

@@ -66,7 +66,7 @@ class _LoadingState extends State<Loading> {
                   height: _size2,
                   width: _size2,
                   decoration:
-                  BoxDecoration(shape: BoxShape.circle, color: Color(0xFF064821)),
+                  BoxDecoration(shape: BoxShape.circle, color: Color(0xFF000047)),
                 ),
                 const SizedBox(
                   width: 5,

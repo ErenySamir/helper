@@ -43,6 +43,8 @@ dependencies:
   firebase_auth: ^5.3.3
   connectivity_plus: ^6.0.5
   shimmer: ^3.0.0
+  flutter_localization: ^0.3.2
+  get_storage: ^2.1.1
 
 dev_dependencies:
   flutter_test:

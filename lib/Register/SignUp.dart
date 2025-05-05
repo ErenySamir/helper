@@ -60,7 +60,7 @@ class SignUpPagePageState extends State<SignUpPage>
   void _validatePasswords() {
     setState(() {
       if (_passwordController.text != confirmPasswordController.text) {
-        _passwordError = 'يجب ادخال نفس كلمه المرور'; // Passwords do not match
+        _passwordError = "يجب ادخال نفس كلمه المرور".tr; // Passwords do not match
       } else {
         _passwordError = null; // Clear the error when they match
       }
@@ -73,12 +73,12 @@ class SignUpPagePageState extends State<SignUpPage>
   void validatePhone(String value) {
     if (value.isEmpty) {
       setState(() {
-        PhoneErrorText = ' يجب ادخال رقم التليفون *'.tr;
+        PhoneErrorText = " يجب ادخال رقم التليفون *".tr;
         // isLoading=false;
       });
     } else if (value.length < 11) {
       setState(() {
-        PhoneErrorText = ' يجب أن يكون رقم الهاتف 11 رقمًا *'.tr;
+        PhoneErrorText = " يجب أن يكون رقم الهاتف 11 رقمًا *".tr;
         // isLoading=false;
       });
     } else {
@@ -103,7 +103,7 @@ class SignUpPagePageState extends State<SignUpPage>
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            'هذا الحساب موجود بالفعل برجاء تسجيل الدخول', // "This account already exists. Please sign in."
+            "هذا الحساب موجود بالفعل برجاء تسجيل الدخول".tr, // "This account already exists. Please sign in."
             textAlign: TextAlign.center,
           ),
           backgroundColor:  Color(0xFF000047),
@@ -120,7 +120,7 @@ class SignUpPagePageState extends State<SignUpPage>
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            'تم تسجيل الدخول بنجاح', // "Successfully registered"
+            "تم تسجيل الدخول بنجاح".tr, // "Successfully registered"
             textAlign: TextAlign.center,
           ),
           backgroundColor:  Color(0xFF000047),
@@ -235,7 +235,7 @@ class SignUpPagePageState extends State<SignUpPage>
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            'هذا الحساب حدث به خطا', // "There was an error with this account"
+            "هذا الحساب حدث به خطا".tr, // "There was an error with this account"
             textAlign: TextAlign.center,
           ),
           backgroundColor:  Color(0xFF000047),
@@ -244,33 +244,32 @@ class SignUpPagePageState extends State<SignUpPage>
     }
   }
 
+
   @override
   void initState() {
     _checkConnectivity();
     // Define animation controller
-    // animationController = AnimationController(
-    //   vsync: this,
-    //   duration: Duration(seconds: 2), // Adjust the duration as needed
-    // );
-    // Future.delayed(Duration(seconds: 2), () {});
-    //
-    // // Define animation
-    // animation = Tween<double>(begin: 0.5, end: 1.0).animate(
-    //   CurvedAnimation(
-    //     parent: animationController,
-    //     curve: Curves.easeInOut,
-    //   ),
-    // );
+    animationController = AnimationController(
+      vsync: this,
+      duration: Duration(seconds: 2), // Adjust the duration as needed
+    );
+    Future.delayed(Duration(seconds: 2), () {});
+
+    // Define animation
+    animation = Tween<double>(begin: 0.5, end: 1.0).animate(
+      CurvedAnimation(
+        parent: animationController,
+        curve: Curves.easeInOut,
+      ),
+    );
 
     // Start the animation
-    // animationController.forward();
+    animationController.forward();
   }
 
   @override
   void dispose() {
-    // animationController.dispose();
-    // confirmPasswordController.dispose();
-    // _phoneNumberController.dispose();
+    animationController.dispose();
     super.dispose();
   }
 
@@ -283,11 +282,44 @@ class SignUpPagePageState extends State<SignUpPage>
           _isConnected
               ? SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.only(top: 100.0,bottom: 15,right: 22,left: 22),
+              padding: const EdgeInsets.only(top: 20.0,bottom: 15,right: 22,left: 22),
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-
+                    Padding(
+                      padding: const EdgeInsets.only(top: 65.0),
+                      child: Align(
+                        alignment: Alignment.topCenter,
+                        child: Container(
+                          width: 135,
+                          height: 160.72,
+                          child: AnimatedBuilder(
+                            animation: animationController,
+                            builder: (context, child) {
+                              return Transform.scale(
+                                scale: animation.value,
+                                child: Container(
+                                    height: 250,
+                                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(20.0),
+                                      color: Color(0xFF000047),),
+                                    child: Image.asset('assets/images/mam.png')),
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                    ),
+                    Center(
+                      child: Text(
+                        "إنشاء حساب".tr,
+                        style: TextStyle(
+                          color:  Color(0xFF000047),
+                          fontFamily: 'Cairo',
+                          fontSize: 24.0,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
                     RichText(
                       textAlign: TextAlign.right,
                       text: TextSpan(
@@ -307,7 +339,7 @@ class SignUpPagePageState extends State<SignUpPage>
                             ),
                           ),
                           TextSpan(
-                            text: 'الأسم ',
+                            text: "الأسم ".tr,
                           ),
                         ],
                       ),
@@ -339,7 +371,7 @@ class SignUpPagePageState extends State<SignUpPage>
                               keyboardType: TextInputType.text,
                               textAlign: TextAlign.right, // Align text to the right
                               decoration: InputDecoration(
-                                hintText: 'الأسم'.tr,
+                                hintText: "الأسم".tr,
                                 hintStyle: TextStyle(
                                   fontFamily: 'Cairo',
                                   color: Color(0xFF495A71),
@@ -368,7 +400,7 @@ class SignUpPagePageState extends State<SignUpPage>
                     if (_nameController.text.length >0 && _nameController.text.length <2)
                       Text(
                         // textAlign: TextAlign.end,
-                        "برجاء ادخال الاسم",
+                        "برجاء ادخال الاسم".tr,
                         style: TextStyle(
                           color: Colors.red.shade900, // Error message color
                           fontSize: 12.0,
@@ -398,7 +430,7 @@ class SignUpPagePageState extends State<SignUpPage>
                             ),
                           ),
                           TextSpan(
-                            text: 'رقم التليفون ',
+                            text: "رقم التليفون ".tr,
                           ),
                         ],
                       ),
@@ -433,7 +465,7 @@ class SignUpPagePageState extends State<SignUpPage>
                               keyboardType: TextInputType.datetime, // Updated keyboard type for phone input
                               textAlign: TextAlign.right, // Align text to the right
                               decoration: InputDecoration(
-                                hintText: 'رقم التليفون'.tr,
+                                hintText: "رقم التليفون".tr,
                                 hintStyle: TextStyle(
                                   fontFamily: 'Cairo',
                                   color: Color(0xFF495A71),
@@ -498,7 +530,7 @@ class SignUpPagePageState extends State<SignUpPage>
                             ),
                           ),
                           TextSpan(
-                            text: 'كلمة المرور ',
+                            text: "كلمة المرور ",
                           ),
                         ],
                       ),
@@ -544,7 +576,7 @@ class SignUpPagePageState extends State<SignUpPage>
                               textAlign: TextAlign.right,
                               obscureText: !_isPasswordVisible, // Toggle password visibility
                               decoration: InputDecoration(
-                                hintText: 'كلمة المرور'.tr,
+                                hintText: "كلمة المرور".tr,
                                 hintStyle: TextStyle(
                                   fontFamily: 'Cairo',
                                   color: Color(0xFF495A71),
@@ -575,7 +607,7 @@ class SignUpPagePageState extends State<SignUpPage>
                       Padding(
                         padding: const EdgeInsets.only(top: 4.0), // Adjust padding as needed
                         child: Text(
-                          'برجاء ادخال كلمه المرور قوية *', // Provide a default error message if _passwordError is null
+                          "برجاء ادخال كلمه المرور قوية *", // Provide a default error message if _passwordError is null
                           style: TextStyle(
                             color: Colors.red.shade900, // Error message color
                             fontSize: 12.0,
@@ -608,7 +640,7 @@ class SignUpPagePageState extends State<SignUpPage>
                             ),
                           ),
                           TextSpan(
-                            text: 'تأكيد كلمة المرور  ', // Full text
+                            text: "تأكيد كلمة المرور  ", // Full text
                           ),
                         ],
                       ),
@@ -654,7 +686,7 @@ class SignUpPagePageState extends State<SignUpPage>
                               textAlign: TextAlign.right,
                               obscureText: !_isPasswordVisibleconfirm, // Toggle password visibility
                               decoration: InputDecoration(
-                                hintText: 'تأكيد كلمة المرور'.tr,
+                                hintText: "تأكيد كلمة المرور".tr,
                                 hintStyle: TextStyle(
                                   fontFamily: 'Cairo',
                                   color: Color(0xFF495A71),
@@ -684,7 +716,7 @@ class SignUpPagePageState extends State<SignUpPage>
                       Padding(
                         padding: const EdgeInsets.only(top: 4.0), // Adjust padding as needed
                         child: Text(
-                          'برجاء ادخال نفس كلمه المرور*', // Provide a default error message if _passwordError is null
+                          "برجاء ادخال نفس كلمه المرور*".tr, // Provide a default error message if _passwordError is null
                           style: TextStyle(
                             color: Colors.red.shade900, // Error message color
                             fontSize: 12.0,
@@ -708,7 +740,7 @@ class SignUpPagePageState extends State<SignUpPage>
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text(
-                                  'برجاء ادخال جميع البيانات', // "Please enter all the data"
+                                  "برجاء ادخال جميع البيانات".tr, // "Please enter all the data"
                                   textAlign: TextAlign.center,
                                 ),
                                 backgroundColor:  Color(0xFF000047),
@@ -723,7 +755,7 @@ class SignUpPagePageState extends State<SignUpPage>
                             SnackBar(
                               content: Text(
                                 textAlign: TextAlign.center,
-                                'رقم الهاتف غير صحيح'.tr,
+                                "رقم الهاتف غير صحيح".tr,
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontFamily: 'Cairo',
@@ -770,7 +802,7 @@ class SignUpPagePageState extends State<SignUpPage>
                           ),
                           child: Center(
                             child: Text(
-                              'إنشــــاء حســــــاب'.tr,
+                              "إنشــــاء حســــــاب".tr,
                               style: TextStyle(
                                 fontFamily: 'Cairo',
                                 fontSize: 16.0,
@@ -841,7 +873,7 @@ class SignUpPagePageState extends State<SignUpPage>
             ),
             SizedBox(height: 16,),
             Text(
-              'انت غير متصل بالانترنت',
+              "انت غير متصل بالانترنت".tr,
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Color(0xFF181A20),
@@ -878,7 +910,7 @@ class SignUpPagePageState extends State<SignUpPage>
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              'لا يوجد اتصال بالإنترنت',
+              "لا يوجد اتصال بالإنترنت".tr,
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontFamily: 'Cairo',

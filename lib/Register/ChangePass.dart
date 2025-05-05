@@ -65,7 +65,7 @@ class ChangePasswordState extends State<ChangePassword>
   void _validatePasswords() {
     setState(() {
       if (_passwordController.text != confirmPasswordController.text) {
-        _passwordError = 'يجب ادخال نفس كلمه المرور'; // Passwords do not match
+        _passwordError = "يجب ادخال نفس كلمه المرور".tr; // Passwords do not match
       } else {
         _passwordError = null; // Clear the error when they match
       }
@@ -96,7 +96,7 @@ class ChangePasswordState extends State<ChangePassword>
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            'تم تغيير كلمة المرور بنجاح', // "Please enter all the data"
+            "تم تغيير كلمة المرور بنجاح".tr, // "Please enter all the data"
             textAlign: TextAlign.center,
           ),
           backgroundColor:  Color(0xFF000047),
@@ -173,9 +173,11 @@ class ChangePasswordState extends State<ChangePassword>
                     child: Align(
                       alignment: Alignment.topCenter,
                       child: Container(
-                        width: 135,
-                        height: 160.72,
-                        child: Image.asset('assets/images/splach.png'),
+                        height: 150,
+                        width: 180,
+                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(20.0),
+                          color: Color(0xFF000047),),
+                        child: Image.asset('assets/images/mam.png'),
                       ),
                     ),
                   ),
@@ -183,7 +185,7 @@ class ChangePasswordState extends State<ChangePassword>
 
                   Center(
                     child: Text(
-                      'تغيير كلمة المرور'.tr,
+                      "تغيير كلمة المرور".tr,
                       style: TextStyle(
                         color: Color(0xFF000047),
                         fontFamily: 'Cairo',
@@ -214,7 +216,7 @@ class ChangePasswordState extends State<ChangePassword>
                           ),
                         ),
                         TextSpan(
-                          text: 'كلمة المرور ',
+                          text: "كلمة المرور ".tr,
                         ),
                       ],
                     ),
@@ -265,7 +267,7 @@ class ChangePasswordState extends State<ChangePassword>
                               textAlign: TextAlign.right,
                               obscureText: !_isPasswordVisible, // Toggle password visibility
                               decoration: InputDecoration(
-                                hintText: 'كلمة المرور'.tr,
+                                hintText: "كلمة المرور ".tr,
                                 hintStyle: TextStyle(
                                   fontFamily: 'Cairo',
                                   color: Color(0xFF495A71),
@@ -297,7 +299,7 @@ class ChangePasswordState extends State<ChangePassword>
                     Padding(
                       padding: const EdgeInsets.only(top: 4.0), // Adjust padding as needed
                       child: Text(
-                        'برجاء ادخال كلمه المرور قوية *', // Provide a default error message if _passwordError is null
+                        "برجاء ادخال كلمه المرور قوية *".tr, // Provide a default error message if _passwordError is null
                         style: TextStyle(
                           color: Colors.red.shade900, // Error message color
                           fontSize: 12.0,
@@ -329,7 +331,7 @@ class ChangePasswordState extends State<ChangePassword>
                           ),
                         ),
                         TextSpan(
-                          text: 'تأكيد كلمة المرور  ',
+                          text: "تأكيد كلمة المرور  ".tr,
                         ),
                       ],
                     ),
@@ -381,7 +383,7 @@ class ChangePasswordState extends State<ChangePassword>
 
                             // obscureText: false, // Hide password input
                             decoration: InputDecoration(
-                              hintText: 'تأكيد كلمة المرور'.tr,
+                              hintText: "تأكيد كلمة المرور".tr,
                               hintStyle: TextStyle(
                                 fontFamily: 'Cairo',
                                 color: Color(0xFF495A71),
@@ -410,7 +412,7 @@ class ChangePasswordState extends State<ChangePassword>
                     Padding(
                       padding: const EdgeInsets.only(top: 4.0), // Adjust padding as needed
                       child: Text(
-                        'برجاء ادخال نفس كلمه المرور*', // Provide a default error message if _passwordError is null
+                        "برجاء ادخال نفس كلمه المرور*".tr, // Provide a default error message if _passwordError is null
                         style: TextStyle(
                           color: Colors.red.shade900, // Error message color
                           fontSize: 12.0,
@@ -427,7 +429,7 @@ class ChangePasswordState extends State<ChangePassword>
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(
-                                'برجاء ادخال نفس كلمة المرور  ', // "Please enter all the data"
+                                "برجاء ادخال نفس كلمة المرور  ".tr, // "Please enter all the data"
                                 textAlign: TextAlign.center,
                               ),
                               backgroundColor: Colors.red.shade900,
@@ -493,7 +495,7 @@ class ChangePasswordState extends State<ChangePassword>
                     child: Container(
                       alignment: Alignment.center, // Center the text within the container
                       child: Text(
-                        'إنشــــاء حســــــاب'.tr,
+                        "إنشــــاء حســــــاب".tr,
                         style: TextStyle(
                           fontFamily: 'Cairo',
                           fontSize: 14.0,
@@ -535,7 +537,7 @@ class ChangePasswordState extends State<ChangePassword>
             ),
             SizedBox(height: 16,),
             Text(
-              'انت غير متصل بالانترنت',
+              "انت غير متصل بالانترنت".tr,
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Color(0xFF181A20),
@@ -573,7 +575,7 @@ class ChangePasswordState extends State<ChangePassword>
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              'لا يوجد اتصال بالإنترنت',
+              "لا يوجد اتصال بالإنترنت".tr,
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontFamily: 'Cairo',

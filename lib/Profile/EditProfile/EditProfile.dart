@@ -10,22 +10,23 @@ import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:typed_data';
 
-import '../ButtomNavigation/CustomButtomNavigation/ButtomNavigation.dart';
-import '../HomePage/HomePage.dart';
-import '../Loading/Loading.dart';
-import '../Register/Model/UserModel.dart';
-import '../Register/SignIn.dart';
+import '../../ButtomNavigation/CustomButtomNavigation/ButtomNavigation.dart';
+import '../../Loading/Loading.dart';
+import '../../Register/Model/UserModel.dart';
+import '../../Register/SignIn.dart';
 
-class Profilepage extends StatefulWidget {
+
+
+class EditProfilepage extends StatefulWidget {
   String docId;
-  Profilepage({required this.docId});
+  EditProfilepage({required this.docId});
   @override
-  State<Profilepage> createState() {
-    return ProfilepageState();
+  State<EditProfilepage> createState() {
+    return EditProfilepageState();
   }
 }
 
-class ProfilepageState extends State<Profilepage>
+class EditProfilepageState extends State<EditProfilepage>
     with SingleTickerProviderStateMixin {
   User? user = FirebaseAuth.instance.currentUser;
   bool _isButtonDisabled = false;
@@ -43,7 +44,70 @@ class ProfilepageState extends State<Profilepage>
   }
 
 
+  Future<void> _updateName(String name) async {
+    CollectionReference usersRef =
+    FirebaseFirestore.instance.collection('PersonData');
+    setState(() {
+      _isLoading = true;
+    });
+    try {
+      // Query the Firestore database to find the user's document based on their phone number
+      QuerySnapshot querySnapshot =
+      await usersRef.where('phone', isEqualTo: _phoneNumberController.text).get();
+      String existingName = userDataa[0].name!;
+      if (name == existingName) {
+        print("Name is already up to date");
+      }
 
+      else{
+        if (querySnapshot.docs.isNotEmpty) {
+          // Update the user's document with the new image URL
+          DocumentSnapshot documentSnapshot = querySnapshot.docs.first;
+          await documentSnapshot.reference.update({
+            'name': name,
+            'phone': _phoneNumberController.text,
+          });
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                "تم حفظ التعديل بنجاح".tr,
+                textAlign: TextAlign.center,
+              ),
+              backgroundColor: Color(0xFF000047),
+            ),
+          );
+          FocusScope.of(context).requestFocus(FocusNode());
+          // if (controller.formKey.currentState!.validate()) {
+          Navigator.push(context,
+            MaterialPageRoute(
+              builder: (context) =>
+                  CustomNavigationBar(current: 0,),
+            ),);
+          print('User  data updated successfully.');
+          setState(() {
+            _isLoading = false;
+          });
+        }
+
+        else {
+          // If the user's document is not found, create a new document
+          await usersRef.add({
+            'name': name,
+            'phone': _phoneNumberController.text,
+
+          });
+          print('User  data added successfully.');
+
+        }
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+    catch (e) {
+      print('Error updating user data: $e');
+    }
+  }
   void _loadUserData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? phoneValue = prefs.getString('phonev');
@@ -169,7 +233,7 @@ class ProfilepageState extends State<Profilepage>
               backgroundColor: Colors.white,
               surfaceTintColor: Colors.transparent,
               title: Text(
-                "الملف الشخصى".tr,
+                "تعديل الملف الشخصى".tr,
                 style: TextStyle(
                   fontSize: 16,
                   fontFamily: 'Cairo',
@@ -189,7 +253,7 @@ class ProfilepageState extends State<Profilepage>
                   Navigator.push(context,
                     MaterialPageRoute(
                       builder: (context) =>
-                          CustomNavigationBar(current: 0,),
+                          CustomNavigationBar(current: 1,),
                     ),);
 
                 },
@@ -241,14 +305,13 @@ class ProfilepageState extends State<Profilepage>
 
                     SizedBox(
                       height: 10,
-                      width: 10,
                     ),
                     Container(
                       height: 48,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20.0),
                         shape: BoxShape.rectangle,
-                        color: Colors.grey.shade200,
+                        color: Colors.white70,
                         border: Border.all(
                           color: Color(0xFF9AAEC9), // Border color
                           width: 1.0, // Border width
@@ -261,9 +324,7 @@ class ProfilepageState extends State<Profilepage>
 
                           Expanded(
                             child: Padding(
-                              padding: const EdgeInsets.only(right: 8.0,left: 8),
-                              child: TextField(
-                                readOnly: true,
+                              padding: const EdgeInsets.only(right: 8.0,left: 8),                              child: TextField(
                                 controller: _nameController,
                                 cursorColor: Color(0xFF000047),
                                 textInputAction: TextInputAction.next,
@@ -271,7 +332,7 @@ class ProfilepageState extends State<Profilepage>
                                 textAlign: TextAlign.right,
                                 // Align text to the right
                                 decoration: InputDecoration(
-                                  hintText: "الأسم ".tr,
+                                  hintText: "الأسم".tr,
                                   hintStyle: TextStyle(
                                     fontFamily: 'Cairo',
                                     color: Color(0xFF495A71),
@@ -328,7 +389,6 @@ class ProfilepageState extends State<Profilepage>
 
                     SizedBox(
                       height: 10,
-                      width: 10,
                     ),
                     Container(
                       height: 48,
@@ -348,11 +408,9 @@ class ProfilepageState extends State<Profilepage>
 
                           Expanded(
                             child: Padding(
-                              padding: const EdgeInsets.only(right: 8.0,left: 8),
-                              child: TextField(
-                                readOnly: true,
+                              padding: const EdgeInsets.only(right: 8.0,left: 8),                              child: TextField(
                                 controller: _phoneNumberController,
-
+                                readOnly: true,
                                 // cursorColor: Color(0xFF064821),
                                 // inputFormatters: [
                                 //   LengthLimitingTextInputFormatter(11),
@@ -414,13 +472,7 @@ class ProfilepageState extends State<Profilepage>
                         });
 
                         try {
-                          FocusScope.of(context).requestFocus(FocusNode());
-                          // if (controller.formKey.currentState!.validate()) {
-                          Navigator.push(context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  CustomNavigationBar(current: 2,),
-                            ),);
+                          await _updateName(_nameController.text);
 
                         } catch (e) {
                           // Handle any errors here
@@ -444,7 +496,7 @@ class ProfilepageState extends State<Profilepage>
                           ),
                           child: Center(
                             child: Text(
-                              "تعديل".tr,
+                              "حفــــــظ".tr,
                               style: TextStyle(
                                 fontFamily: 'Cairo',
                                 fontSize: 16.0,
@@ -459,33 +511,33 @@ class ProfilepageState extends State<Profilepage>
                     SizedBox(
                       height: 5,
                     ),
-                    SizedBox(height: 5,),
-                    GestureDetector(
-                      onTap: (){
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>SigninPage(),
-                          ),
-                        );
-                      },
-                      child: Container(
-                        alignment: Alignment.centerLeft, // Ensure container aligns children to the left
-                        child: Text(
-                          "تسجيل خروج".tr,
-                          textAlign: TextAlign.left, // Aligns text within its own bounds
-                          style: TextStyle(
-                            fontFamily: 'Cairo',
-                            fontSize: 14.0,
-                            fontWeight: FontWeight.w400,
-                            color:  Color(0xFF000047),
-                            decoration: TextDecoration.underline, // Adds the underline
-                            decorationColor:  Color(0xFF000047), // Underline color to match text color
-                            decorationThickness: 1.0, // Optional: Thickness of the underline
-                          ),
-                        ),
-                      ),
-                    ),
+                    // SizedBox(height: 5,),
+                    // GestureDetector(
+                    //   onTap: (){
+                    //     Navigator.push(
+                    //       context,
+                    //       MaterialPageRoute(
+                    //         builder: (context) =>SigninPage(),
+                    //       ),
+                    //     );
+                    //   },
+                    //   child: Container(
+                    //     alignment: Alignment.centerLeft, // Ensure container aligns children to the left
+                    //     child: Text(
+                    //       'تسجيل خروج'.tr,
+                    //       textAlign: TextAlign.left, // Aligns text within its own bounds
+                    //       style: TextStyle(
+                    //         fontFamily: 'Cairo',
+                    //         fontSize: 14.0,
+                    //         fontWeight: FontWeight.w400,
+                    //         color:  Color(0xFF000047),
+                    //         decoration: TextDecoration.underline, // Adds the underline
+                    //         decorationColor:  Color(0xFF000047), // Underline color to match text color
+                    //         decorationThickness: 1.0, // Optional: Thickness of the underline
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
                   ]),
                 ),
               ),
