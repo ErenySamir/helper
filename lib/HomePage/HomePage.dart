@@ -286,7 +286,11 @@ class HomePageState extends State<HomePage> {
                                       children: [
                                         Icon(Icons.edit),
                                         Text(
-                                          "   أسم العائلة :  ".tr + familyItem.familyName!,
+                                          "   أسم العائلة :  ".tr +
+                                              // + familyItem.familyName!,
+                                            (familyItem.familyName!.length > 30
+                                              ? '${familyItem.familyName!.substring(0, 30)}..'
+                                              : familyItem.familyName!),
                                           style: TextStyle(
                                             fontFamily: 'Cairo',
                                             fontSize: 14.0,
@@ -297,7 +301,11 @@ class HomePageState extends State<HomePage> {
                                       ],
                                     ),
                                     Text(
-                                      " تاريخ العطية : ".tr + familyItem.date!,
+                                      " تاريخ العطية : ".tr +
+                                          // familyItem.date!,
+                                          (familyItem.date!.length > 30
+                                              ? '${familyItem.date!.substring(0, 30)}..'
+                                              : familyItem.date!),
                                       style: TextStyle(
                                         fontFamily: 'Cairo',
                                         fontSize: 14.0,
@@ -306,7 +314,11 @@ class HomePageState extends State<HomePage> {
                                       ),
                                     ),
                                     Text(
-                                      " العطية : ".tr + familyItem.give!,
+                                      " العطية : ".tr +
+                                          // familyItem.give!,
+                                          (familyItem.give!.length > 30
+                                              ? '${familyItem.give!.substring(0, 30)}..'
+                                              : familyItem.give!),
                                       style: TextStyle(
                                         fontFamily: 'Cairo',
                                         fontSize: 14.0,
@@ -315,7 +327,11 @@ class HomePageState extends State<HomePage> {
                                       ),
                                     ),
                                     Text(
-                                      "  اسم المعطي :  ".tr + familyItem.giverName!,
+                                      "  اسم المعطي :  ".tr +
+                                          // familyItem.giverName!,
+                                          (familyItem.giverName!.length > 30
+                                              ? '${familyItem.giverName!.substring(0, 30)}..'
+                                              : familyItem.giverName!),
                                       style: TextStyle(
                                         fontFamily: 'Cairo',
                                         fontSize: 14.0,
