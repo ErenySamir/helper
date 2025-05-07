@@ -194,9 +194,10 @@ class ProfilepageState extends State<Profilepage>
 
                 },
                 icon: Icon(
-                  Directionality.of(context) == TextDirection.rtl
-                      ? Icons.arrow_forward_ios
-                      : Icons.arrow_back_ios_new_rounded,
+                  // Directionality.of(context) == TextDirection.rtl
+                  //     ? Icons.arrow_forward_ios
+                  //     :
+                  Icons.arrow_back_ios_new_rounded,
                   size: 24,
                   color: Color(0xFF62748E),
                 ),
@@ -204,10 +205,12 @@ class ProfilepageState extends State<Profilepage>
             ),
           ),
         ),
-        body: Directionality(
-          textDirection: TextDirection.rtl,
-          child: Stack(
-              children:[ SingleChildScrollView(
+        body:  Stack(
+            children:[  Directionality(
+              textDirection: Get.locale?.languageCode == 'ar'
+                  ? TextDirection.rtl
+                  : TextDirection.ltr,
+              child: SingleChildScrollView(
                 child: Padding(
                   padding: const EdgeInsets.only(
                       top: 15.0, bottom: 15, right: 22, left: 22),
@@ -221,7 +224,7 @@ class ProfilepageState extends State<Profilepage>
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         RichText(
-                          textAlign: TextAlign.right,
+                          // textAlign: TextAlign.right,
                           text: TextSpan(
                             style: TextStyle(
                                 fontFamily: 'Cairo',
@@ -268,7 +271,7 @@ class ProfilepageState extends State<Profilepage>
                                 cursorColor: Color(0xFF000047),
                                 textInputAction: TextInputAction.next,
                                 keyboardType: TextInputType.text,
-                                textAlign: TextAlign.right,
+                                // textAlign: TextAlign.right,
                                 // Align text to the right
                                 decoration: InputDecoration(
                                   hintText: "الأسم ".tr,
@@ -308,7 +311,7 @@ class ProfilepageState extends State<Profilepage>
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         RichText(
-                          textAlign: TextAlign.right,
+                          // textAlign: TextAlign.right,
                           text: TextSpan(
                             style: TextStyle(
                                 fontFamily: 'Cairo',
@@ -359,8 +362,8 @@ class ProfilepageState extends State<Profilepage>
                                 // ],
                                 // textInputAction: TextInputAction.done,
                                 // keyboardType: TextInputType.none, // Updated keyboard type for phone input
-                                textAlign: TextAlign.right,
-                                textDirection: TextDirection.rtl,
+                                // textAlign: TextAlign.right,
+                                // textDirection: TextDirection.rtl,
 
                                 // Align text to the right
                                 decoration: InputDecoration(
@@ -489,11 +492,12 @@ class ProfilepageState extends State<Profilepage>
                   ]),
                 ),
               ),
-                ( _isLoading == true)
-                    ? const Positioned( child: Loading())
-                    : Container(height: 5,),
-              ]
-          ),),
+            ),
+              ( _isLoading == true)
+                  ? const Positioned( child: Loading())
+                  : Container(height: 5,),
+            ]
+        ),
       ),
     );
   }

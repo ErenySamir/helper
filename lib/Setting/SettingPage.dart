@@ -48,9 +48,10 @@ class SettingPage extends StatelessWidget{
 
     },
     icon: Icon(
-    Directionality.of(context) == TextDirection.rtl
-    ? Icons.arrow_forward_ios
-        : Icons.arrow_back_ios_new_rounded,
+   // Get.locale?.languageCode == 'ar'
+   //  ? Icons.arrow_forward_ios
+   //      :
+   Icons.arrow_back_ios_new_rounded,
     size: 24,
     color: Color(0xFF62748E),
     ),
@@ -60,76 +61,81 @@ class SettingPage extends StatelessWidget{
     ),
      body: Padding(
        padding: const EdgeInsets.all(16.0),
-       child: Column(
-         crossAxisAlignment: CrossAxisAlignment.end,
-         children: [
-           const SizedBox(height: 16),
-           _buildLanguageTile(),
-           SizedBox(height: 30,),
-           GestureDetector(
-             onTap: (){
-               showDialog(
-                 context: context,
-                 builder: (context) => AlertDialog(
-                   backgroundColor: Colors.white,
-                   title: Text("تسجيل الخروج ".tr,textAlign: TextAlign.right),
-                   content: Text("هل أنت متأكد أنك تريد تسجيل الخروج؟".tr,textAlign: TextAlign.right),
-                   actions: [
-                     Container(
-                       height: 40,
-                       width: 86,
-                       decoration: BoxDecoration(
+       child:  Directionality(
+         textDirection: Get.locale?.languageCode == 'ar'
+             ? TextDirection.ltr
+             : TextDirection.rtl,
+         child: Column(
+           crossAxisAlignment: CrossAxisAlignment.end,
+           children: [
+             const SizedBox(height: 16),
+             _buildLanguageTile(),
+             SizedBox(height: 30,),
+             GestureDetector(
+               onTap: (){
+                 showDialog(
+                   context: context,
+                   builder: (context) => AlertDialog(
+                     backgroundColor: Colors.white,
+                     title: Text("تسجيل الخروج ".tr,textAlign: TextAlign.right),
+                     content: Text("هل أنت متأكد أنك تريد تسجيل الخروج؟".tr,textAlign: TextAlign.right),
+                     actions: [
+                       Container(
+                         height: 40,
+                         width: 86,
+                         decoration: BoxDecoration(
 
-                           borderRadius: BorderRadius.circular(10.0),color:Colors.white ),
-                       child: TextButton(
-                         onPressed: () => Navigator.of(context).pop(false),
-                         child: Text("إلغاء".tr,textAlign: TextAlign.center, style: TextStyle(color: Color(0xFF000047))),
+                             borderRadius: BorderRadius.circular(10.0),color:Colors.white ),
+                         child: TextButton(
+                           onPressed: () => Navigator.of(context).pop(false),
+                           child: Text("إلغاء".tr,textAlign: TextAlign.center, style: TextStyle(color: Color(0xFF000047))),
+                         ),
                        ),
-                     ),
-                     Spacer(),
-                     Container(
-                       height: 36,
-                       // width: 90,
-                       decoration: BoxDecoration(
+                       Spacer(),
+                       Container(
+                         height: 36,
+                         // width: 90,
+                         decoration: BoxDecoration(
 
-                           borderRadius: BorderRadius.circular(10.0),color:Color(0xFF000047) ),
-                       child: TextButton(
-                         onPressed: () async {
-                           // print("familyItem.Id!${familyItem.Id!}");
-                           Navigator.push(
-                             context,
-                             MaterialPageRoute(
-                               builder: (context) =>SigninPage(),
-                             ),
-                           );
-                           Navigator.of(context).pop(true);
-                         },
-                         child: Text("تسجيل خروج".tr,textAlign: TextAlign.center, style: TextStyle(color: Colors.white,fontSize: 12)),
+                             borderRadius: BorderRadius.circular(10.0),color:Color(0xFF000047) ),
+                         child: TextButton(
+                           onPressed: () async {
+                             // print("familyItem.Id!${familyItem.Id!}");
+                             Navigator.push(
+                               context,
+                               MaterialPageRoute(
+                                 builder: (context) =>SigninPage(),
+                               ),
+                             );
+                             Navigator.of(context).pop(true);
+                           },
+                           child: Text("تسجيل خروج".tr,textAlign: TextAlign.center, style: TextStyle(color: Colors.white,fontSize: 12)),
+                         ),
                        ),
-                     ),
-                   ],
-                 ),
-               );
-             },
-             child: Container(
+                     ],
+                   ),
+                 );
+               },
+               child: Container(
 
-               alignment: Alignment.centerRight, // Ensure container aligns children to the left
-               child: Text(
-                 "تسجيل خروج".tr,
-                 textAlign: TextAlign.right, // Aligns text within its own bounds
-                 style: TextStyle(
-                   fontFamily: 'Cairo',
-                   fontSize: 20.0,
-                   fontWeight: FontWeight.bold,
-                   color:  Color(0xFF000047),
-                   decoration: TextDecoration.underline, // Adds the underline
-                   decorationColor:  Color(0xFF000047), // Underline color to match text color
-                   decorationThickness: 1.0, // Optional: Thickness of the underline
+                 // alignment: Alignment.centerRight, // Ensure container aligns children to the left
+                 child: Text(
+                   "تسجيل خروج".tr,
+                   // textAlign: TextAlign.right, // Aligns text within its own bounds
+                   style: TextStyle(
+                     fontFamily: 'Cairo',
+                     fontSize: 20.0,
+                     fontWeight: FontWeight.bold,
+                     color:  Color(0xFF000047),
+                     decoration: TextDecoration.underline, // Adds the underline
+                     decorationColor:  Color(0xFF000047), // Underline color to match text color
+                     decorationThickness: 1.0, // Optional: Thickness of the underline
+                   ),
                  ),
                ),
              ),
-           ),
-         ],
+           ],
+         ),
        ),
      ),
    );

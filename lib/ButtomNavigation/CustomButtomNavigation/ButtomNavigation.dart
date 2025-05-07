@@ -131,11 +131,10 @@ class _CustomBottomBarTwoState extends State<CustomNavigationBar> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Opacity(opacity: .1),
+
               _buildBottomNavItem(3, Icons.settings, "".tr),
-              _buildBottomNavItem(0, Icons.home, "".tr),
 
-              _buildBottomNavItem(1, Icons.person, "".tr),
-
+              _buildBottomNavItem(1, Icons.person, "".tr), _buildBottomNavItem(0, Icons.home, "".tr),
               const SizedBox(width: .1),
             ],
           ),

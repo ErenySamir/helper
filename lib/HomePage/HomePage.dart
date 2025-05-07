@@ -125,301 +125,312 @@ class HomePageState extends State<HomePage> {
 
       child: Scaffold(
         backgroundColor: Colors.white,
-        body: Stack(
-          children: [
-            SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only( right: 12, top: 66),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(bottom: 14.0, right: 16, top: 10,left: 15),
-                          child: GestureDetector(
-                            onTap:(){
-                              // Navigator.push(
-                              //   context,
-                              //   MaterialPageRoute(
-                              //     builder: (context) => Profilepage(docId: userDataa[0].phoneNumber!,),
-                              //   ),
-                              // );
-                              FocusScope.of(context).requestFocus(FocusNode());
-                              // if (controller.formKey.currentState!.validate()) {
-                              Navigator.push(context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      CustomNavigationBar(current: 1,),
-                                ),);
-                            },
-                            child: userDataa.isNotEmpty && userDataa[0].name!.isNotEmpty
-                                ? Text(
-                              userDataa[0].name!.length > 30
-                                  ? '${userDataa[0].name!.substring(0, 30)}..'
-                                  : userDataa[0].name!,
-                              style: TextStyle(
-                                fontFamily: 'Cairo',
-                                fontSize: 18.0,
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xFF000047),
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            )
-                                : Container(),
-                          ),
-
-                        ),
-                        Text(
-                          "  مرحبا بك  ".tr,
-                          style: TextStyle(
-                            fontFamily: 'Cairo',
-                            fontSize: 15.0,
-                            fontWeight: FontWeight.w500,
-                            color: Color(0xFF000047),
-                          ),
+        body:    Directionality(
+          textDirection: Get.locale?.languageCode == 'ar'
+              ? TextDirection.ltr
+              : TextDirection.rtl,
+          child: Stack(
+            children: [
+          SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only( right: 12, top: 66,left: 12),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(bottom: 14.0, right: 16, top: 10,left: 15),
+                        child: GestureDetector(
+                          onTap:(){
+                            // Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //     builder: (context) => Profilepage(docId: userDataa[0].phoneNumber!,),
+                            //   ),
+                            // );
+                            FocusScope.of(context).requestFocus(FocusNode());
+                            // if (controller.formKey.currentState!.validate()) {
+                            Navigator.push(context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    CustomNavigationBar(current: 1,),
+                              ),);
+                          },
+                          child: userDataa.isNotEmpty && userDataa[0].name!.isNotEmpty
+                              ? Text(
+                            userDataa[0].name!.length > 30
+                                ? '${userDataa[0].name!.substring(0, 30)}..'
+                                : userDataa[0].name!,
+                            style: TextStyle(
+                              fontFamily: 'Cairo',
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF000047),
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          )
+                              : Container(),
                         ),
 
-                      ],
-                    ),
+                      ),
+                      Text(
+                        "  مرحبا بك  ".tr,
+                        style: TextStyle(
+                          fontFamily: 'Cairo',
+                          fontSize: 15.0,
+                          fontWeight: FontWeight.w500,
+                          color: Color(0xFF000047),
+                        ),
+                      ),
+
+                    ],
                   ),
+                ),
 
-                  familyAllData.isNotEmpty
-                      ? ListView.builder(
-                    itemCount: familyAllData.length,
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      final familyItem = familyAllData[index];
+                familyAllData.isNotEmpty
+                    ? ListView.builder(
+                  itemCount: familyAllData.length,
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    final familyItem = familyAllData[index];
 
-                      return Dismissible(
-                        key: ValueKey(familyItem.Id), // Unique key for each item
-                        direction: DismissDirection.endToStart, // Swipe from right to left
-                        background: Container(
-                          color: Colors.red.shade900,
-                          alignment: Alignment.centerRight,
-                          padding: EdgeInsets.only(right: 20),
-                          child: Icon(Icons.delete, color: Colors.white, size: 20),
-                        ),
-                        confirmDismiss: (direction) async {
-                          // Show confirmation dialog before deleting
-                          return await showDialog(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              title: Text("تأكيد الحذف".tr),
-                              content: Text("هل أنت متأكد أنك تريد حذف هذه العائلة؟".tr),
-                              actions: [
-                                TextButton(
-                                  onPressed: () => Navigator.of(context).pop(false),
-                                  child: Text("إلغاء".tr,style: TextStyle(color: Color(0xFF000047))),
-                                ),
-                                TextButton(
-                                  onPressed: () async {
-                                    print("familyItem.Id!${familyItem.Id!}");
-                                    await deleteCancelByPhoneAndPlaygroundId(familyItem.Id!);
-                                    Navigator.of(context).pop(true);
-                                    },
-                                  child: Text("حذف".tr, style: TextStyle(color: Colors.red.shade900)),
+                    return Dismissible(
+                      key: ValueKey(familyItem.Id), // Unique key for each item
+                      direction: DismissDirection.endToStart, // Swipe from right to left
+                      background: Container(
+                        color: Colors.red.shade900,
+                        alignment: Alignment.centerRight,
+                        padding: EdgeInsets.only(right: 20),
+                        child: Icon(Icons.delete, color: Colors.white, size: 20),
+                      ),
+                      confirmDismiss: (direction) async {
+                        // Show confirmation dialog before deleting
+                        return await showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: Text("تأكيد الحذف".tr),
+                            content: Text("هل أنت متأكد أنك تريد حذف هذه العائلة؟".tr),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.of(context).pop(false),
+                                child: Text("إلغاء".tr,style: TextStyle(color: Color(0xFF000047))),
+                              ),
+                              TextButton(
+                                onPressed: () async {
+                                  print("familyItem.Id!${familyItem.Id!}");
+                                  await deleteCancelByPhoneAndPlaygroundId(familyItem.Id!);
+                                  Navigator.of(context).pop(true);
+                                  },
+                                child: Text("حذف".tr, style: TextStyle(color: Colors.red.shade900)),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                      onDismissed: (direction) async {
+                        // Delete from Firebase
+                        await FirebaseFirestore.instance
+                            .collection('familyCollection') // Change to your actual collection name
+                            .doc(familyItem.Id)
+                            .delete();
+
+                        // Remove from local list
+                        setState(() {
+                          familyAllData.removeAt(index);
+                        });
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text("تم حذف العائلة بنجاح".tr), backgroundColor:  Color(0xFF000047),),
+                        );
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 22.0, left: 22, top: 6, bottom: 10),
+                        child: GestureDetector(
+                          onTap: () {
+                            print("iddddddddddd  ${familyItem.Id}");
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => AddFamilyData(familyItem.Id!, docId!),
+                              ),
+                            );
+                          },
+                          child: Container(
+                            height: 140,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20.0),
+                              gradient: LinearGradient(
+                                colors: [
+                                  Colors.blue.shade200,
+                                  Colors.blue.shade50,
+                                ],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.5),
+                                  spreadRadius: 1,
+                                  blurRadius: 2,
+                                  offset: Offset(0, 0),
                                 ),
                               ],
                             ),
-                          );
-                        },
-                        onDismissed: (direction) async {
-                          // Delete from Firebase
-                          await FirebaseFirestore.instance
-                              .collection('familyCollection') // Change to your actual collection name
-                              .doc(familyItem.Id)
-                              .delete();
-
-                          // Remove from local list
-                          setState(() {
-                            familyAllData.removeAt(index);
-                          });
-
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text("تم حذف العائلة بنجاح".tr), backgroundColor:  Color(0xFF000047),),
-                          );
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.only(right: 22.0, left: 22, top: 6, bottom: 10),
-                          child: GestureDetector(
-                            onTap: () {
-                              print("iddddddddddd  ${familyItem.Id}");
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => AddFamilyData(familyItem.Id!, docId!),
-                                ),
-                              );
-                            },
-                            child: Container(
-                              height: 140,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20.0),
-                                gradient: LinearGradient(
-                                  colors: [
-                                    Colors.blue.shade200,
-                                    Colors.blue.shade50,
-                                  ],
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                ),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.5),
-                                    spreadRadius: 1,
-                                    blurRadius: 2,
-                                    offset: Offset(0, 0),
-                                  ),
-                                ],
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.only(top: 8, right: 18, left: 8),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Icon(Icons.edit),
-                                        Text(
-                                          "   أسم العائلة :  ".tr +
-                                              // + familyItem.familyName!,
-                                            (familyItem.familyName!.length > 30
-                                              ? '${familyItem.familyName!.substring(0, 30)}..'
-                                              : familyItem.familyName!),
-                                          style: TextStyle(
-                                            fontFamily: 'Cairo',
-                                            fontSize: 14.0,
-                                            fontWeight: FontWeight.w700,
-                                            color: Color(0xFF000047),
-                                          ),
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 8, right: 18, left: 8),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Icon(Icons.edit),
+                                      Text(
+                                        "   أسم العائلة :  ".tr +
+                                            // + familyItem.familyName!,
+                                          (familyItem.familyName!.length > 25
+                                            ? '${familyItem.familyName!.substring(0, 25)}..'
+                                            : familyItem.familyName!),
+                                        style: TextStyle(
+                                          fontFamily: 'Cairo',
+                                          fontSize: 14.0,
+                                          fontWeight: FontWeight.w700,
+                                          color: Color(0xFF000047),
                                         ),
-                                      ],
-                                    ),
-                                    Text(
-                                      " تاريخ العطية : ".tr +
-                                          // familyItem.date!,
-                                          (familyItem.date!.length > 30
-                                              ? '${familyItem.date!.substring(0, 30)}..'
-                                              : familyItem.date!),
-                                      style: TextStyle(
-                                        fontFamily: 'Cairo',
-                                        fontSize: 14.0,
-                                        fontWeight: FontWeight.w700,
-                                        color: Color(0xFF000047),
                                       ),
+                                    ],
+                                  ),
+                                  Text(
+                                    " تاريخ العطية : ".tr +
+                                        // familyItem.date!,
+                                        (familyItem.date!.length > 30
+                                            ? '${familyItem.date!.substring(0, 30)}..'
+                                            : familyItem.date!),
+                                    style: TextStyle(
+                                      fontFamily: 'Cairo',
+                                      fontSize: 14.0,
+                                      fontWeight: FontWeight.w700,
+                                      color: Color(0xFF000047),
                                     ),
-                                    Text(
-                                      " العطية : ".tr +
-                                          // familyItem.give!,
-                                          (familyItem.give!.length > 30
-                                              ? '${familyItem.give!.substring(0, 30)}..'
-                                              : familyItem.give!),
-                                      style: TextStyle(
-                                        fontFamily: 'Cairo',
-                                        fontSize: 14.0,
-                                        fontWeight: FontWeight.w700,
-                                        color: Color(0xFF000047),
-                                      ),
+                                  ),
+                                  Text(
+                                    " العطية : ".tr +
+                                        // familyItem.give!,
+                                        (familyItem.give!.length > 30
+                                            ? '${familyItem.give!.substring(0, 30)}..'
+                                            : familyItem.give!),
+                                    style: TextStyle(
+                                      fontFamily: 'Cairo',
+                                      fontSize: 14.0,
+                                      fontWeight: FontWeight.w700,
+                                      color: Color(0xFF000047),
                                     ),
-                                    Text(
-                                      "  اسم المعطي :  ".tr +
-                                          // familyItem.giverName!,
-                                          (familyItem.giverName!.length > 30
-                                              ? '${familyItem.giverName!.substring(0, 30)}..'
-                                              : familyItem.giverName!),
-                                      style: TextStyle(
-                                        fontFamily: 'Cairo',
-                                        fontSize: 14.0,
-                                        fontWeight: FontWeight.w700,
-                                        color: Color(0xFF000047),
-                                      ),
+                                  ),
+                                  Text(
+                                    "  اسم المعطي :  ".tr +
+                                        // familyItem.giverName!,
+                                        (familyItem.giverName!.length > 30
+                                            ? '${familyItem.giverName!.substring(0, 30)}..'
+                                            : familyItem.giverName!),
+                                    style: TextStyle(
+                                      fontFamily: 'Cairo',
+                                      fontSize: 14.0,
+                                      fontWeight: FontWeight.w700,
+                                      color: Color(0xFF000047),
                                     ),
-                                    Text(
-                                      familyItem.date! + ": بتاريخ ".tr,
-                                      style: TextStyle(
-                                        fontFamily: 'Cairo',
-                                        fontSize: 14.0,
-                                        fontWeight: FontWeight.w700,
-                                        color: Color(0xFF000047),
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                                  ),
+                                  // Text(
+                                  //   familyItem.date! + ": بتاريخ ".tr,
+                                  //   style: TextStyle(
+                                  //     fontFamily: 'Cairo',
+                                  //     fontSize: 14.0,
+                                  //     fontWeight: FontWeight.w700,
+                                  //     color: Color(0xFF000047),
+                                  //   ),
+                                  // ),
+                                ],
                               ),
                             ),
                           ),
                         ),
-                      );
-                    },
-                  )
-
-                      : Padding(
-                        padding: const EdgeInsets.only(top: 158.0),
-                        child: Container(
-                                          height: 250,
-                            child: Center(
-                              child: Column(
-                                children: [
-                                  Image.asset(
-                                    'assets/images/zero.jpg',
-                                    height: 140,
-                                    width: 140,
-                                  ),
-                                  Text(
-                                  "لم تتم اضافه اي بيانات حتي الان ".tr,
-                                  style: TextStyle(
-                                    fontFamily: 'Cairo',
-                                    fontSize: 15.0,
-                                    fontWeight: FontWeight.w500,
-                                    color: Color(0xFF000047),
-                                  ),
-                                                        ),
-                                ],
-                              ),
-                            )),
                       ),
-                  ///////////////////////// design bsssssssssssssssss
-                  ///UUUUUUU
-                  SizedBox(height: 55),
-                ],
-              ),
-            ),
-          ],
-        ),
-        floatingActionButton: Padding(
-          padding: const EdgeInsets.only(bottom: 85.0),
-          child: Container(
-            height: 49,
-            width: 49,
-            child: FloatingActionButton(
-              onPressed: () {
-                print("docIddocId$docId");
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => AddFamilyData("",docId!)),
-                );
-              },
-              child: Icon(
-                Icons.add,
-                color: Colors.white,
-                size: 26,
-              ),
-              backgroundColor: Color(0xFF000047),
-              shape: RoundedRectangleBorder(
-                borderRadius:
-                    BorderRadius.circular(30), // Adjust the circular shape here
-              ),
-              // elevation: 6.0, // Adjust the elevation if needed
+                    );
+                  },
+                )
+
+                    : Padding(
+                      padding: const EdgeInsets.only(top: 158.0),
+                      child: Container(
+                                        height: 250,
+                          child: Center(
+                            child: Column(
+                              children: [
+                                Image.asset(
+                                  'assets/images/zero.jpg',
+                                  height: 140,
+                                  width: 140,
+                                ),
+                                Text(
+                                "لم تتم اضافه اي بيانات حتي الان ".tr,
+                                style: TextStyle(
+                                  fontFamily: 'Cairo',
+                                  fontSize: 15.0,
+                                  fontWeight: FontWeight.w500,
+                                  color: Color(0xFF000047),
+                                ),
+                                                      ),
+                              ],
+                            ),
+                          )),
+                    ),
+                ///////////////////////// design bsssssssssssssssss
+                ///UUUUUUU
+                SizedBox(height: 55),
+              ],
             ),
           ),
+            ],
+          ),
         ),
+     floatingActionButton: Padding(
+      padding: EdgeInsets.only(
+      bottom: 85.0,
+        right: Get.locale?.languageCode == 'ar' ? 28.0 : 0.0, // Add right padding only for Arabic
       ),
+          child:   Align(
+            alignment: Alignment.bottomRight, // Forces right alignment
+
+            child: Container(
+              height: 49,
+              width: 49,
+              child: FloatingActionButton(
+                onPressed: () {
+                  print("docIddocId$docId");
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => AddFamilyData("",docId!)),
+                  );
+                },
+                child: Icon(
+                  Icons.add,
+                  color: Colors.white,
+                  size: 26,
+                ),
+                backgroundColor: Color(0xFF000047),
+                shape: RoundedRectangleBorder(
+                  borderRadius:
+                  BorderRadius.circular(30), // Adjust the circular shape here
+                ),
+                // elevation: 6.0, // Adjust the elevation if needed
+              ),
+            ),
+          ),
+        ),      ),
     );
   }
   Future<void> deleteCancelByPhoneAndPlaygroundId(String docId) async {

@@ -258,9 +258,10 @@ class EditProfilepageState extends State<EditProfilepage>
 
                 },
                 icon: Icon(
-                  Directionality.of(context) == TextDirection.rtl
-                      ? Icons.arrow_forward_ios
-                      : Icons.arrow_back_ios_new_rounded,
+                  // Directionality.of(context) == TextDirection.rtl
+                  //     ? Icons.arrow_forward_ios
+                  //     :
+                  Icons.arrow_back_ios_new_rounded,
                   size: 24,
                   color: Color(0xFF62748E),
                 ),
@@ -268,8 +269,10 @@ class EditProfilepageState extends State<EditProfilepage>
             ),
           ),
         ),
-        body: Directionality(
-          textDirection: TextDirection.rtl,
+        body:  Directionality(
+          textDirection: Get.locale?.languageCode == 'ar'
+              ? TextDirection.rtl
+              : TextDirection.ltr,
           child: Stack(
               children:[ SingleChildScrollView(
                 child: Padding(
@@ -285,7 +288,7 @@ class EditProfilepageState extends State<EditProfilepage>
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         RichText(
-                          textAlign: TextAlign.right,
+                          // textAlign: TextAlign.right,
                           text: TextSpan(
                             style: TextStyle(
                                 fontFamily: 'Cairo',
@@ -329,7 +332,7 @@ class EditProfilepageState extends State<EditProfilepage>
                                 cursorColor: Color(0xFF000047),
                                 textInputAction: TextInputAction.next,
                                 keyboardType: TextInputType.text,
-                                textAlign: TextAlign.right,
+                                // textAlign: TextAlign.right,
                                 // Align text to the right
                                 decoration: InputDecoration(
                                   hintText: "الأسم".tr,
@@ -369,7 +372,7 @@ class EditProfilepageState extends State<EditProfilepage>
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         RichText(
-                          textAlign: TextAlign.right,
+                          // textAlign: TextAlign.right,
                           text: TextSpan(
                             style: TextStyle(
                                 fontFamily: 'Cairo',
@@ -417,8 +420,8 @@ class EditProfilepageState extends State<EditProfilepage>
                                 // ],
                                 // textInputAction: TextInputAction.done,
                                 // keyboardType: TextInputType.none, // Updated keyboard type for phone input
-                                textAlign: TextAlign.right,
-                                textDirection: TextDirection.rtl,
+                                // textAlign: TextAlign.right,
+                                // textDirection: TextDirection.rtl,
 
                                 // Align text to the right
                                 decoration: InputDecoration(
