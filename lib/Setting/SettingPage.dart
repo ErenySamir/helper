@@ -77,44 +77,63 @@ class SettingPage extends StatelessWidget{
                    context: context,
                    builder: (context) => AlertDialog(
                      backgroundColor: Colors.white,
-                     title: Text("تسجيل الخروج ".tr,textAlign: TextAlign.right),
-                     content: Text("هل أنت متأكد أنك تريد تسجيل الخروج؟".tr,textAlign: TextAlign.right),
+                     title: Text(
+                       "تسجيل الخروج".tr,
+                       textAlign: TextAlign.right,
+                     ),
+                     content: Text(
+                       "هل أنت متأكد أنك تريد تسجيل الخروج؟".tr,
+                       textAlign: TextAlign.right,
+                     ),
+                     actionsPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                      actions: [
-                       Container(
-                         height: 40,
-                         width: 86,
-                         decoration: BoxDecoration(
-
-                             borderRadius: BorderRadius.circular(10.0),color:Colors.white ),
-                         child: TextButton(
-                           onPressed: () => Navigator.of(context).pop(false),
-                           child: Text("إلغاء".tr,textAlign: TextAlign.center, style: TextStyle(color: Color(0xFF000047))),
-                         ),
-                       ),
-                       Spacer(),
-                       Container(
-                         height: 36,
-                         // width: 90,
-                         decoration: BoxDecoration(
-
-                             borderRadius: BorderRadius.circular(10.0),color:Color(0xFF000047) ),
-                         child: TextButton(
-                           onPressed: () async {
-                             // print("familyItem.Id!${familyItem.Id!}");
-                             Navigator.push(
-                               context,
-                               MaterialPageRoute(
-                                 builder: (context) =>SigninPage(),
+                       Row(
+                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                         children: [
+                           Container(
+                             height: 40,
+                             width: 86,
+                             decoration: BoxDecoration(
+                               borderRadius: BorderRadius.circular(10.0),
+                               color: Colors.white,
+                             ),
+                             child: TextButton(
+                               onPressed: () => Navigator.of(context).pop(false),
+                               child: Text(
+                                 "إلغاء".tr,
+                                 textAlign: TextAlign.center,
+                                 style: TextStyle(color: Color(0xFF000047)),
                                ),
-                             );
-                             Navigator.of(context).pop(true);
-                           },
-                           child: Text("تسجيل خروج".tr,textAlign: TextAlign.center, style: TextStyle(color: Colors.white,fontSize: 12)),
-                         ),
+                             ),
+                           ),
+                           Container(
+                             height: 40,
+                             width: 100,
+                             decoration: BoxDecoration(
+                               borderRadius: BorderRadius.circular(10.0),
+                               color: Color(0xFF000047),
+                             ),
+                             child: TextButton(
+                               onPressed: () {
+                                 print("Button pressed");
+                                 Navigator.push(
+                                   context,
+                                   MaterialPageRoute(builder: (context) => SigninPage()),
+                                 );
+                               },
+                               child: Text(
+                                 "تسجيل خروج".tr,
+                                 textAlign: TextAlign.center,
+                                 style: TextStyle(color: Colors.white, fontSize: 12),
+                               ),
+                             ),
+                           ),
+                         ],
                        ),
                      ],
                    ),
                  );
+
                },
                child: Container(
 

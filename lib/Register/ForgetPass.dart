@@ -226,219 +226,230 @@ class ForgetPasswordState extends State<ForgetPassword>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.only(top: 15.0,bottom: 15,right: 22,left: 22),
+      body:   Directionality(
+        textDirection: Get.locale?.languageCode == 'ar'
+            ? TextDirection.ltr
+            : TextDirection.rtl,
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.only(top: 15.0,bottom: 15,right: 22,left: 22),
 
-          child: Column(
-            crossAxisAlignment:CrossAxisAlignment.end,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 65.0),
-                child: Align(
-                  alignment: Alignment.topCenter,
-                  child: Container(
-                    width: 135,
-                    height: 160.72,
-                    child: AnimatedBuilder(
-                      animation: animationController,
-                      builder: (context, child) {
-                        return Transform.scale(
-                          scale: animation.value,
-                          child: Container(
-                              height: 250,
-                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(20.0),
-                                color: Color(0xFF000047),),
-                              child: Image.asset('assets/images/mam.png')),
-                        );
-                      },
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(height: 16,),
-
-              Center(
-                child: Text(
-                  "نسيت كلمة المرور".tr,
-                  style: TextStyle(
-                    color:  Color(0xFF000047),
-                    fontFamily: 'Cairo',
-                    fontSize: 24.0,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-              Text(
-                "رقم التليفون".tr,
-                textAlign: TextAlign.right,
-                style: TextStyle(
-                    fontFamily: 'Cairo',
-                    fontSize: 14.0,
-                    fontWeight: FontWeight.w700,
-                    color: Color(0xFF495A71)
-                ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Container(
-                height: 48,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20.0),
-                  shape: BoxShape.rectangle,
-                  color: Colors.white70,
-                  border: Border.all(
-                    color: Color(0xFF9AAEC9), // Border color
-                    width: 1.0, // Border width
-                  ),
-                ),
-                alignment: Alignment.centerRight,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.only(right: 10),
-                        child: TextField(
-                          controller: PhoneController,
-                          cursorColor:Color(0xFF064821),
-                          inputFormatters: [
-                            LengthLimitingTextInputFormatter(11),
-                          ],
-                          textInputAction: TextInputAction.done,
-                          keyboardType: TextInputType.number,
-                          textAlign: TextAlign.right, // Align text to the right
-                          decoration: InputDecoration(
-                            hintText: "رقم التليفون".tr,
-                            hintStyle: TextStyle(
-                              fontFamily: 'Cairo',
-                              color: Color(0xFF495A71),
-                            ),
-                            border: InputBorder.none,
-                          ),
-                          onChanged: (value) {
-                            Phone = value;
-                            print("phoneeee" + value + " " + Phone);
-                            setState(() {
-                              validatePhone(value);
-
-                            });
-                          },
-
-                        ),
+            child: Column(
+              crossAxisAlignment:CrossAxisAlignment.end,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 65.0),
+                  child: Align(
+                    alignment: Alignment.topCenter,
+                    child: Container(
+                      width: 135,
+                      height: 160.72,
+                      child: AnimatedBuilder(
+                        animation: animationController,
+                        builder: (context, child) {
+                          return Transform.scale(
+                            scale: animation.value,
+                            child: Container(
+                                height: 250,
+                                decoration: BoxDecoration(borderRadius: BorderRadius.circular(20.0),
+                                  color: Color(0xFF000047),),
+                                child: Image.asset('assets/images/mam.png')),
+                          );
+                        },
                       ),
                     ),
-                    Container(
-                      margin: EdgeInsets.symmetric(horizontal: 20.0),
-                      child:
-                      Icon(
-                        Icons.phone,
-                        size: 22,
-                        color:  Color(0xFF000047),
-                      ),
-                    ),
-
-
-
-                  ],
+                  ),
                 ),
-              ),
-              if (PhoneErrorText.isNotEmpty)
+                SizedBox(height: 16,),
+
+                Center(
+                  child: Text(
+                    "نسيت كلمة المرور".tr,
+                    style: TextStyle(
+                      color:  Color(0xFF000047),
+                      fontFamily: 'Cairo',
+                      fontSize: 24.0,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
                 Text(
-                  // textAlign: TextAlign.end,
-                  PhoneErrorText,
+                  "رقم التليفون ".tr,
+                  textAlign: TextAlign.right,
                   style: TextStyle(
-                    color: Colors.red.shade900, // Error message color
-                    fontSize: 12.0,
-                    fontFamily: 'Cairo',
+                      fontFamily: 'Cairo',
+                      fontSize: 14.0,
+                      fontWeight: FontWeight.w700,
+                      color: Color(0xFF495A71)
                   ),
                 ),
-              SizedBox(height: 5,),
-              //passssssssssssssssssssword
-              SizedBox(
-                height: 15,
-              ),
-              GestureDetector(
-                onTap: () async {
-                  String phoneNumber = PhoneController.text;
-                  if (phoneNumber.isEmpty) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          textAlign: TextAlign.center,
-                          "يجب ادخال بيانات".tr,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontFamily: 'Cairo',
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                        backgroundColor:  Color(0xFF000047),
-                      ),
-                    );
-                  }
-                  else if (!isValidPhoneNumber(phoneNumber)) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          textAlign: TextAlign.center,
-                          "رقم الهاتف غير صحيح".tr,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontFamily: 'Cairo',
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                        backgroundColor:  Color(0xFF000047),
-                      ),
-                    );
-                  }
-                  else {
-                    // validatePhonefirebase(PhoneController.text);
-                    SharedPreferences prefs = await SharedPreferences.getInstance();
-                    prefs.setString('phonevalid', PhoneController.text);
+                SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  height: 48,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20.0),
+                    shape: BoxShape.rectangle,
+                    color: Colors.white70,
+                    border: Border.all(
+                      color: Color(0xFF9AAEC9), // Border color
+                      width: 1.0, // Border width
+                    ),
+                  ),
+                  alignment: Alignment.centerRight,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.only(right: 10),
+                          child: TextField(
+                            controller: PhoneController,
+                            cursorColor:Color(0xFF064821),
+                            inputFormatters: [
+                              LengthLimitingTextInputFormatter(11),
+                            ],
+                            textInputAction: TextInputAction.done,
+                            keyboardType: TextInputType.number,
+                            // textAlign: TextAlign.right, // Align text to the right
+                            textDirection: Get.locale?.languageCode == 'ar'
+                                ? TextDirection.rtl
+                                : TextDirection.ltr,
+                            decoration: InputDecoration(
+                              hintText: "رقم التليفون ".tr,
+                              hintStyle: TextStyle(
+                                fontFamily: 'Cairo',
+                                color: Color(0xFF495A71),
+                              ),
+                              hintTextDirection: Get.locale?.languageCode == 'ar'
+                                  ? TextDirection.rtl
+                                  : TextDirection.ltr,
+                              border: InputBorder.none,
+                            ),
+                            onChanged: (value) {
+                              Phone = value;
+                              print("phoneeee" + value + " " + Phone);
+                              setState(() {
+                                validatePhone(value);
 
-                    setState(() {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ChangePassword(),
+                              });
+                            },
+
+                          ),
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.symmetric(horizontal: 20.0),
+                        child:
+                        Icon(
+                          Icons.phone,
+                          size: 22,
+                          color:  Color(0xFF000047),
+                        ),
+                      ),
+
+
+
+                    ],
+                  ),
+                ),
+                if (PhoneErrorText.isNotEmpty)
+                  Text(
+                    // textAlign: TextAlign.end,
+                    PhoneErrorText,
+                    style: TextStyle(
+                      color: Colors.red.shade900, // Error message color
+                      fontSize: 12.0,
+                      fontFamily: 'Cairo',
+                    ),
+                  ),
+                SizedBox(height: 5,),
+                //passssssssssssssssssssword
+                SizedBox(
+                  height: 15,
+                ),
+                GestureDetector(
+                  onTap: () async {
+                    String phoneNumber = PhoneController.text;
+                    if (phoneNumber.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            textAlign: TextAlign.center,
+                            "يجب ادخال بيانات".tr,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontFamily: 'Cairo',
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          backgroundColor:  Color(0xFF000047),
                         ),
                       );
-                    });
-                  }
-                },
+                    }
+                    else if (!isValidPhoneNumber(phoneNumber)) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            textAlign: TextAlign.center,
+                            "رقم الهاتف غير صحيح".tr,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontFamily: 'Cairo',
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          backgroundColor:  Color(0xFF000047),
+                        ),
+                      );
+                    }
+                    else {
+                      // validatePhonefirebase(PhoneController.text);
+                      SharedPreferences prefs = await SharedPreferences.getInstance();
+                      prefs.setString('phonevalid', PhoneController.text);
 
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 100.0,right: 20,left: 20),
-                  child: Container(
-                    height: 50,
-                    width: 320,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(30.0),
-                      shape: BoxShape.rectangle,
-                      color:  Color(0xFF000047), // Background color of the container
-                      // border: Border.all(
-                      //   width: 1.0, // Border width
-                      //   color: Colors.black
-                      // ),
-                    ),
-                    child: Center(
-                      child: Text(
-                        "إعادة تعيين".tr,
-                        style: TextStyle(
-                          fontFamily: 'Cairo',
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.white, // Text color
+                      setState(() {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ChangePassword(),
+                          ),
+                        );
+                      });
+                    }
+                  },
+
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 100.0,right: 20,left: 20),
+                    child: Container(
+                      height: 50,
+                      width: 320,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30.0),
+                        shape: BoxShape.rectangle,
+                        color:  Color(0xFF000047), // Background color of the container
+                        // border: Border.all(
+                        //   width: 1.0, // Border width
+                        //   color: Colors.black
+                        // ),
+                      ),
+                      child: Center(
+                        child: Text(
+                          "إعادة تعيين".tr,
+                          style: TextStyle(
+                            fontFamily: 'Cairo',
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.white, // Text color
+                          ),
                         ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

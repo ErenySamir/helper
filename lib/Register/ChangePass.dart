@@ -162,356 +162,372 @@ class ChangePasswordState extends State<ChangePassword>
       body: Stack(
         children: [
           _isConnected
-              ?SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.only(top: 15.0,bottom: 15,right: 22,left: 22),
-              child: Column(
-                crossAxisAlignment:CrossAxisAlignment.end,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 65.0),
-                    child: Align(
-                      alignment: Alignment.topCenter,
-                      child: Container(
-                        height: 150,
-                        width: 180,
-                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(20.0),
-                          color: Color(0xFF000047),),
-                        child: Image.asset('assets/images/mam.png'),
+              ?   Directionality(
+            textDirection: Get.locale?.languageCode == 'ar'
+                ? TextDirection.ltr
+                : TextDirection.rtl,
+                child: SingleChildScrollView(
+                            child: Padding(
+                padding: const EdgeInsets.only(top: 15.0,bottom: 15,right: 22,left: 22),
+                child: Column(
+                  crossAxisAlignment:CrossAxisAlignment.end,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 65.0),
+                      child: Align(
+                        alignment: Alignment.topCenter,
+                        child: Container(
+                          height: 150,
+                          width: 180,
+                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(20.0),
+                            color: Color(0xFF000047),),
+                          child: Image.asset('assets/images/mam.png'),
+                        ),
                       ),
                     ),
-                  ),
-                  SizedBox(height: 16,),
+                    SizedBox(height: 16,),
 
-                  Center(
-                    child: Text(
-                      "تغيير كلمة المرور".tr,
-                      style: TextStyle(
-                        color: Color(0xFF000047),
-                        fontFamily: 'Cairo',
-                        fontSize: 24.0,
-                        fontWeight: FontWeight.w700,
+                    Center(
+                      child: Text(
+                        "تغيير كلمة المرور".tr,
+                        style: TextStyle(
+                          color: Color(0xFF000047),
+                          fontFamily: 'Cairo',
+                          fontSize: 24.0,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ),
-                  ),
-                  SizedBox(
-                    height: 12,
-                  ),
-                  RichText(
-                    textAlign: TextAlign.right,
-                    text: TextSpan(
-                      style: TextStyle(
-                          fontFamily: 'Cairo',
-                          fontSize: 14.0,
-                          fontWeight: FontWeight.w700,
-                          color: Color(0xFF495A71)
-                      ),
-                      children: [
-                        WidgetSpan(
-                          child: Text(
-                            '  *  ',
-                            style: TextStyle(
-                              color: Colors.red.shade800, // Red color for the asterisk
+                    SizedBox(
+                      height: 12,
+                    ),
+                    RichText(
+                      textAlign: TextAlign.right,
+                      text: TextSpan(
+                        style: TextStyle(
+                            fontFamily: 'Cairo',
+                            fontSize: 14.0,
+                            fontWeight: FontWeight.w700,
+                            color: Color(0xFF495A71)
+                        ),
+                        children: [
+                          WidgetSpan(
+                            child: Text(
+                              '  *  ',
+                              style: TextStyle(
+                                color: Colors.red.shade800, // Red color for the asterisk
+                              ),
                             ),
                           ),
-                        ),
-                        TextSpan(
-                          text: "كلمة المرور ".tr,
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Container(
-                    height: 48,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20.0),
-                      shape: BoxShape.rectangle,
-                      color: Colors.white70,
-                      border: Border.all(
-                        color: Color(0xFF9AAEC9), // Border color
-                        width: 1.0, // Border width
+                          TextSpan(
+                            text: "كلمة المرور ".tr,
+                          ),
+                        ],
                       ),
                     ),
-                    alignment: Alignment.centerRight,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        SizedBox(width: 8,),
-                        IconButton(
-                          icon: Icon(
-                            _isPasswordVisible
-                                ? Icons.remove_red_eye_outlined
-                                : Icons.visibility_off_outlined,
-                            color: Color(0xFF495A71),
-                            size: 20,
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              _isPasswordVisible = !_isPasswordVisible; // Toggle visibility
-                            });
-                          },
+
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Container(
+                      height: 48,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20.0),
+                        shape: BoxShape.rectangle,
+                        color: Colors.white70,
+                        border: Border.all(
+                          color: Color(0xFF9AAEC9), // Border color
+                          width: 1.0, // Border width
                         ),
-                        // Spacer(),
-                        Expanded(
-                          child: Padding(
-                            padding: EdgeInsets.only(right: 10),
+                      ),
+                      alignment: Alignment.centerRight,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          SizedBox(width: 8,),
+                          IconButton(
+                            icon: Icon(
+                              _isPasswordVisible
+                                  ? Icons.remove_red_eye_outlined
+                                  : Icons.visibility_off_outlined,
+                              color: Color(0xFF495A71),
+                              size: 20,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _isPasswordVisible = !_isPasswordVisible; // Toggle visibility
+                              });
+                            },
+                          ),
+                          // Spacer(),
+                          Expanded(
+                            child: Padding(
+                              padding: EdgeInsets.only(right: 10),
+                              child: TextField(
+                                controller: _passwordController,
+                                cursorColor: Color(0xFF064821),
+                                textInputAction: TextInputAction.next,
+                                keyboardType: TextInputType.text,
+                                // textAlign: TextAlign.right,
+                                textDirection: Get.locale?.languageCode == 'ar'
+                                    ? TextDirection.rtl
+                                    : TextDirection.ltr,
+                                obscureText: !_isPasswordVisible, // Toggle password visibility
+                                decoration: InputDecoration(
+                                  hintText: "كلمة المرور ".tr,
+                                  hintStyle: TextStyle(
+                                    fontFamily: 'Cairo',
+                                    color: Color(0xFF495A71),
+                                  ),
+                                  hintTextDirection: Get.locale?.languageCode == 'ar'
+                                      ? TextDirection.rtl
+                                      : TextDirection.ltr,
+                                  border: InputBorder.none,
+                                ),
+
+                                onSubmitted: (value) {
+                                  // Move focus to the next text field
+                                  FocusScope.of(context).nextFocus();
+                                },
+                              ),
+                            ),
+                          ),
+                          Container(
+                              margin: EdgeInsets.symmetric(horizontal: 20.0),
+                              height: 25,
+                              width: 25,
+                              child:
+                              Icon(
+                                Icons.key_off,
+                                size: 22,
+                                color:  Color(0xFF000047),
+                              ),                          ),
+                        ],
+                      ),
+                    ),
+                    if (_passwordController.text.length > 0 && _passwordController.text.length < 6)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 4.0), // Adjust padding as needed
+                        child: Text(
+                          "برجاء ادخال كلمه المرور قوية *".tr, // Provide a default error message if _passwordError is null
+                          style: TextStyle(
+                            color: Colors.red.shade900, // Error message color
+                            fontSize: 12.0,
+                            fontFamily: 'Cairo',
+                          ),
+                        ),
+                      ),
+                    //confirm paswooooooooooooooooooooooooord
+                    //passssssssssssssssssssword
+                    SizedBox(
+                      height: 12,
+                    ),
+                    RichText(
+                      textAlign: TextAlign.right,
+                      text: TextSpan(
+                        style: TextStyle(
+                            fontFamily: 'Cairo',
+                            fontSize: 14.0,
+                            fontWeight: FontWeight.w700,
+                            color: Color(0xFF495A71)
+                        ),
+                        children: [
+                          WidgetSpan(
+                            child: Text(
+                              '  *  ',
+                              style: TextStyle(
+                                color: Colors.red.shade800, // Red color for the asterisk
+                              ),
+                            ),
+                          ),
+                          TextSpan(
+                            text: "تأكيد كلمة المرور  ".tr,
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Container(
+                      height: 48,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20.0),
+                        shape: BoxShape.rectangle,
+                        color: Colors.white70,
+                        border: Border.all(
+                          color: Color(0xFF9AAEC9),
+                          width: 1.0,
+                        ),
+                      ),
+                      alignment: Alignment.centerRight,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          SizedBox(width: 8,),
+                          IconButton(
+                            icon: Icon(
+                              _isPasswordVisibleconfirm
+                                  ? Icons.remove_red_eye_outlined
+                                  : Icons.visibility_off_outlined,
+                              color: Color(0xFF495A71),
+                              size: 20,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _isPasswordVisibleconfirm = !_isPasswordVisibleconfirm; // Toggle visibility
+                              });
+                            },
+                          ),
+                          // Spacer(),
+
+                          Expanded(
                             child: TextField(
-                              controller: _passwordController,
+                              controller: confirmPasswordController,
                               cursorColor: Color(0xFF064821),
-                              textInputAction: TextInputAction.next,
+                              textInputAction: TextInputAction.done,
                               keyboardType: TextInputType.text,
-                              textAlign: TextAlign.right,
-                              obscureText: !_isPasswordVisible, // Toggle password visibility
+                              // textAlign: TextAlign.right, // Align text to the right
+                              obscureText: !_isPasswordVisibleconfirm, // Toggle password visibility
+                              textDirection: Get.locale?.languageCode == 'ar'
+                                  ? TextDirection.rtl
+                                  : TextDirection.ltr,
+                              // obscureText: false, // Hide password input
                               decoration: InputDecoration(
-                                hintText: "كلمة المرور ".tr,
+                                hintText: "تأكيد كلمة المرور".tr,
                                 hintStyle: TextStyle(
                                   fontFamily: 'Cairo',
                                   color: Color(0xFF495A71),
                                 ),
+                                hintTextDirection: Get.locale?.languageCode == 'ar'
+                                    ? TextDirection.rtl
+                                    : TextDirection.ltr,
                                 border: InputBorder.none,
                               ),
-
-                              onSubmitted: (value) {
-                                // Move focus to the next text field
-                                FocusScope.of(context).nextFocus();
+                              onChanged: (value) {
+                                _validatePasswords(); // Call validation on input change
                               },
                             ),
                           ),
-                        ),
-                        Container(
+                          Container(
                             margin: EdgeInsets.symmetric(horizontal: 20.0),
                             height: 25,
                             width: 25,
-                            child:
-                            Icon(
+                            child:   Icon(
                               Icons.key_off,
                               size: 22,
                               color:  Color(0xFF000047),
-                            ),                          ),
-                      ],
-                    ),
-                  ),
-                  if (_passwordController.text.length > 0 && _passwordController.text.length < 6)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 4.0), // Adjust padding as needed
-                      child: Text(
-                        "برجاء ادخال كلمه المرور قوية *".tr, // Provide a default error message if _passwordError is null
-                        style: TextStyle(
-                          color: Colors.red.shade900, // Error message color
-                          fontSize: 12.0,
-                          fontFamily: 'Cairo',
-                        ),
-                      ),
-                    ),
-                  //confirm paswooooooooooooooooooooooooord
-                  //passssssssssssssssssssword
-                  SizedBox(
-                    height: 12,
-                  ),
-                  RichText(
-                    textAlign: TextAlign.right,
-                    text: TextSpan(
-                      style: TextStyle(
-                          fontFamily: 'Cairo',
-                          fontSize: 14.0,
-                          fontWeight: FontWeight.w700,
-                          color: Color(0xFF495A71)
-                      ),
-                      children: [
-                        WidgetSpan(
-                          child: Text(
-                            '  *  ',
-                            style: TextStyle(
-                              color: Colors.red.shade800, // Red color for the asterisk
                             ),
                           ),
-                        ),
-                        TextSpan(
-                          text: "تأكيد كلمة المرور  ".tr,
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Container(
-                    height: 48,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20.0),
-                      shape: BoxShape.rectangle,
-                      color: Colors.white70,
-                      border: Border.all(
-                        color: Color(0xFF9AAEC9),
-                        width: 1.0,
+                        ],
                       ),
                     ),
-                    alignment: Alignment.centerRight,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        SizedBox(width: 8,),
-                        IconButton(
-                          icon: Icon(
-                            _isPasswordVisibleconfirm
-                                ? Icons.remove_red_eye_outlined
-                                : Icons.visibility_off_outlined,
-                            color: Color(0xFF495A71),
-                            size: 20,
+                    if (_passwordController.text != confirmPasswordController.text && confirmPasswordController.text.isEmpty)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 4.0), // Adjust padding as needed
+                        child: Text(
+                          "برجاء ادخال نفس كلمه المرور*".tr, // Provide a default error message if _passwordError is null
+                          style: TextStyle(
+                            color: Colors.red.shade900, // Error message color
+                            fontSize: 12.0,
+                            fontFamily: 'Cairo',
                           ),
-                          onPressed: () {
-                            setState(() {
-                              _isPasswordVisibleconfirm = !_isPasswordVisibleconfirm; // Toggle visibility
-                            });
-                          },
                         ),
-                        // Spacer(),
+                      ),
 
-                        Expanded(
-                          child: TextField(
-                            controller: confirmPasswordController,
-                            cursorColor: Color(0xFF064821),
-                            textInputAction: TextInputAction.done,
-                            keyboardType: TextInputType.text,
-                            textAlign: TextAlign.right, // Align text to the right
-                            obscureText: !_isPasswordVisibleconfirm, // Toggle password visibility
-
-                            // obscureText: false, // Hide password input
-                            decoration: InputDecoration(
-                              hintText: "تأكيد كلمة المرور".tr,
-                              hintStyle: TextStyle(
-                                fontFamily: 'Cairo',
-                                color: Color(0xFF495A71),
+                    GestureDetector(
+                      onTap: () async {
+                        if (
+                            _passwordController.text != confirmPasswordController.text) {
+                          setState(() {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  "برجاء ادخال نفس كلمة المرور  ".tr, // "Please enter all the data"
+                                  textAlign: TextAlign.center,
+                                ),
+                                backgroundColor: Colors.red.shade900,
                               ),
-                              border: InputBorder.none,
-                            ),
-                            onChanged: (value) {
-                              _validatePasswords(); // Call validation on input change
-                            },
-                          ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.symmetric(horizontal: 20.0),
-                          height: 25,
-                          width: 25,
-                          child:   Icon(
-                            Icons.key_off,
-                            size: 22,
-                            color:  Color(0xFF000047),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  if (_passwordController.text != confirmPasswordController.text && confirmPasswordController.text.isEmpty)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 4.0), // Adjust padding as needed
-                      child: Text(
-                        "برجاء ادخال نفس كلمه المرور*".tr, // Provide a default error message if _passwordError is null
-                        style: TextStyle(
-                          color: Colors.red.shade900, // Error message color
-                          fontSize: 12.0,
-                          fontFamily: 'Cairo',
-                        ),
-                      ),
-                    ),
+                            );
+                            isLoading = false;
+                          });
+                          return; // Exit early if validation fails
+                        }
 
-                  GestureDetector(
-                    onTap: () async {
-                      if (
-                          _passwordController.text != confirmPasswordController.text) {
                         setState(() {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                "برجاء ادخال نفس كلمة المرور  ".tr, // "Please enter all the data"
-                                textAlign: TextAlign.center,
-                              ),
-                              backgroundColor: Colors.red.shade900,
-                            ),
-                          );
-                          isLoading = false;
+                          isLoading = true; // Set loading state only if validation passes
                         });
-                        return; // Exit early if validation fails
-                      }
 
-                      setState(() {
-                        isLoading = true; // Set loading state only if validation passes
-                      });
+                        await verifyPhone(Phone);
 
-                      await verifyPhone(Phone);
+                        SharedPreferences prefs = await SharedPreferences.getInstance();
+                        String v_phone = prefs.getString('phonevalid') ?? "";
 
-                      SharedPreferences prefs = await SharedPreferences.getInstance();
-                      String v_phone = prefs.getString('phonevalid') ?? "";
+                        validatePhonefirebase(v_phone);
+                      },
 
-                      validatePhonefirebase(v_phone);
-                    },
-
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 100.0,right: 20,left: 20),
-                      child: Container(
-                        height: 50,
-                        width: 320,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30.0),
-                          shape: BoxShape.rectangle,
-                          color: Color(0xFF000047), // Background color of the container
-                          // border: Border.all(
-                          //   width: 1.0, // Border width
-                          //   color: Colors.black
-                          // ),
-                        ),
-                        child: Center(
-                          child: Text(
-                            "تأكيد".tr,
-                            style: TextStyle(
-                              fontFamily: 'Cairo',
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.white, // Text color
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 100.0,right: 20,left: 20),
+                        child: Container(
+                          height: 50,
+                          width: 320,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(30.0),
+                            shape: BoxShape.rectangle,
+                            color: Color(0xFF000047), // Background color of the container
+                            // border: Border.all(
+                            //   width: 1.0, // Border width
+                            //   color: Colors.black
+                            // ),
+                          ),
+                          child: Center(
+                            child: Text(
+                              "تأكيد".tr,
+                              style: TextStyle(
+                                fontFamily: 'Cairo',
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white, // Text color
+                              ),
                             ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                  SizedBox(height: 5,),
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => SignUpPage()),
-                        );
-                      });
-                    },
+                    SizedBox(height: 5,),
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => SignUpPage()),
+                          );
+                        });
+                      },
 
-                    child: Container(
-                      alignment: Alignment.center, // Center the text within the container
-                      child: Text(
-                        "إنشــــاء حســــــاب".tr,
-                        style: TextStyle(
-                          fontFamily: 'Cairo',
-                          fontSize: 14.0,
-                          fontWeight: FontWeight.w400,
-                          color: Color(0xFF000047), // Text color
-                          decoration: TextDecoration.underline, // Adds the underline
-                          decorationColor: Color(0xFF000047), // Underline color to match text color
-                          decorationThickness: 1.0, // Optional: Thickness of the underline
+                      child: Container(
+                        alignment: Alignment.center, // Center the text within the container
+                        child: Text(
+                          "إنشــــاء حســــــاب".tr,
+                          style: TextStyle(
+                            fontFamily: 'Cairo',
+                            fontSize: 14.0,
+                            fontWeight: FontWeight.w400,
+                            color: Color(0xFF000047), // Text color
+                            decoration: TextDecoration.underline, // Adds the underline
+                            decorationColor: Color(0xFF000047), // Underline color to match text color
+                            decorationThickness: 1.0, // Optional: Thickness of the underline
+                          ),
                         ),
                       ),
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ): SizedBox.shrink(),
+                    )
+                  ],
+                ),
+                            ),
+                          ),
+              ): SizedBox.shrink(),
           (isLoading == true)
               ? const Positioned(top: 0, child: Loading())
               : Container(height: 5,),

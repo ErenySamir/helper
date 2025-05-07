@@ -188,397 +188,414 @@ FocusScope.of(context).requestFocus(FocusNode());
           body: Stack(
             children: [
               _isConnected
-                  ?SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 15.0,bottom: 15,right: 22,left: 22),
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 65.0),
-                          child: Align(
-                            alignment: Alignment.topCenter,
-                            child: Container(
-                              width: 135,
-                              height: 160.72,
-                              child: AnimatedBuilder(
-                                animation: animationController,
-                                builder: (context, child) {
-                                  return Transform.scale(
-                                    scale: animation.value,
-                                    child: Container(
-                                      height: 250,
-                                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(20.0),
-                                          color: Color(0xFF000047),),
-                                        child: Image.asset('assets/images/mam.png')),
-                                  );
-                                },
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 20,),
-                        Center(
-                          child: Text(
-                            "تسجيل دخول".tr,
-                            style: TextStyle(
-                              color:  Color(0xFF000047),
-                              fontFamily: 'Cairo',
-                              fontSize: 24.0,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                        ),
-                        //passssssssssssssssssssword
-                        SizedBox(
-                          height: 12,
-                        ),
-                        RichText(
-                          textAlign: TextAlign.right,
-                          text: TextSpan(
-                            style: TextStyle(
-                                fontFamily: 'Cairo',
-                                fontSize: 14.0,
-                                fontWeight: FontWeight.w700,
-                                color: Color(0xFF495A71)
-                            ),
-                            children: [
-                              WidgetSpan(
-                                child: Text(
-                                  '  *  ',
-                                  style: TextStyle(
-                                    color: Colors.red.shade800, // Red color for the asterisk
-                                  ),
-                                ),
-                              ),
-                              TextSpan(
-                                text: "رقم التليفون ".tr,
-                              ),
-                            ],
-                          ),
-                        ),
-
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Container(
-                          height: 48,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20.0),
-                            shape: BoxShape.rectangle,
-                            color: Colors.white70,
-                            border: Border.all(
-                              color: Color(0xFF9AAEC9), // Border color
-                              width: 1.0, // Border width
-                            ),
-                          ),
-                          alignment: Alignment.centerRight,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Expanded(
-                                child: TextField(
-                                  controller: PhoneController,
-                                  cursorColor:Color(0xFF064821),
-                                  inputFormatters: [
-                                    LengthLimitingTextInputFormatter(11),
-                                  ],
-                                  textInputAction: TextInputAction.next,
-                                  keyboardType: TextInputType.datetime,
-                                  textAlign: TextAlign.right, // Align text to the right
-                                  decoration: InputDecoration(
-                                    hintText: "رقم التليفون ".tr,
-                                    hintStyle: TextStyle(
-                                      fontFamily: 'Cairo',
-                                      color: Color(0xFF495A71),
-                                    ),
-                                    border: InputBorder.none,
-                                  ),
-                                  onChanged: (value) {
-                                    Phone = value;
-                                    print("phoneeee" + " " + Phone);
-                                    setState(() {
-                                      validatePhone(value);
-                                    });
-                                  },
-                                  onSubmitted: (value) {
-                                    // Move focus to the next text field
-                                    FocusScope.of(context).nextFocus();
-                                  },
-                                ),
-                              ),
-
-                              Container(
-                                margin: EdgeInsets.symmetric(horizontal: 20.0),
-                                child:Icon(
-                                  Icons.phone,
-                                 size: 22,
-                                  color:  Color(0xFF000047),
-                                ),
-
-                              ),
-                            ],
-                          ),
-                        ),
-                        if (PhoneErrorText.isNotEmpty)
-                          Text(
-                            // textAlign: TextAlign.end,
-                            PhoneErrorText,
-                            style: TextStyle(
-                              color: Colors.red.shade900, // Error message color
-                              fontSize: 12.0,
-                              fontFamily: 'Cairo',
-                            ),),
-                        SizedBox(height: 5,),
-
-                        //passssssssssssssssssssword
-                        SizedBox(
-                          height: 12,
-                        ),
-                        RichText(
-                          textAlign: TextAlign.right,
-                          text: TextSpan(
-                            style: TextStyle(
-                                fontFamily: 'Cairo',
-                                fontSize: 14.0,
-                                fontWeight: FontWeight.w700,
-                                color: Color(0xFF495A71)
-                            ),
-                            children: [
-                              WidgetSpan(
-                                child: Text(
-                                  '  *  ',
-                                  style: TextStyle(
-                                    color: Colors.red.shade800, // Red color for the asterisk
-                                  ),
-                                ),
-                              ),
-                              TextSpan(
-                                text: "كلمة المرور ".tr,
-                              ),
-                            ],
-                          ),
-                        ),
-
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Container(
-                          height: 48,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20.0),
-                            shape: BoxShape.rectangle,
-                            color: Colors.white70,
-                            border: Border.all(
-                              color: Color(0xFF9AAEC9), // Border color
-                              width: 1.0, // Border width
-                            ),
-                          ),
-                          alignment: Alignment.centerRight,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              SizedBox(width: 8,),
-                              IconButton(
-                                icon: Icon(
-                                  _isPasswordVisible
-                                      ? Icons.remove_red_eye_outlined
-                                      : Icons.visibility_off_outlined,
-                                  color: Color(0xFF495A71),
-                                  size: 20,
-                                ),
-                                onPressed: () {
-                                  setState(() {
-                                    _isPasswordVisible = !_isPasswordVisible; // Toggle visibility
-                                  });
-                                },
-                              ),
-                              Expanded(
-                                child: TextField(
-                                  controller: PasswordController,
-                                  cursorColor: Color(0xFF064821),
-                                  textInputAction: TextInputAction.done,
-                                  keyboardType: TextInputType.text,
-                                  textAlign: TextAlign.right,
-                                  obscureText: !_isPasswordVisible, // Toggle password visibility
-                                  decoration: InputDecoration(
-                                    hintText: "كلمة المرور ".tr,
-                                    hintStyle: TextStyle(
-                                      fontFamily: 'Cairo',
-                                      color: Color(0xFF495A71),
-                                    ),
-                                    border: InputBorder.none,
-                                  ),
-
-                                  // onSubmitted: (value) {
-                                  //   // Move focus to the next text field
-                                  //   FocusScope.of(context).nextFocus();
-                                  // },
-                                ),
-                              ),
-                              Container(
-                                  margin: EdgeInsets.symmetric(horizontal: 20.0),
-                                  height: 25,
-                                  width: 25,
-                                  child:
-                                  Icon(
-                                    Icons.key_off,
-                                    size: 22,
-                                    color:  Color(0xFF000047),
-                                  ),                              ),
-                            ],
-                          ),
-                        ),
-                        if (PasswordController.text.length > 0 && PasswordController.text.length < 6)
+                  ?   Directionality(
+                textDirection: Get.locale?.languageCode == 'ar'
+                    ? TextDirection.ltr
+                    : TextDirection.rtl,
+                    child: SingleChildScrollView(
+                                    child: Padding(
+                    padding: const EdgeInsets.only(top: 15.0,bottom: 15,right: 22,left: 22),
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
                           Padding(
-                            padding: const EdgeInsets.only(top: 4.0), // Adjust padding as needed
+                            padding: const EdgeInsets.only(top: 65.0),
+                            child: Align(
+                              alignment: Alignment.topCenter,
+                              child: Container(
+                                width: 135,
+                                height: 160.72,
+                                child: AnimatedBuilder(
+                                  animation: animationController,
+                                  builder: (context, child) {
+                                    return Transform.scale(
+                                      scale: animation.value,
+                                      child: Container(
+                                        height: 250,
+                                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(20.0),
+                                            color: Color(0xFF000047),),
+                                          child: Image.asset('assets/images/mam.png')),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 20,),
+                          Center(
                             child: Text(
-                              "برجاء ادخال كلمه المرور قوية *".tr, // Provide a default error message if _passwordError is null
+                              "تسجيل دخول".tr,
+                              style: TextStyle(
+                                color:  Color(0xFF000047),
+                                fontFamily: 'Cairo',
+                                fontSize: 24.0,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ),
+                          //passssssssssssssssssssword
+                          SizedBox(
+                            height: 12,
+                          ),
+                          RichText(
+                            textAlign: TextAlign.right,
+                            text: TextSpan(
+                              style: TextStyle(
+                                  fontFamily: 'Cairo',
+                                  fontSize: 14.0,
+                                  fontWeight: FontWeight.w700,
+                                  color: Color(0xFF495A71)
+                              ),
+                              children: [
+                                WidgetSpan(
+                                  child: Text(
+                                    '  *  ',
+                                    style: TextStyle(
+                                      color: Colors.red.shade800, // Red color for the asterisk
+                                    ),
+                                  ),
+                                ),
+                                TextSpan(
+                                  text: "رقم التليفون ".tr,
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Container(
+                            height: 48,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20.0),
+                              shape: BoxShape.rectangle,
+                              color: Colors.white70,
+                              border: Border.all(
+                                color: Color(0xFF9AAEC9), // Border color
+                                width: 1.0, // Border width
+                              ),
+                            ),
+                            alignment: Alignment.centerRight,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Expanded(
+                                  child: TextField(
+                                    controller: PhoneController,
+                                    cursorColor:Color(0xFF064821),
+                                    inputFormatters: [
+                                      LengthLimitingTextInputFormatter(11),
+                                    ],
+                                    textInputAction: TextInputAction.next,
+                                    keyboardType: TextInputType.datetime,
+                                    // textAlign: TextAlign.right, // Align text to the right
+                                    textDirection: Get.locale?.languageCode == 'ar'
+                                        ? TextDirection.rtl
+                                        : TextDirection.ltr,
+                                    decoration: InputDecoration(
+                                      hintText: "رقم التليفون ".tr,
+                                      hintStyle: TextStyle(
+                                        fontFamily: 'Cairo',
+                                        color: Color(0xFF495A71),
+                                      ),
+                                      hintTextDirection: Get.locale?.languageCode == 'ar'
+                                          ? TextDirection.rtl
+                                          : TextDirection.ltr,
+                                      border: InputBorder.none,
+                                    ),
+                                    onChanged: (value) {
+                                      Phone = value;
+                                      print("phoneeee" + " " + Phone);
+                                      setState(() {
+                                        validatePhone(value);
+                                      });
+                                    },
+                                    onSubmitted: (value) {
+                                      // Move focus to the next text field
+                                      FocusScope.of(context).nextFocus();
+                                    },
+                                  ),
+                                ),
+
+                                Container(
+                                  margin: EdgeInsets.symmetric(horizontal: 20.0),
+                                  child:Icon(
+                                    Icons.phone,
+                                   size: 22,
+                                    color:  Color(0xFF000047),
+                                  ),
+
+                                ),
+                              ],
+                            ),
+                          ),
+                          if (PhoneErrorText.isNotEmpty)
+                            Text(
+                              // textAlign: TextAlign.end,
+                              PhoneErrorText,
                               style: TextStyle(
                                 color: Colors.red.shade900, // Error message color
                                 fontSize: 12.0,
                                 fontFamily: 'Cairo',
-                              ),
-                            ),
+                              ),),
+                          SizedBox(height: 5,),
+
+                          //passssssssssssssssssssword
+                          SizedBox(
+                            height: 12,
                           ),
-                        SizedBox(height: 5,),
-                        GestureDetector(
-                          onTap: (){
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ForgetPassword( ),
-                              ),
-                            );
-                          },
-                          child: Container(
-                            alignment: Alignment.centerLeft, // Ensure container aligns children to the left
-                            child: Text(
-                              "نسيت كلمة المرور".tr,
-                              textAlign: TextAlign.left, // Aligns text within its own bounds
+                          RichText(
+                            textAlign: TextAlign.right,
+                            text: TextSpan(
                               style: TextStyle(
-                                fontFamily: 'Cairo',
-                                fontSize: 14.0,
-                                fontWeight: FontWeight.w400,
-                                color:  Color(0xFF000047),
-                                decoration: TextDecoration.underline, // Adds the underline
-                                decorationColor:  Color(0xFF000047), // Underline color to match text color
-                                decorationThickness: 1.0, // Optional: Thickness of the underline
+                                  fontFamily: 'Cairo',
+                                  fontSize: 14.0,
+                                  fontWeight: FontWeight.w700,
+                                  color: Color(0xFF495A71)
                               ),
-                            ),
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () async {
-                            String phoneNumber = PhoneController.text;
-                            String password = PasswordController.text;
-
-                            if (phoneNumber.isEmpty || password.isEmpty) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                    textAlign: TextAlign.center,
-                                    "يجب ادخال بيانات".tr,
+                              children: [
+                                WidgetSpan(
+                                  child: Text(
+                                    '  *  ',
                                     style: TextStyle(
-                                      color: Colors.white,
-                                      fontFamily: 'Cairo',
-                                      fontWeight: FontWeight.w700,
+                                      color: Colors.red.shade800, // Red color for the asterisk
                                     ),
                                   ),
-                                  backgroundColor: Color(0xFF000047),
                                 ),
-                              );
-                            }
-                            else if (!isValidPhoneNumber(phoneNumber)) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                    textAlign: TextAlign.center,
-                                    "رقم الهاتف غير صحيح".tr,
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontFamily: 'Cairo',
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  ),
-                                  backgroundColor:  Color(0xFF000047),
+                                TextSpan(
+                                  text: "كلمة المرور ".tr,
                                 ),
-                              );
-                            }
-                            else {
-                              validatePhonefirebase(phoneNumber, password);
-                              print("phonnnnnnnnnnnnnnnnnnneeee$phoneNumber");
+                              ],
+                            ),
+                          ),
 
-
-                            }
-                          },
-
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: 80.0,right: 20,left: 20),
-                            child: Container(
-                              height: 50,
-                              width: 320,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(30.0),
-                                shape: BoxShape.rectangle,
-                                color:  Color(0xFF000047), // Background color of the container
-                                // border: Border.all(
-                                //   width: 1.0, // Border width
-                                //   color: Colors.black
-                                // ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Container(
+                            height: 48,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20.0),
+                              shape: BoxShape.rectangle,
+                              color: Colors.white70,
+                              border: Border.all(
+                                color: Color(0xFF9AAEC9), // Border color
+                                width: 1.0, // Border width
                               ),
-                              child: Center(
-                                child: Text(
-                                  "تسجيل دخول".tr,
-                                  style: TextStyle(
-                                    fontFamily: 'Cairo',
-                                    fontSize: 16.0,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.white, // Text color
+                            ),
+                            alignment: Alignment.centerRight,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                SizedBox(width: 8,),
+                                IconButton(
+                                  icon: Icon(
+                                    _isPasswordVisible
+                                        ? Icons.remove_red_eye_outlined
+                                        : Icons.visibility_off_outlined,
+                                    color: Color(0xFF495A71),
+                                    size: 20,
                                   ),
+                                  onPressed: () {
+                                    setState(() {
+                                      _isPasswordVisible = !_isPasswordVisible; // Toggle visibility
+                                    });
+                                  },
+                                ),
+                                Expanded(
+                                  child: TextField(
+                                    controller: PasswordController,
+                                    cursorColor: Color(0xFF064821),
+                                    textInputAction: TextInputAction.done,
+                                    keyboardType: TextInputType.text,
+                                    // textAlign: TextAlign.right,
+                                    obscureText: !_isPasswordVisible, // Toggle password visibility
+                                    textDirection: Get.locale?.languageCode == 'ar'
+                                        ? TextDirection.rtl
+                                        : TextDirection.ltr,
+                                    decoration: InputDecoration(
+                                      hintText: "كلمة المرور ".tr,
+                                      hintStyle: TextStyle(
+                                        fontFamily: 'Cairo',
+                                        color: Color(0xFF495A71),
+                                      ),
+                                      hintTextDirection: Get.locale?.languageCode == 'ar'
+                                          ? TextDirection.rtl
+                                          : TextDirection.ltr,
+                                      border: InputBorder.none,
+                                    ),
+
+                                    // onSubmitted: (value) {
+                                    //   // Move focus to the next text field
+                                    //   FocusScope.of(context).nextFocus();
+                                    // },
+                                  ),
+                                ),
+                                Container(
+                                    margin: EdgeInsets.symmetric(horizontal: 20.0),
+                                    height: 25,
+                                    width: 25,
+                                    child:
+                                    Icon(
+                                      Icons.key_off,
+                                      size: 22,
+                                      color:  Color(0xFF000047),
+                                    ),                              ),
+                              ],
+                            ),
+                          ),
+                          if (PasswordController.text.length > 0 && PasswordController.text.length < 6)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 4.0), // Adjust padding as needed
+                              child: Text(
+                                "برجاء ادخال كلمه المرور قوية *".tr, // Provide a default error message if _passwordError is null
+                                style: TextStyle(
+                                  color: Colors.red.shade900, // Error message color
+                                  fontSize: 12.0,
+                                  fontFamily: 'Cairo',
                                 ),
                               ),
                             ),
-                          ),
-                        ),
-                        SizedBox(height: 5,),
-                        GestureDetector(
-                          onTap: () {
-                            setState(() {
-
+                          SizedBox(height: 5,),
+                          GestureDetector(
+                            onTap: (){
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => SignUpPage()),
+                                  builder: (context) => ForgetPassword( ),
+                                ),
                               );
-                            });
-                          },
-
-                          child: Container(
-                            alignment: Alignment.center, // Center the text within the container
-                            child: Text(
-                              "إنشــــاء حســــــاب".tr,
-                              style: TextStyle(
-                                fontFamily: 'Cairo',
-                                fontSize: 14.0,
-                                fontWeight: FontWeight.w400,
-                                color:  Color(0xFF000047), // Text color
-                                decoration: TextDecoration.underline, // Adds the underline
-                                decorationColor:  Color(0xFF000047), // Underline color to match text color
-                                decorationThickness: 1.0, // Optional: Thickness of the underline
+                            },
+                            child: Container(
+                              alignment: Alignment.centerLeft, // Ensure container aligns children to the left
+                              child: Text(
+                                "نسيت كلمة المرور".tr,
+                                textAlign: TextAlign.left, // Aligns text within its own bounds
+                                style: TextStyle(
+                                  fontFamily: 'Cairo',
+                                  fontSize: 14.0,
+                                  fontWeight: FontWeight.w400,
+                                  color:  Color(0xFF000047),
+                                  decoration: TextDecoration.underline, // Adds the underline
+                                  decorationColor:  Color(0xFF000047), // Underline color to match text color
+                                  decorationThickness: 1.0, // Optional: Thickness of the underline
+                                ),
                               ),
                             ),
                           ),
+                          GestureDetector(
+                            onTap: () async {
+                              String phoneNumber = PhoneController.text;
+                              String password = PasswordController.text;
 
-                        ),
-                        SizedBox(
-                          height: 35,
-                        ),
-                      ]),
+                              if (phoneNumber.isEmpty || password.isEmpty) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      textAlign: TextAlign.center,
+                                      "يجب ادخال بيانات".tr,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontFamily: 'Cairo',
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                    backgroundColor: Color(0xFF000047),
+                                  ),
+                                );
+                              }
+                              else if (!isValidPhoneNumber(phoneNumber)) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      textAlign: TextAlign.center,
+                                      "رقم الهاتف غير صحيح".tr,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontFamily: 'Cairo',
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                    backgroundColor:  Color(0xFF000047),
+                                  ),
+                                );
+                              }
+                              else {
+                                validatePhonefirebase(phoneNumber, password);
+                                print("phonnnnnnnnnnnnnnnnnnneeee$phoneNumber");
 
-                ),
 
-              ) : SizedBox.shrink(),
+                              }
+                            },
+
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 80.0,right: 20,left: 20),
+                              child: Container(
+                                height: 50,
+                                width: 320,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(30.0),
+                                  shape: BoxShape.rectangle,
+                                  color:  Color(0xFF000047), // Background color of the container
+                                  // border: Border.all(
+                                  //   width: 1.0, // Border width
+                                  //   color: Colors.black
+                                  // ),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    "تسجيل دخول".tr,
+                                    style: TextStyle(
+                                      fontFamily: 'Cairo',
+                                      fontSize: 16.0,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.white, // Text color
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 5,),
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => SignUpPage()),
+                                );
+                              });
+                            },
+
+                            child: Container(
+                              alignment: Alignment.center, // Center the text within the container
+                              child: Text(
+                                "إنشــــاء حســــــاب".tr,
+                                style: TextStyle(
+                                  fontFamily: 'Cairo',
+                                  fontSize: 14.0,
+                                  fontWeight: FontWeight.w400,
+                                  color:  Color(0xFF000047), // Text color
+                                  decoration: TextDecoration.underline, // Adds the underline
+                                  decorationColor:  Color(0xFF000047), // Underline color to match text color
+                                  decorationThickness: 1.0, // Optional: Thickness of the underline
+                                ),
+                              ),
+                            ),
+
+                          ),
+                          SizedBox(
+                            height: 35,
+                          ),
+                        ]),
+
+                                    ),
+
+                                  ),
+                  ) : SizedBox.shrink(),
               isLoading ? Loading() :  Container(height: 5,),
               if (!_isConnected) _buildNoConnectionOverlay(),
 

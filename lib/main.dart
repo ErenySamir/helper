@@ -35,7 +35,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      locale: TranslationController.to.currentLocale,
+      // Force Arabic
+      locale: const Locale('ar', 'AR'),
       fallbackLocale: const Locale('ar', 'AR'),
       translations: TranslationController.to,
       supportedLocales: const [
@@ -48,16 +49,12 @@ class MyApp extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       builder: (context, child) {
-        final locale = TranslationController.to.currentLocale;
-        final isArabic = locale.languageCode == 'ar';
-
+        // Always RTL for Arabic
         return Directionality(
-          textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
+          textDirection: TextDirection.rtl,
           child: child!,
         );
       },
-
-
       home: SplachPage(),
     );
   }

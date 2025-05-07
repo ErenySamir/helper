@@ -139,6 +139,7 @@ class TranslationController extends GetxController implements Translations {
       "رقم الهاتف غير صحيح": "Invalid phone number",
       "يجب ادخال بيانات": "Please enter the data",
       "تسجيل الخروج ":"Sign out ",
+      "إنشاء حساب":"Create Account",
       "هل أنت متأكد أنك تريد تسجيل الخروج؟":"Are you sure you want to Sign out?",
       // Login/Register
       "رقم التليفون ": "Phone Number",

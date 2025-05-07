@@ -293,7 +293,7 @@ class HomePageState extends State<HomePage> {
                                         "   أسم العائلة :  ".tr +
                                             // + familyItem.familyName!,
                                           (familyItem.familyName!.length > 25
-                                            ? '${familyItem.familyName!.substring(0, 25)}..'
+                                            ? '${familyItem.familyName!.substring(0, 25)}'
                                             : familyItem.familyName!),
                                         style: TextStyle(
                                           fontFamily: 'Cairo',
@@ -308,7 +308,7 @@ class HomePageState extends State<HomePage> {
                                     " تاريخ العطية : ".tr +
                                         // familyItem.date!,
                                         (familyItem.date!.length > 30
-                                            ? '${familyItem.date!.substring(0, 30)}..'
+                                            ? '${familyItem.date!.substring(0, 30)}'
                                             : familyItem.date!),
                                     style: TextStyle(
                                       fontFamily: 'Cairo',
@@ -320,9 +320,10 @@ class HomePageState extends State<HomePage> {
                                   Text(
                                     " العطية : ".tr +
                                         // familyItem.give!,
-                                        (familyItem.give!.length > 30
-                                            ? '${familyItem.give!.substring(0, 30)}..'
+                                        (familyItem.give!.length > 45
+                                            ? '${familyItem.give!.substring(0, 45)}'
                                             : familyItem.give!),
+                                    maxLines: 1,
                                     style: TextStyle(
                                       fontFamily: 'Cairo',
                                       fontSize: 14.0,
@@ -334,7 +335,7 @@ class HomePageState extends State<HomePage> {
                                     "  اسم المعطي :  ".tr +
                                         // familyItem.giverName!,
                                         (familyItem.giverName!.length > 30
-                                            ? '${familyItem.giverName!.substring(0, 30)}..'
+                                            ? '${familyItem.giverName!.substring(0, 30)}'
                                             : familyItem.giverName!),
                                     style: TextStyle(
                                       fontFamily: 'Cairo',
@@ -399,7 +400,7 @@ class HomePageState extends State<HomePage> {
      floatingActionButton: Padding(
       padding: EdgeInsets.only(
       bottom: 85.0,
-        right: Get.locale?.languageCode == 'ar' ? 28.0 : 0.0, // Add right padding only for Arabic
+        right: Get.locale?.languageCode == 'ar' ? 28.0 :28.0, // Add right padding only for Arabic
       ),
           child:   Align(
             alignment: Alignment.bottomRight, // Forces right alignment
