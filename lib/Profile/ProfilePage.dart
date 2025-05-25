@@ -464,14 +464,72 @@ class ProfilepageState extends State<Profilepage>
                     ),
                     SizedBox(height: 5,),
                     GestureDetector(
-                      onTap: (){
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>SigninPage(),
-                          ),
-                        );
-                      },
+                        onTap: (){
+                          showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              backgroundColor: Colors.white,
+                              title: Text(
+                                "تسجيل خروج".tr,
+                                // textAlign: TextAlign.right,
+                              ),
+                              content: Text(
+                                "هل أنت متأكد أنك تريد تسجيل الخروج؟".tr,
+                                // textAlign: TextAlign.right,
+                              ),
+                              // actionsPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                              actions: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
+                                      height: 40,
+                                      width: 86,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10.0),
+                                        color: Colors.white,
+                                      ),
+                                      child: TextButton(
+                                        onPressed: () => Navigator.of(context).pop(false),
+                                        child: Text(
+                                          "إلغاء".tr,
+                                          // textAlign: TextAlign.center,
+                                          style: TextStyle(color: Color(0xFF000047)),
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      height: 40,
+                                      width: 100,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10.0),
+                                        color: Color(0xFF000047),
+                                      ),
+                                      child: TextButton(
+                                        onPressed: () async {
+                                          SharedPreferences prefs = await SharedPreferences.getInstance();
+                                          // Clear specific value
+                                          await prefs.remove('phonev'); // or await prefs.setString('phonev', '');
+                                          print("Button pressed");
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(builder: (context) => SigninPage()),
+                                          );
+                                        },
+                                        child: Text(
+                                          "تسجيل خروج".tr,
+                                          // textAlign: TextAlign.center,
+                                          style: TextStyle(color: Colors.white, fontSize: 12),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          );
+
+                        },
                       child: Container(
                         alignment: Alignment.centerLeft, // Ensure container aligns children to the left
                         child: Text(

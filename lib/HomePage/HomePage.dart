@@ -201,31 +201,91 @@ class HomePageState extends State<HomePage> {
                     return Dismissible(
                       key: ValueKey(familyItem.Id), // Unique key for each item
                       direction: DismissDirection.endToStart, // Swipe from right to left
-                      background: Container(
-                        color: Colors.red.shade900,
-                        alignment: Alignment.centerRight,
-                        padding: EdgeInsets.only(right: 20),
-                        child: Icon(Icons.delete, color: Colors.white, size: 20),
+                      background: Padding(
+                        padding: const EdgeInsets.all(18.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.red.shade900,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          alignment: Get.locale?.languageCode == 'ar'
+                              ? Alignment.centerRight
+                              : Alignment.centerLeft,
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Icon(Icons.delete, color: Colors.white, size: 20),
+                        ),
                       ),
-                      confirmDismiss: (direction) async {
+
+                        confirmDismiss: (direction) async {
                         // Show confirmation dialog before deleting
-                        return await showDialog(
+                        return await
+                        // showDialog(
+                        //   context: context,
+                        //   builder: (context) => AlertDialog(
+                        //     title: Text("تأكيد الحذف".tr),
+                        //     content: Text("هل أنت متأكد أنك تريد حذف هذه العائلة؟".tr),
+                        //     actions: [
+                        //       TextButton(
+                        //         onPressed: () => Navigator.of(context).pop(false),
+                        //         child: Text("إلغاء".tr,style: TextStyle(color: Color(0xFF000047))),
+                        //       ),
+                        //       TextButton(
+                        //         onPressed: () async {
+                        //           print("familyItem.Id!${familyItem.Id!}");
+                        //           await deleteCancelByPhoneAndPlaygroundId(familyItem.Id!);
+                        //           Navigator.of(context).pop(true);
+                        //           },
+                        //         child: Text("حذف".tr, style: TextStyle(color: Colors.red.shade900)),
+                        //       ),
+                        //     ],
+                        //   ),
+                        // );
+                        showDialog(
                           context: context,
                           builder: (context) => AlertDialog(
+                            backgroundColor: Colors.white,
                             title: Text("تأكيد الحذف".tr),
                             content: Text("هل أنت متأكد أنك تريد حذف هذه العائلة؟".tr),
+                            // actionsPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                             actions: [
-                              TextButton(
-                                onPressed: () => Navigator.of(context).pop(false),
-                                child: Text("إلغاء".tr,style: TextStyle(color: Color(0xFF000047))),
-                              ),
-                              TextButton(
-                                onPressed: () async {
-                                  print("familyItem.Id!${familyItem.Id!}");
-                                  await deleteCancelByPhoneAndPlaygroundId(familyItem.Id!);
-                                  Navigator.of(context).pop(true);
-                                  },
-                                child: Text("حذف".tr, style: TextStyle(color: Colors.red.shade900)),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Container(
+                                    height: 40,
+                                    width: 86,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                      color: Colors.white,
+                                    ),
+                                    child: TextButton(
+                                      onPressed: () => Navigator.of(context).pop(false),
+                                      child: Text(
+                                        "إلغاء".tr,
+                                        // textAlign: TextAlign.center,
+                                        style: TextStyle(color: Color(0xFF000047)),
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    height: 40,
+                                    width: 100,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                      color: Color(0xFF000047),
+                                    ),
+                                    child:
+                                    TextButton(
+                                      onPressed: () async {
+                                        print("familyItem.Id!${familyItem.Id!}");
+                                        await deleteCancelByPhoneAndPlaygroundId(familyItem.Id!);
+                                        Navigator.of(context).pop(true);
+                                      },
+                                      child: Text("حذف".tr, style: TextStyle(color: Colors.white, fontSize: 12)),
+                                    ),
+
+                                  ),
+                                ],
                               ),
                             ],
                           ),
@@ -244,7 +304,7 @@ class HomePageState extends State<HomePage> {
                         });
 
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text("تم حذف العائلة بنجاح".tr), backgroundColor:  Color(0xFF000047),),
+                          SnackBar(content: Text("تم حذف العائلة بنجاح".tr,textAlign: TextAlign.center,), backgroundColor:  Color(0xFF000047),),
                         );
                       },
                       child: Padding(
@@ -295,6 +355,9 @@ class HomePageState extends State<HomePage> {
                                           (familyItem.familyName!.length > 25
                                             ? '${familyItem.familyName!.substring(0, 25)}'
                                             : familyItem.familyName!),
+                                        textAlign: Get.locale?.languageCode == 'ar'
+                                            ? TextAlign.right
+                                            : TextAlign.left,
                                         style: TextStyle(
                                           fontFamily: 'Cairo',
                                           fontSize: 14.0,
@@ -320,10 +383,13 @@ class HomePageState extends State<HomePage> {
                                   Text(
                                     " العطية : ".tr +
                                         // familyItem.give!,
-                                        (familyItem.give!.length > 45
-                                            ? '${familyItem.give!.substring(0, 45)}'
+                                        (familyItem.give!.length > 66
+                                            ? '${familyItem.give!.substring(0, 66)}'
                                             : familyItem.give!),
-                                    maxLines: 1,
+                                    textAlign: Get.locale?.languageCode == 'ar'
+                                        ? TextAlign.right
+                                        : TextAlign.left,
+                                    maxLines: 2,
                                     style: TextStyle(
                                       fontFamily: 'Cairo',
                                       fontSize: 14.0,

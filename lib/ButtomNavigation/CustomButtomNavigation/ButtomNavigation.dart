@@ -7,6 +7,7 @@ import 'package:helper/Profile/ProfilePage.dart';
 import 'package:helper/Setting/SettingPage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../Loading/Loading.dart';
 import '../../Register/Model/UserModel.dart';
 import '../../Register/SignIn.dart';
 
@@ -84,7 +85,7 @@ class _CustomBottomBarTwoState extends State<CustomNavigationBar> {
   Widget build(BuildContext context) {
     if (isLoading || pages == null) {
       return const Scaffold(
-        body: Center(child: CircularProgressIndicator(color:Color(0xFF000047) ,)),
+        body:Loading(),
       );
     }
 

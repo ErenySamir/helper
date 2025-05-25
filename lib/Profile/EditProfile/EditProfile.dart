@@ -212,7 +212,7 @@ class EditProfilepageState extends State<EditProfilepage>
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        FocusScope.of(context).requestFocus(FocusNode());
+        // FocusScope.of(context).requestFocus(FocusNode());
         // if (controller.formKey.currentState!.validate()) {
         Navigator.push(context,
           MaterialPageRoute(
@@ -244,17 +244,18 @@ class EditProfilepageState extends State<EditProfilepage>
               // Center the title horizontally
               leading: IconButton(
                 onPressed: () {
-                  Map<dynamic, dynamic>? arguments = ModalRoute.of(context)
-                      ?.settings
-                      .arguments as Map<dynamic, dynamic>?; // Explicit casting
+                  // Map<dynamic, dynamic>? arguments = ModalRoute.of(context)
+                  //     ?.settings
+                  //     .arguments as Map<dynamic, dynamic>?; // Explicit casting
 
-                  FocusScope.of(context).requestFocus(FocusNode());
+                  // FocusScope.of(context).requestFocus(FocusNode());
                   // if (controller.formKey.currentState!.validate()) {
                   Navigator.push(context,
                     MaterialPageRoute(
                       builder: (context) =>
                           CustomNavigationBar(current: 1,),
-                    ),);
+                    ),
+                  );
 
                 },
                 icon: Icon(

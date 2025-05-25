@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 import 'Setting/Translation/Translation.dart';
@@ -26,17 +27,36 @@ Future<void> main() async {
 
   // Initialize controllers
   Get.put(TranslationController());
-
-  runApp(MyApp());
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  String? langCode = prefs.getString('langCode') ?? 'ar'; // default to Arabic
+  runApp(MyApp(initialLangCode: langCode));
 }
 
 class MyApp extends StatelessWidget {
+  final String initialLangCode;
+
+  const MyApp({Key? key, required this.initialLangCode}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+      theme: ThemeData(
+        scrollbarTheme: ScrollbarThemeData(
+          thumbColor: MaterialStateProperty.all(const Color(0xFF000047)),
+          trackColor: MaterialStateProperty.all(const Color(0xffE3E5E8)),
+          trackBorderColor: MaterialStateProperty.all(const Color(0xffE3E5E8)),
+          thickness: MaterialStateProperty.all(8),
+          radius: const Radius.circular(10),
+        ),
+        textSelectionTheme: TextSelectionThemeData(
+          selectionColor: Colors.blue.shade800,
+          selectionHandleColor: Color(0xFF000047),
+          cursorColor: Color(0xFF000047),
+        ),
+      ),
+
       debugShowCheckedModeBanner: false,
-      // Force Arabic
-      locale: const Locale('ar', 'AR'),
+      locale: Locale(initialLangCode),
       fallbackLocale: const Locale('ar', 'AR'),
       translations: TranslationController.to,
       supportedLocales: const [
@@ -49,9 +69,10 @@ class MyApp extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       builder: (context, child) {
-        // Always RTL for Arabic
         return Directionality(
-          textDirection: TextDirection.rtl,
+          textDirection: initialLangCode == 'ar'
+              ? TextDirection.rtl
+              : TextDirection.ltr,
           child: child!,
         );
       },

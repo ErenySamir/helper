@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../ButtomNavigation/CustomButtomNavigation/ButtomNavigation.dart';
 import '../Register/SignIn.dart';
@@ -61,7 +62,7 @@ class SettingPage extends StatelessWidget{
     ),
      body: Padding(
        padding: const EdgeInsets.all(16.0),
-       child:  Directionality(
+       child:   Directionality(
          textDirection: Get.locale?.languageCode == 'ar'
              ? TextDirection.ltr
              : TextDirection.rtl,
@@ -78,14 +79,14 @@ class SettingPage extends StatelessWidget{
                    builder: (context) => AlertDialog(
                      backgroundColor: Colors.white,
                      title: Text(
-                       "تسجيل الخروج".tr,
-                       textAlign: TextAlign.right,
+                       "تسجيل خروج".tr,
+                       // textAlign: TextAlign.right,
                      ),
                      content: Text(
                        "هل أنت متأكد أنك تريد تسجيل الخروج؟".tr,
-                       textAlign: TextAlign.right,
+                       // textAlign: TextAlign.right,
                      ),
-                     actionsPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                     // actionsPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                      actions: [
                        Row(
                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -101,7 +102,7 @@ class SettingPage extends StatelessWidget{
                                onPressed: () => Navigator.of(context).pop(false),
                                child: Text(
                                  "إلغاء".tr,
-                                 textAlign: TextAlign.center,
+                                 // textAlign: TextAlign.center,
                                  style: TextStyle(color: Color(0xFF000047)),
                                ),
                              ),
@@ -114,8 +115,11 @@ class SettingPage extends StatelessWidget{
                                color: Color(0xFF000047),
                              ),
                              child: TextButton(
-                               onPressed: () {
+                               onPressed: () async {
                                  print("Button pressed");
+                                 // Clear specific value
+                                 SharedPreferences prefs = await SharedPreferences.getInstance();
+                                 await prefs.remove('phonev'); // or await prefs.setString('phonev', '');
                                  Navigator.push(
                                    context,
                                    MaterialPageRoute(builder: (context) => SigninPage()),
@@ -123,7 +127,7 @@ class SettingPage extends StatelessWidget{
                                },
                                child: Text(
                                  "تسجيل خروج".tr,
-                                 textAlign: TextAlign.center,
+                                 // textAlign: TextAlign.center,
                                  style: TextStyle(color: Colors.white, fontSize: 12),
                                ),
                              ),
@@ -168,7 +172,12 @@ class SettingPage extends StatelessWidget{
           children: [
             // English option
             GestureDetector(
-              onTap: () => TranslationController.to.changeLanguage('en'),
+              onTap: ()
+        {
+          currentLang  == 'en';
+          TranslationController.to.changeLanguage('en');
+          changeLanguage(currentLang);
+        } ,
               child: Text(
                 'English'.tr,
                 style: TextStyle(
@@ -181,7 +190,10 @@ class SettingPage extends StatelessWidget{
             const SizedBox(width: 16),
             // Arabic option
             GestureDetector(
-              onTap: () => TranslationController.to.changeLanguage('ar'),
+              onTap: () {
+                currentLang == 'ar';
+                TranslationController.to.changeLanguage('ar');
+              changeLanguage(currentLang);},
               child: Text(
                 "العربية".tr,
                 style: TextStyle(
@@ -195,6 +207,11 @@ class SettingPage extends StatelessWidget{
         );
       }),
     );
+  }
+  Future<void> changeLanguage(String langCode) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('langCode', langCode);
+    Get.updateLocale(Locale(langCode));
   }
 
   Widget _buildTile({required String title, required Widget trailing}) {

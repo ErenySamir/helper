@@ -585,6 +585,7 @@ class SignUpPagePageState extends State<SignUpPage>
                             ),
                             Expanded(
                               child: TextField(
+                                // inputFormatters: [LengthLimitingTextInputFormatter(6)],
                                 controller: _passwordController,
                                 cursorColor:  Color(0xFF000047),
                                 textInputAction: TextInputAction.next,
@@ -794,7 +795,22 @@ class SignUpPagePageState extends State<SignUpPage>
                               ),
                             );
                           }
-                
+                        else if (_passwordController.text.length > 0 && _passwordController.text.length < 6)
+
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                textAlign: TextAlign.center,
+                                "برجاء ادخال كلمه المرور قوية ".tr,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontFamily: 'Cairo',
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              backgroundColor:  Color(0xFF000047),
+                            ),
+                          );
                           else {
                             setState(() {
                               // Clear any existing error message
