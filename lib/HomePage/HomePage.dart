@@ -142,38 +142,21 @@ class HomePageState extends State<HomePage> {
                     children: [
                       Padding(
                         padding: EdgeInsets.only(bottom: 14.0, right: 16, top: 10,left: 15),
-                        child: GestureDetector(
-                          onTap:(){
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //     builder: (context) => Profilepage(docId: userDataa[0].phoneNumber!,),
-                            //   ),
-                            // );
-                            FocusScope.of(context).requestFocus(FocusNode());
-                            // if (controller.formKey.currentState!.validate()) {
-                            Navigator.push(context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    CustomNavigationBar(current: 1,),
-                              ),);
-                          },
-                          child: userDataa.isNotEmpty && userDataa[0].name!.isNotEmpty
-                              ? Text(
-                            userDataa[0].name!.length > 30
-                                ? '${userDataa[0].name!.substring(0, 30)}..'
-                                : userDataa[0].name!,
-                            style: TextStyle(
-                              fontFamily: 'Cairo',
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFF000047),
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          )
-                              : Container(),
-                        ),
+                        child: userDataa.isNotEmpty && userDataa[0].name!.isNotEmpty
+                            ? Text(
+                          userDataa[0].name!.length > 30
+                              ? '${userDataa[0].name!.substring(0, 30)}..'
+                              : userDataa[0].name!,
+                          style: TextStyle(
+                            fontFamily: 'Cairo',
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF000047),
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        )
+                            : Container(),
 
                       ),
                       Text(

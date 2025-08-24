@@ -114,6 +114,8 @@ class SplachPageState extends State<SplachPage> with SingleTickerProviderStateMi
       // Navigate to home page after successfully fetching document ID
       // FocusScope.of(context).requestFocus(FocusNode());
       // if (controller.formKey.currentState!.validate()) {
+      print("navigate to home page  $docId");
+
       Navigator.push(context,
         MaterialPageRoute(
           builder: (context) =>

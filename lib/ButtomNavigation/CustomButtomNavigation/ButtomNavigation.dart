@@ -26,7 +26,7 @@ class _CustomBottomBarTwoState extends State<CustomNavigationBar> {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   List<UserData> userDataa = [];
-  List<Widget>? pages; // nullable instead of late
+  late List<Widget> pages; // Declare the list // nullable instead of late
 
   bool isLoading = true;
 
@@ -34,6 +34,11 @@ class _CustomBottomBarTwoState extends State<CustomNavigationBar> {
   void initState() {
     super.initState();
     currentIndex = widget.current;
+    pages = [
+      HomePage(),//0
+      Profilepage(docId: userDataa.isNotEmpty ? userDataa[0].phoneNumber! : ''),//1
+      SettingPage()//3
+    ];
     _initializeState();
   }
 
@@ -50,7 +55,7 @@ class _CustomBottomBarTwoState extends State<CustomNavigationBar> {
         EditProfilepage(docId: userDataa.isNotEmpty ? userDataa[0].phoneNumber! : ''),//2
         SettingPage()//3
       ];
-      isLoading = false;
+      // isLoading = false;
     });
   }
 
@@ -83,11 +88,6 @@ class _CustomBottomBarTwoState extends State<CustomNavigationBar> {
 
   @override
   Widget build(BuildContext context) {
-    if (isLoading || pages == null) {
-      return const Scaffold(
-        body:Loading(),
-      );
-    }
 
     return Scaffold(
       key: scaffoldKey,
@@ -95,7 +95,7 @@ class _CustomBottomBarTwoState extends State<CustomNavigationBar> {
       resizeToAvoidBottomInset: false,
       body: PageStorage(
         bucket: bucket,
-        child: pages![currentIndex],
+        child: pages[currentIndex],
       ),
       bottomNavigationBar: _buildBottomNavigationBar(),
     );

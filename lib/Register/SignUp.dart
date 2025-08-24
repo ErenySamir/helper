@@ -10,6 +10,7 @@ import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../ButtomNavigation/CustomButtomNavigation/ButtomNavigation.dart';
 import '../HomePage/HomePage.dart';
 import '../Loading/Loading.dart';
 import 'SignIn.dart';
@@ -138,12 +139,11 @@ class SignUpPagePageState extends State<SignUpPage>
       SharedPreferences prefs = await SharedPreferences.getInstance();
 
       prefs.setString('phonev','+2$phone');
-      Navigator.push(
-        context,
+      Navigator.push(context,
         MaterialPageRoute(
-          builder: (context) => HomePage(),
-        ),
-      );
+          builder: (context) =>
+              CustomNavigationBar(current: 0,),
+        ),);
     }
     String? verificationId; // Variable to store verificationId
 
@@ -165,12 +165,11 @@ class SignUpPagePageState extends State<SignUpPage>
         //   context,
         //   MaterialPageRoute(builder: (context) => OTP('', phone, "regest", _nameController.text)),
         // );
-        Navigator.push(
-          context,
+        Navigator.push(context,
           MaterialPageRoute(
-            builder: (context) => HomePage(),
-          ),
-        );
+            builder: (context) =>
+                CustomNavigationBar(current: 0,),
+          ),);
       },
       codeSent: (String sentVerificationId, int? forceResendingToken) {
         verificationId = sentVerificationId; // Store the sent verificationId
@@ -181,12 +180,11 @@ class SignUpPagePageState extends State<SignUpPage>
         //   context,
         //   MaterialPageRoute(builder: (context) => OTP(verificationId!, phone, "regest", _nameController.text)),
         // );
-        Navigator.push(
-          context,
+        Navigator.push(context,
           MaterialPageRoute(
-            builder: (context) => HomePage(),
-          ),
-        );
+            builder: (context) =>
+                CustomNavigationBar(current: 0,),
+          ),);
       },
       codeAutoRetrievalTimeout: (String verificationID) {
         log("codeAutoRetrievalTimeout $verificationID");
@@ -196,12 +194,11 @@ class SignUpPagePageState extends State<SignUpPage>
         //   context,
         //   MaterialPageRoute(builder: (context) => OTP('', phone, "regest", _nameController.text)),
         // );
-        Navigator.push(
-          context,
+        Navigator.push(context,
           MaterialPageRoute(
-            builder: (context) => HomePage(),
-          ),
-        );
+            builder: (context) =>
+                CustomNavigationBar(current: 0,),
+          ),);
       },
       // timeout: const Duration(seconds: 60),
     );

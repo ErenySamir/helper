@@ -38,6 +38,7 @@ android {
         jvmTarget = '17'
     }
     defaultConfig {
+        multiDexEnabled true
         applicationId "com.example.helper"
         minSdkVersion 23 // Change this from 21 to 23
         targetSdkVersion 33 // Ensure this is also set to a compatible version
