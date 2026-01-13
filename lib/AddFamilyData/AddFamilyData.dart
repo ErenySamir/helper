@@ -42,7 +42,7 @@ class AddFamilyDataState extends State<AddFamilyData>
     final date = dateController.text.trim();
     final num = familyNumController.text.trim();
 
-
+    isLoading = true;
     // Create a playground model object
     final FamilyModel familyModel = FamilyModel(
       familyName: nameController.text,
@@ -79,6 +79,7 @@ class AddFamilyDataState extends State<AddFamilyData>
 
 
       if (updates.isNotEmpty) {
+        isLoading = true;
         await FirebaseFirestore.instance
             .collection('PeopleData')
             .doc(widget.docId)

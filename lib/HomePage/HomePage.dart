@@ -366,13 +366,14 @@ class HomePageState extends State<HomePage> {
                                   Text(
                                     " العطية : ".tr +
                                         // familyItem.give!,
-                                        (familyItem.give!.length > 66
-                                            ? '${familyItem.give!.substring(0, 66)}'
+                                        (familyItem.give!.length > 50
+                                            ? '${familyItem.give!.substring(0, 50)}'
                                             : familyItem.give!),
                                     textAlign: Get.locale?.languageCode == 'ar'
                                         ? TextAlign.right
                                         : TextAlign.left,
                                     maxLines: 2,
+                                    overflow: TextOverflow.ellipsis, // << This adds "..."
                                     style: TextStyle(
                                       fontFamily: 'Cairo',
                                       fontSize: 14.0,
