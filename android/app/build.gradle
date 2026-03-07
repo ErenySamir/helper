@@ -27,9 +27,8 @@ if (flutterVersionName == null) {
 
 android {
     namespace = "com.example.helper"
-    compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
-
+    compileSdk = 35
+    ndkVersion = "26.1.10909125"
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17

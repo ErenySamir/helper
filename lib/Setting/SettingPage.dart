@@ -70,7 +70,7 @@ class SettingPage extends StatelessWidget{
            crossAxisAlignment: CrossAxisAlignment.end,
            children: [
              const SizedBox(height: 16),
-             _buildLanguageTile(),
+             // _buildLanguageTile(),
              SizedBox(height: 30,),
              GestureDetector(
                onTap: (){
@@ -163,56 +163,56 @@ class SettingPage extends StatelessWidget{
      ),
    );
   }
-  Widget _buildLanguageTile() {
-    return _buildTile(
-      title: "اللغة".tr,
-      trailing: Obx(() {
-        final currentLang = TranslationController.to.currentLocale.languageCode;
-        return Row(
-          children: [
-            // English option
-            GestureDetector(
-              onTap: ()
-        {
-          currentLang  == 'en';
-          TranslationController.to.changeLanguage('en');
-          changeLanguage(currentLang);
-        } ,
-              child: Text(
-                'English'.tr,
-                style: TextStyle(
-                  fontSize: 16,
-                  color: currentLang == 'en' ? const Color(0xFF000047) : Colors.grey,
-                  fontWeight: currentLang == 'en' ? FontWeight.bold : FontWeight.normal,
-                ),
-              ),
-            ),
-            const SizedBox(width: 16),
-            // Arabic option
-            GestureDetector(
-              onTap: () {
-                currentLang == 'ar';
-                TranslationController.to.changeLanguage('ar');
-              changeLanguage(currentLang);},
-              child: Text(
-                "العربية".tr,
-                style: TextStyle(
-                  fontSize: 16,
-                  color: currentLang == 'ar' ? const Color(0xFF000047) : Colors.grey,
-                  fontWeight: currentLang == 'ar' ? FontWeight.bold : FontWeight.normal,
-                ),
-              ),
-            ),
-          ],
-        );
-      }),
-    );
-  }
-  Future<void> changeLanguage(String langCode) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('langCode', langCode);
-    Get.updateLocale(Locale(langCode));
-  }
+  // Widget _buildLanguageTile() {
+  //   return _buildTile(
+  //     title: "اللغة".tr,
+  //     trailing: Obx(() {
+  //       final currentLang = TranslationController.to.currentLocale.languageCode;
+  //       return Row(
+  //         children: [
+  //           // English option
+  //           GestureDetector(
+  //             onTap: ()
+  //       {
+  //         currentLang  == 'en';
+  //         TranslationController.to.changeLanguage('en');
+  //         changeLanguage(currentLang);
+  //       } ,
+  //             child: Text(
+  //               'English'.tr,
+  //               style: TextStyle(
+  //                 fontSize: 16,
+  //                 color: currentLang == 'en' ? const Color(0xFF000047) : Colors.grey,
+  //                 fontWeight: currentLang == 'en' ? FontWeight.bold : FontWeight.normal,
+  //               ),
+  //             ),
+  //           ),
+  //           const SizedBox(width: 16),
+  //           // Arabic option
+  //           GestureDetector(
+  //             onTap: () {
+  //               currentLang == 'ar';
+  //               TranslationController.to.changeLanguage('ar');
+  //             changeLanguage(currentLang);},
+  //             child: Text(
+  //               "العربية".tr,
+  //               style: TextStyle(
+  //                 fontSize: 16,
+  //                 color: currentLang == 'ar' ? const Color(0xFF000047) : Colors.grey,
+  //                 fontWeight: currentLang == 'ar' ? FontWeight.bold : FontWeight.normal,
+  //               ),
+  //             ),
+  //           ),
+  //         ],
+  //       );
+  //     }),
+  //   );
+  // }
+  // Future<void> changeLanguage(String langCode) async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   await prefs.setString('langCode', langCode);
+  //   Get.updateLocale(Locale(langCode));
+  // }
 
   Widget _buildTile({required String title, required Widget trailing}) {
     return Container(

@@ -7,6 +7,7 @@ import 'package:helper/Profile/ProfilePage.dart';
 import 'package:helper/Setting/SettingPage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../Cards/Home_Cards.dart';
 import '../../Loading/Loading.dart';
 import '../../Register/Model/UserModel.dart';
 import '../../Register/SignIn.dart';
@@ -37,7 +38,9 @@ class _CustomBottomBarTwoState extends State<CustomNavigationBar> {
     pages = [
       HomePage(),//0
       Profilepage(docId: userDataa.isNotEmpty ? userDataa[0].phoneNumber! : ''),//1
-      SettingPage()//3
+      // SettingPage(),//3
+    CardsPage()
+
     ];
     _initializeState();
   }
@@ -53,7 +56,8 @@ class _CustomBottomBarTwoState extends State<CustomNavigationBar> {
         HomePage(),//0
         Profilepage(docId: userDataa.isNotEmpty ? userDataa[0].phoneNumber! : ''),//1
         EditProfilepage(docId: userDataa.isNotEmpty ? userDataa[0].phoneNumber! : ''),//2
-        SettingPage()//3
+        // SettingPage(),//3
+        CardsPage()
       ];
       // isLoading = false;
     });

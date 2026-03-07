@@ -1,13 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:helper/AddFamilyData/AddFamilyData.dart';
 import 'package:helper/AddFamilyData/Model/FamilyModel.dart';
-import 'package:helper/Profile/ProfilePage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../ButtomNavigation/CustomButtomNavigation/ButtomNavigation.dart';
 import '../Register/Model/UserModel.dart';
 import '../Register/SignIn.dart';
 
@@ -22,27 +21,37 @@ class HomePageState extends State<HomePage> {
   List<UserData> userDataa = [];
   List<FamilyModel> familyAllData = [];
   String? docId;
+  String? adminId = FirebaseAuth.instance.currentUser?.uid;
   Future<void> getAlldata() async {
-    CollectionReference playerchat = FirebaseFirestore.instance.collection("PeopleData");
+    print("admiiiiiiiiiiiiiiin$adminId");
+    CollectionReference playerchat =
+    FirebaseFirestore.instance.collection("PeopleData");
 
     try {
-      QuerySnapshot playgroundSnapshot = await playerchat.get();
+      QuerySnapshot playgroundSnapshot = await playerchat
+          .where('AdminId', isEqualTo: adminId)
+          .get();
 
-      if (!mounted) return; // Ensure the widget is still in the tree before modifying state
+      if (!mounted) return;
 
       if (playgroundSnapshot.docs.isNotEmpty) {
-        setState(() {  // Safely update UI
+        setState(() {
           familyAllData.clear();
+
           for (var document in playgroundSnapshot.docs) {
-            Map<String, dynamic> userData = document.data() as Map<String, dynamic>;
+            Map<String, dynamic> userData =
+            document.data() as Map<String, dynamic>;
+
             FamilyModel familyAllDataa = FamilyModel.fromMap(userData);
             familyAllDataa.Id = document.id;
+
             familyAllData.add(familyAllDataa);
           }
         });
       } else {
-        print("No playgrounds found for this AdminId.");
+        print("No data found for this AdminId");
       }
+
     } catch (e) {
       print("Error getting user: $e");
     }
@@ -65,14 +74,16 @@ class HomePageState extends State<HomePage> {
         UserData user = UserData.fromMap(userData);
 
         print("Document ID: $docId");
+
         SharedPreferences prefs = await SharedPreferences.getInstance();
         prefs.setString('docIid', docId!);
-
+        adminId =docId ;
+        print("Document ID: $adminId");
         // Update the list and UI
         setState(() {
           userDataa.add(user);
         });
-
+        getAlldata();
         // If you want to use docId later, consider storing it in a variable or controller
       } else {
         print("User not found with phone number $phoneNumber");
@@ -93,7 +104,7 @@ class HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _initializeState();
-    getAlldata();
+
     // _loadUserData();
   }
 
@@ -202,27 +213,7 @@ class HomePageState extends State<HomePage> {
                         confirmDismiss: (direction) async {
                         // Show confirmation dialog before deleting
                         return await
-                        // showDialog(
-                        //   context: context,
-                        //   builder: (context) => AlertDialog(
-                        //     title: Text("تأكيد الحذف".tr),
-                        //     content: Text("هل أنت متأكد أنك تريد حذف هذه العائلة؟".tr),
-                        //     actions: [
-                        //       TextButton(
-                        //         onPressed: () => Navigator.of(context).pop(false),
-                        //         child: Text("إلغاء".tr,style: TextStyle(color: Color(0xFF000047))),
-                        //       ),
-                        //       TextButton(
-                        //         onPressed: () async {
-                        //           print("familyItem.Id!${familyItem.Id!}");
-                        //           await deleteCancelByPhoneAndPlaygroundId(familyItem.Id!);
-                        //           Navigator.of(context).pop(true);
-                        //           },
-                        //         child: Text("حذف".tr, style: TextStyle(color: Colors.red.shade900)),
-                        //       ),
-                        //     ],
-                        //   ),
-                        // );
+
                         showDialog(
                           context: context,
                           builder: (context) => AlertDialog(
