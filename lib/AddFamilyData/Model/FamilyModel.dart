@@ -1,56 +1,99 @@
-class FamilyModel {
-  // Assuming these are the properties of your User class
-  String? familyPhone;
-  String? familyName;
-  String? date;
-  String? AdminID;
-  int? familyNum;
-  String? give;
-  String? giverName;
-String? Id;
-  // List<String>? TeamMembers = [];
+class FamilyDataModel {
+  String? Id;
+  String cardId;
+  String adminId;
+  String give;
+  String giverName;
+  String date;
+  String fatherName;
+  String fatherPhone;
+  String fatherJob;
+  String fatherNationalId;
+  String fatherEducation;
+  String fatherImage;
+  String motherName;
+  String motherPhone;
+  String motherJob;
+  String motherNationalId;
+  String motherEducation;
+  String motherImage;
+  List<Map<String, dynamic>> sons;
 
-  // Constructor
-  FamilyModel({this.familyName,this.Id, this.familyNum,this.familyPhone,this.AdminID,this.date,this.give,this.giverName});
+  FamilyDataModel({
+    this.Id,
+    required this.cardId,
+    required this.adminId,
+    required this.give,
+    required this.giverName,
+    required this.date,
+    required this.fatherName,
+    required this.fatherPhone,
+    required this.fatherJob,
+    required this.fatherNationalId,
+    required this.fatherEducation,
+    required this.fatherImage,
+    required this.motherName,
+    required this.motherPhone,
+    required this.motherJob,
+    required this.motherNationalId,
+    required this.motherEducation,
+    required this.motherImage,
+    required this.sons,
+  });
 
-  // fromMap method to create a User object from a Map
-  factory FamilyModel.fromMap(Map<String, dynamic> map) {
-    return FamilyModel(
-      familyName: map['familyName'],
-        familyNum: map['familyNum'] is String
-            ? int.tryParse(map['familyNum']) // Convert if it's a string
-            : map['familyNum'] as int?, // Keep as is if it's already an int
-        //      familyPhone:map['familyPhone'],
-      AdminID:'',
-        giverName: map['giverName'],
-      give: map['give'],
-      date: map['date'],
-      familyPhone: map['familyPhone'],
-      Id: ''
-      // TeamMembers: (map['TeamMembers'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
+  // Factory constructor to create FamilyDataModel from Firestore document
+  factory FamilyDataModel.fromMap(Map<String, dynamic> map, {String? docId}) {
+    final father = map['father'] as Map<String, dynamic>? ?? {};
+    final mother = map['mother'] as Map<String, dynamic>? ?? {};
+
+    return FamilyDataModel(
+      Id: docId,
+      cardId: map['CardId'] ?? '',
+      adminId: map['AdminID'] ?? '',
+      give: map['give'] ?? '',
+      giverName: map['giverName'] ?? '',
+      date: map['date'] ?? '',
+      fatherName: father['name'] ?? '',
+      fatherPhone: father['phone'] ?? '',
+      fatherJob: father['job'] ?? '',
+      fatherNationalId: father['nationalId'] ?? '',
+      fatherEducation: father['education'] ?? '',
+      fatherImage: father['image'] ?? '',
+      motherName: mother['name'] ?? '',
+      motherPhone: mother['phone'] ?? '',
+      motherJob: mother['job'] ?? '',
+      motherNationalId: mother['nationalId'] ?? '',
+      motherEducation: mother['education'] ?? '',
+      motherImage: mother['image'] ?? '',
+      sons: List<Map<String, dynamic>>.from(map['sons'] ?? []),
     );
   }
 
-
-  // Method to convert the model to a Map
+  // Convert FamilyDataModel to Map for Firestore
   Map<String, dynamic> toMap() {
     return {
-     'familyName' :familyName,
-       'familyNum': familyNum,
-      'familyPhone' :familyPhone,
-      'AdminId' :AdminID,
-
-
+      'CardId': cardId,
+      'give': give,
       'giverName': giverName,
-       'give':give,
-      'date':date
-      // 'TeamMembers': TeamMembers,
+      'date': date,
+      'AdminID': adminId,
+      'father': {
+        'name': fatherName,
+        'phone': fatherPhone,
+        'job': fatherJob,
+        'nationalId': fatherNationalId,
+        'education': fatherEducation,
+        'image': fatherImage,
+      },
+      'mother': {
+        'name': motherName,
+        'phone': motherPhone,
+        'job': motherJob,
+        'nationalId': motherNationalId,
+        'education': motherEducation,
+        'image': motherImage,
+      },
+      'sons': sons,
     };
-  }
-
-  // toString method to print the User object
-  @override
-  String toString() {
-    return 'FamilyModel(familyName: $familyName, name: $familyNum, familyPhone: $familyPhone,AdminId: $AdminID )';
   }
 }

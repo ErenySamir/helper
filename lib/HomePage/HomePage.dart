@@ -1,491 +1,498 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:helper/AddFamilyData/AddFamilyData.dart';
-import 'package:helper/AddFamilyData/Model/FamilyModel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../AddFamilyData/FamilyData.dart';
+import '../AddFamilyData/Model/FamilyModel.dart';
+import '../Cards/Auth Service.dart';
+import '../Cards/Call Firestore.dart';
+import '../Cards/Delete Family.dart';
+import '../Cards/Family Card.dart';
+import '../Cards/User Service.dart';
 import '../Register/Model/UserModel.dart';
 import '../Register/SignIn.dart';
 
-class HomePage extends StatefulWidget {
+
+class HomeScreen extends StatefulWidget {
+  final String? cardId;
+  final String? cardName; // Optional: to display the current card name
+  const HomeScreen({
+    Key? key,
+    this.cardId,
+    this.cardName,
+  }) : super(key: key);
+
   @override
-  State<HomePage> createState() {
-    return HomePageState();
-  }
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class HomePageState extends State<HomePage> {
-  List<UserData> userDataa = [];
-  List<FamilyModel> familyAllData = [];
-  String? docId;
-  String? adminId = FirebaseAuth.instance.currentUser?.uid;
-  Future<void> getAlldata() async {
-    print("admiiiiiiiiiiiiiiin$adminId");
-    CollectionReference playerchat =
-    FirebaseFirestore.instance.collection("PeopleData");
+class _HomeScreenState extends State<HomeScreen> {
+  final AuthService _authService = AuthService();
+  final UserService _userService = UserService();
+  final FamilyService _familyService = FamilyService();
 
-    try {
-      QuerySnapshot playgroundSnapshot = await playerchat
-          .where('AdminId', isEqualTo: adminId)
-          .get();
-
-      if (!mounted) return;
-
-      if (playgroundSnapshot.docs.isNotEmpty) {
-        setState(() {
-          familyAllData.clear();
-
-          for (var document in playgroundSnapshot.docs) {
-            Map<String, dynamic> userData =
-            document.data() as Map<String, dynamic>;
-
-            FamilyModel familyAllDataa = FamilyModel.fromMap(userData);
-            familyAllDataa.Id = document.id;
-
-            familyAllData.add(familyAllDataa);
-          }
-        });
-      } else {
-        print("No data found for this AdminId");
-      }
-
-    } catch (e) {
-      print("Error getting user: $e");
-    }
-  }
-
-  Future<void> getUserByPhone(String phoneNumber) async {
-    try {
-      String normalizedPhoneNumber = phoneNumber.replaceFirst('+20', '0');
-      CollectionReference playerchat =
-      FirebaseFirestore.instance.collection('PersonData');
-
-      QuerySnapshot querySnapshot = await playerchat
-          .where('phone', isEqualTo: normalizedPhoneNumber)
-          .get();
-
-      if (querySnapshot.docs.isNotEmpty) {
-        var doc = querySnapshot.docs.first;
-         docId = doc.id; // ✅ Get the document ID here
-        Map<String, dynamic> userData = doc.data() as Map<String, dynamic>;
-        UserData user = UserData.fromMap(userData);
-
-        print("Document ID: $docId");
-
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        prefs.setString('docIid', docId!);
-        adminId =docId ;
-        print("Document ID: $adminId");
-        // Update the list and UI
-        setState(() {
-          userDataa.add(user);
-        });
-        getAlldata();
-        // If you want to use docId later, consider storing it in a variable or controller
-      } else {
-        print("User not found with phone number $phoneNumber");
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        await prefs.clear();
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => SigninPage()),
-              (Route<dynamic> route) => false,
-        );
-      }
-    } catch (e) {
-      print("Error getting user: $e");
-    }
-  }
+  List<UserData> userDataList = [];
+  List<FamilyDataModel> familyDataList = [];
+  String? adminId;
+  bool isLoading = true;
+  String? currentCardName;
 
   @override
   void initState() {
     super.initState();
     _initializeState();
-
-    // _loadUserData();
+    _loadCardDetails();
+    _getSavedAdminId();
   }
-
-  @override
-  void dispose() {
-
-    super.dispose();
-  }
-
-  Future<void> _initializeState() async {
-    // Perform async initialization here
+  Future<void> _getSavedAdminId() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? phoneValue = prefs.getString('phonev');
-    print("phonnnnnnnnnnnne$phoneValue");
-    if (phoneValue != null) {
-      getUserByPhone(phoneValue);
+    String? adminId = prefs.getString('adminid');
+    String? docIid = prefs.getString('docIid');
+
+    print("Saved admin ID: $adminId");
+    print("Saved docIid: $docIid");
+
+    if (adminId != null) {
+      setState(() {
+        this.adminId = adminId;
+      });
+    }
+  }
+  Future<void> _loadCardDetails() async {
+    if (widget.cardId != null && widget.cardId!.isNotEmpty) {
+      try {
+        DocumentSnapshot cardDoc = await FirebaseFirestore.instance
+            .collection("Cards")
+            .doc(widget.cardId)
+            .get();
+
+        if (cardDoc.exists) {
+          setState(() {
+            currentCardName = cardDoc['name'];
+          });
+        }
+      } catch (e) {
+        print("Error loading card details: $e");
+      }
     }
   }
 
-  late List<UserData> user = [];
+  Future<void> _initializeState() async {
+    setState(() => isLoading = true);
+
+    adminId = _authService.getCurrentUserId();
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? phoneValue = prefs.getString('phonev');
+
+    if (phoneValue != null) {
+      await _loadUserData(phoneValue);
+    }
+
+      await _loadFamilyData();
+
+  }
+
+  Future<void> _loadUserData(String phoneNumber) async {
+    UserData? user = await _userService.getUserByPhone(phoneNumber);
+    if (user != null) {
+      setState(() {
+        userDataList = [user];
+      });
+    } else {
+      // User not found, sign out
+      await _authService.signOut();
+      if (mounted) {
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) =>  SigninPage()),
+              (route) => false,
+        );
+      }
+    }
+  }
+
+  Future<void> _loadFamilyData() async {
+    try {
+      print(" widget.cardId widget.cardId${ widget.cardId}");
+      // print(" widget.cardId widget.cardId${ cardId}");
+      List<FamilyDataModel> data = await _familyService.getFamilyData(
+        adminId: adminId!,
+        cardId: widget.cardId!,
+      );
+      setState(() {
+        familyDataList = data;
+      });
+    } catch (e) {
+      print("Error loading family data: $e");
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("حدث خطأ في تحميل البيانات".tr),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
+  Future<void> _deleteFamilyItem(int index, String docId) async {
+    try {
+      await _familyService.deleteFamilyData(docId);
+      setState(() {
+        familyDataList.removeAt(index);
+      });
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("تم حذف العائلة بنجاح".tr),
+            backgroundColor: const Color(0xFF000047),
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("حدث خطأ أثناء الحذف".tr),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
+  Future<void> _showCardSelectionDialog(String familyId) async {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("اختر البطاقة".tr),
+          content: SizedBox(
+            width: double.maxFinite,
+            child: StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance
+                  .collection("Cards")
+                  .where("AdminId", isEqualTo: adminId)
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
+                var cards = snapshot.data!.docs;
+
+                if (cards.isEmpty) {
+                  return Center(
+                    child: Text("لا توجد بطاقات متاحة".tr),
+                  );
+                }
+
+                return ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: cards.length,
+                  itemBuilder: (context, index) {
+                    var card = cards[index];
+                    bool isCurrentCard = card.id == widget.cardId;
+
+                    return ListTile(
+                      leading: isCurrentCard
+                          ? const Icon(Icons.check_circle, color: Colors.green)
+                          : null,
+                      title: Text(card["name"]),
+                      subtitle: isCurrentCard
+                          ? Text("البطاقة الحالية".tr)
+                          : null,
+                      onTap: () async {
+                        await _familyService.addFamilyToCard(
+                          familyId,
+                          card.id,
+                        );
+                        if (mounted) {
+                          Navigator.pop(context);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text("تم نقل العائلة إلى ${card['name']}".tr),
+                              backgroundColor: const Color(0xFF000047),
+                            ),
+                          );
+                          // Refresh the list if needed
+                          await _loadFamilyData();
+                        }
+                      },
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text("إلغاء".tr),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        SystemNavigator.pop(); // This exits the app
+        // Navigate back to cards page instead of exiting
+        Navigator.pop(context);
         return false;
       },
-
       child: Scaffold(
         backgroundColor: Colors.white,
-        body:    Directionality(
-          textDirection: Get.locale?.languageCode == 'ar'
-              ? TextDirection.ltr
-              : TextDirection.rtl,
-          child: Stack(
-            children: [
-          SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Padding(
-                  padding: EdgeInsets.only( right: 12, top: 66,left: 12),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(bottom: 14.0, right: 16, top: 10,left: 15),
-                        child: userDataa.isNotEmpty && userDataa[0].name!.isNotEmpty
-                            ? Text(
-                          userDataa[0].name!.length > 30
-                              ? '${userDataa[0].name!.substring(0, 30)}..'
-                              : userDataa[0].name!,
-                          style: TextStyle(
-                            fontFamily: 'Cairo',
-                            fontSize: 18.0,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF000047),
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        )
-                            : Container(),
-
-                      ),
-                      Text(
-                        "  مرحبا بك  ".tr,
-                        style: TextStyle(
-                          fontFamily: 'Cairo',
-                          fontSize: 15.0,
-                          fontWeight: FontWeight.w500,
-                          color: Color(0xFF000047),
-                        ),
-                      ),
-
-                    ],
-                  ),
-                ),
-
-                familyAllData.isNotEmpty
-                    ? ListView.builder(
-                  itemCount: familyAllData.length,
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    final familyItem = familyAllData[index];
-
-                    return Dismissible(
-                      key: ValueKey(familyItem.Id), // Unique key for each item
-                      direction: DismissDirection.endToStart, // Swipe from right to left
-                      background: Padding(
-                        padding: const EdgeInsets.all(18.0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.red.shade900,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          alignment: Get.locale?.languageCode == 'ar'
-                              ? Alignment.centerRight
-                              : Alignment.centerLeft,
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: Icon(Icons.delete, color: Colors.white, size: 20),
-                        ),
-                      ),
-
-                        confirmDismiss: (direction) async {
-                        // Show confirmation dialog before deleting
-                        return await
-
-                        showDialog(
-                          context: context,
-                          builder: (context) => AlertDialog(
-                            backgroundColor: Colors.white,
-                            title: Text("تأكيد الحذف".tr),
-                            content: Text("هل أنت متأكد أنك تريد حذف هذه العائلة؟".tr),
-                            // actionsPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                            actions: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Container(
-                                    height: 40,
-                                    width: 86,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10.0),
-                                      color: Colors.white,
-                                    ),
-                                    child: TextButton(
-                                      onPressed: () => Navigator.of(context).pop(false),
-                                      child: Text(
-                                        "إلغاء".tr,
-                                        // textAlign: TextAlign.center,
-                                        style: TextStyle(color: Color(0xFF000047)),
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    height: 40,
-                                    width: 100,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10.0),
-                                      color: Color(0xFF000047),
-                                    ),
-                                    child:
-                                    TextButton(
-                                      onPressed: () async {
-                                        print("familyItem.Id!${familyItem.Id!}");
-                                        await deleteCancelByPhoneAndPlaygroundId(familyItem.Id!);
-                                        Navigator.of(context).pop(true);
-                                      },
-                                      child: Text("حذف".tr, style: TextStyle(color: Colors.white, fontSize: 12)),
-                                    ),
-
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                      onDismissed: (direction) async {
-                        // Delete from Firebase
-                        await FirebaseFirestore.instance
-                            .collection('familyCollection') // Change to your actual collection name
-                            .doc(familyItem.Id)
-                            .delete();
-
-                        // Remove from local list
-                        setState(() {
-                          familyAllData.removeAt(index);
-                        });
-
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text("تم حذف العائلة بنجاح".tr,textAlign: TextAlign.center,), backgroundColor:  Color(0xFF000047),),
-                        );
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.only(right: 22.0, left: 22, top: 6, bottom: 10),
-                        child: GestureDetector(
-                          onTap: () {
-                            print("iddddddddddd  ${familyItem.Id}");
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => AddFamilyData(familyItem.Id!, docId!),
-                              ),
-                            );
-                          },
-                          child: Container(
-                            height: 140,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20.0),
-                              gradient: LinearGradient(
-                                colors: [
-                                  Colors.blue.shade200,
-                                  Colors.blue.shade50,
-                                ],
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                              ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.5),
-                                  spreadRadius: 1,
-                                  blurRadius: 2,
-                                  offset: Offset(0, 0),
-                                ),
-                              ],
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.only(top: 8, right: 18, left: 8),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Icon(Icons.edit),
-                                      Text(
-                                        "   أسم العائلة :  ".tr +
-                                            // + familyItem.familyName!,
-                                          (familyItem.familyName!.length > 25
-                                            ? '${familyItem.familyName!.substring(0, 25)}'
-                                            : familyItem.familyName!),
-                                        textAlign: Get.locale?.languageCode == 'ar'
-                                            ? TextAlign.right
-                                            : TextAlign.left,
-                                        style: TextStyle(
-                                          fontFamily: 'Cairo',
-                                          fontSize: 14.0,
-                                          fontWeight: FontWeight.w700,
-                                          color: Color(0xFF000047),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Text(
-                                    " تاريخ العطية : ".tr +
-                                        // familyItem.date!,
-                                        (familyItem.date!.length > 30
-                                            ? '${familyItem.date!.substring(0, 30)}'
-                                            : familyItem.date!),
-                                    style: TextStyle(
-                                      fontFamily: 'Cairo',
-                                      fontSize: 14.0,
-                                      fontWeight: FontWeight.w700,
-                                      color: Color(0xFF000047),
-                                    ),
-                                  ),
-                                  Text(
-                                    " العطية : ".tr +
-                                        // familyItem.give!,
-                                        (familyItem.give!.length > 50
-                                            ? '${familyItem.give!.substring(0, 50)}'
-                                            : familyItem.give!),
-                                    textAlign: Get.locale?.languageCode == 'ar'
-                                        ? TextAlign.right
-                                        : TextAlign.left,
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis, // << This adds "..."
-                                    style: TextStyle(
-                                      fontFamily: 'Cairo',
-                                      fontSize: 14.0,
-                                      fontWeight: FontWeight.w700,
-                                      color: Color(0xFF000047),
-                                    ),
-                                  ),
-                                  Text(
-                                    "  اسم المعطي :  ".tr +
-                                        // familyItem.giverName!,
-                                        (familyItem.giverName!.length > 30
-                                            ? '${familyItem.giverName!.substring(0, 30)}'
-                                            : familyItem.giverName!),
-                                    style: TextStyle(
-                                      fontFamily: 'Cairo',
-                                      fontSize: 14.0,
-                                      fontWeight: FontWeight.w700,
-                                      color: Color(0xFF000047),
-                                    ),
-                                  ),
-                                  // Text(
-                                  //   familyItem.date! + ": بتاريخ ".tr,
-                                  //   style: TextStyle(
-                                  //     fontFamily: 'Cairo',
-                                  //     fontSize: 14.0,
-                                  //     fontWeight: FontWeight.w700,
-                                  //     color: Color(0xFF000047),
-                                  //   ),
-                                  // ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                )
-
-                    : Padding(
-                      padding: const EdgeInsets.only(top: 158.0),
-                      child: Container(
-                                        height: 250,
-                          child: Center(
-                            child: Column(
-                              children: [
-                                Image.asset(
-                                  'assets/images/zero.jpg',
-                                  height: 140,
-                                  width: 140,
-                                ),
-                                Text(
-                                "لم تتم اضافه اي بيانات حتي الان ".tr,
-                                style: TextStyle(
-                                  fontFamily: 'Cairo',
-                                  fontSize: 15.0,
-                                  fontWeight: FontWeight.w500,
-                                  color: Color(0xFF000047),
-                                ),
-                                                      ),
-                              ],
-                            ),
-                          )),
-                    ),
-                ///////////////////////// design bsssssssssssssssss
-                ///UUUUUUU
-                SizedBox(height: 55),
-              ],
-            ),
-          ),
-            ],
-          ),
+        appBar: _buildAppBar(),
+        body: Directionality(
+          textDirection: TextDirection.rtl,
+          child: _buildBody(),
         ),
-     floatingActionButton: Padding(
-      padding: EdgeInsets.only(
-      bottom: 85.0,
-        right: Get.locale?.languageCode == 'ar' ? 28.0 :28.0, // Add right padding only for Arabic
+        floatingActionButton: _buildFloatingActionButton(),
       ),
-          child:   Align(
-            alignment: Alignment.bottomRight, // Forces right alignment
-
-            child: Container(
-              height: 49,
-              width: 49,
-              child: FloatingActionButton(
-                onPressed: () {
-                  print("docIddocId$docId");
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => AddFamilyData("",docId!)),
-                  );
-                },
-                child: Icon(
-                  Icons.add,
-                  color: Colors.white,
-                  size: 26,
-                ),
-                backgroundColor: Color(0xFF000047),
-                shape: RoundedRectangleBorder(
-                  borderRadius:
-                  BorderRadius.circular(30), // Adjust the circular shape here
-                ),
-                // elevation: 6.0, // Adjust the elevation if needed
-              ),
-            ),
-          ),
-        ),      ),
     );
   }
-  Future<void> deleteCancelByPhoneAndPlaygroundId(String docId) async {
-    try {
-      final firestore = FirebaseFirestore.instance;
 
-      await firestore.collection('PeopleData').doc(docId).delete(); // Delete the document
-
-      print("Document with ID $docId deleted successfully.");
-    } catch (e) {
-      print('Error deleting document: $e');
-    }
+  PreferredSizeWidget _buildAppBar() {
+    return AppBar(
+      backgroundColor: Colors.white,
+      elevation: 0,
+      centerTitle: true,
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back_ios, color: Color(0xFF000047)),
+        onPressed: () => Navigator.pop(context),
+      ),
+      title: Column(
+        children: [
+          Text(
+            currentCardName ?? "",
+            style: const TextStyle(
+              fontFamily: 'Cairo',
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF000047),
+            ),
+          ),
+          if (widget.cardId != null)
+            Text(
+              "بطاقة: ${currentCardName ?? ''}".tr,
+              style: const TextStyle(
+                fontFamily: 'Cairo',
+                fontSize: 12,
+                color: Colors.grey,
+              ),
+            ),
+        ],
+      ),
+    );
   }
 
+  Widget _buildBody() {
+    if (widget.cardId == null || widget.cardId!.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.credit_card_off,
+              size: 60,
+              color: Colors.grey.shade400,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              "الرجاء اختيار بطاقة أولاً".tr,
+              style: TextStyle(
+                fontSize: 18,
+                color: Colors.grey.shade600,
+                fontFamily: 'Cairo',
+              ),
+            ),
+            const SizedBox(height: 16),
 
+          ],
+        ),
+      );
+    }
+
+    return RefreshIndicator(
+      onRefresh: _loadFamilyData,
+      child: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            _buildHeader(),
+            if (familyDataList != null && familyDataList.isNotEmpty)
+              _buildFamilyList()
+            else
+              _buildEmptyState(),
+
+            const SizedBox(height: 80),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHeader() {
+    return Padding(
+      padding: const EdgeInsets.only(right: 12, top: 16, left: 12),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Text(
+            "  مرحبا بك/  ".tr,
+            style: const TextStyle(
+              fontFamily: 'Cairo',
+              fontSize: 15.0,
+              fontWeight: FontWeight.w500,
+              color: Color(0xFF000047),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 14.0, right: 16, top: 10, left: 15),
+            child: userDataList.isNotEmpty && userDataList[0].name != null && userDataList[0].name!.isNotEmpty
+                ? Text(
+              userDataList[0].name!.length > 30
+                  ? '${userDataList[0].name!.substring(0, 30)}..'
+                  : userDataList[0].name!,
+              style: const TextStyle(
+                fontFamily: 'Cairo',
+                fontSize: 18.0,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF000047),
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            )
+                : Container(),
+          ),
+
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFamilyList() {
+    return ListView.builder(
+      itemCount: familyDataList.length,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemBuilder: (context, index) {
+        final familyItem = familyDataList[index];
+
+        return Dismissible(
+          key: ValueKey(familyItem.Id),
+          direction: DismissDirection.endToStart,
+          background: Padding(
+            padding: const EdgeInsets.all(18.0),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.red.shade900,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              alignment: Alignment.centerLeft,
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: const Icon(Icons.delete, color: Colors.white, size: 20),
+            ),
+          ),
+          confirmDismiss: (direction) async {
+            return await DeleteConfirmationDialog.show(context);
+          },
+          onDismissed: (direction) async {
+            await _deleteFamilyItem(index, familyItem.Id!);
+          },
+          child: FamilyCard(
+            familyItem: familyItem,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => AddFamilyDataScreen(
+                    docId: familyItem.Id!,
+                    adminId: adminId!,
+                    cardId: widget.cardId!,
+                  ),
+                ),
+              ).then((_) => _loadFamilyData()); // Refresh when returning
+            },
+            onAddCard: () {
+              _showCardSelectionDialog(familyItem.Id!);
+            },
+            onDelete: () async {
+              await _deleteFamilyItem(index, familyItem.Id!);
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildEmptyState() {
+    return Center(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Image.asset(
+            'assets/images/zero.jpg',
+            height: 140,
+            width: 140,
+          ),
+          Text(
+            "لم تتم اضافه اي بيانات حتي الان ".tr,
+            style: TextStyle(
+              fontFamily: 'Cairo',
+              fontSize: 15.0,
+              fontWeight: FontWeight.w500,
+              color: Color(0xFF000047),
+            ),
+          ),
+        ],
+      ));
+  }
+
+  Widget _buildFloatingActionButton() {
+    if (widget.cardId == null || widget.cardId!.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    return Padding(
+      padding: EdgeInsets.only(
+        bottom: 20.0,
+        right: 20.0,
+      ),
+      child: Align(
+        alignment: Alignment.bottomRight,
+        child: FloatingActionButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => AddFamilyDataScreen(
+                  adminId: adminId!,
+                  docId: '',
+                  cardId: widget.cardId!,
+                ),
+              ),
+            ).then((_) => _loadFamilyData());
+          },
+          child: const Icon(
+            Icons.add,
+            color: Colors.white,
+            size: 26,
+          ),
+          backgroundColor: const Color(0xFF000047),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30),
+          ),
+        ),
+      ),
+    );
+  }
 }

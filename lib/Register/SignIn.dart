@@ -7,7 +7,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import '../ButtomNavigation/CustomButtomNavigation/ButtomNavigation.dart';
-import '../HomePage/HomePage.dart';
 import '../Loading/Loading.dart';
 import 'ForgetPass.dart';
 import 'SignUp.dart';
@@ -90,13 +89,7 @@ FocusScope.of(context).requestFocus(FocusNode());
                 builder: (context) =>
                     CustomNavigationBar(current: 0,),
               ),);
-          // }
-          // Navigator.push(
-          //   context,
-          //   MaterialPageRoute(
-          //     builder: (context) => HomePage(),
-          //   ),
-          // );
+
           break;
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -136,12 +129,6 @@ FocusScope.of(context).requestFocus(FocusNode());
     } else {
       PasswordController.clear();
       PhoneController.clear();
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(
-      //     builder: (context) => HomePage(),
-      //   ),
-      // );
       print("Document ID of the matched phone number: $docId");
       // You can now use docId for further operations if needed
     }
